@@ -1,0 +1,38 @@
+@(id: Long, userForm: Form[User])
+
+@import helper._
+
+@import b3.vertical.fieldConstructor  // Declares a vertical field constructor as default
+
+@main {
+    
+    <h1>Edit user</h1>
+    
+    @b3.form(routes.HomeController.update(id)) {
+        
+        <fieldset>
+        
+            @b3.text(userForm("name"), '_label -> "User name", '_help -> "")
+            @* an example of drop-down list from related table *@
+            @*
+            @b3.select(
+                userForm("company.id"),
+                options(Company.options), 
+                '_label -> "Company", '_default -> "-- Choose a company --",
+                '_showConstraints -> false
+            )*@
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Save this user" class="btn primary"> or
+            <a href="@routes.HomeController.list()" class="btn">Cancel</a>
+        </div>
+        
+    }
+    
+    @b3.form(routes.HomeController.delete(id), 'class -> "topRight") {
+        <input type="submit" value="Delete this user" class="btn danger">
+    }
+    
+}
