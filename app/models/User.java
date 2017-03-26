@@ -1,10 +1,8 @@
 package models;
 
-import java.util.*;
 import javax.persistence.*;
 
 import com.avaje.ebean.PagedList;
-import play.db.ebean.*;
 import play.data.validation.*;
 
 
@@ -21,6 +19,9 @@ public class User extends com.avaje.ebean.Model {
 
     @Constraints.Required
     public String name;
+
+    @Constraints.Required
+    public String password;
 
     /**
      * Generic query helper for entity User with id Long
@@ -43,6 +44,30 @@ public class User extends com.avaje.ebean.Model {
                     .ilike("name", "%" + filter + "%")
                     .orderBy(sortBy + " " + order)
                     .findPagedList(page, pageSize);
+    }
+
+    public static User getByName(String name) {
+        return find.where().eq("name", name).findUnique();
+    }
+
+    public static User getByNameAndPassword(String name, String password) {
+        try {
+            User user = getByName(name);
+            if (user == null) {
+                throw new IllegalArgumentException("User with login '" + name + "' was not found");
+            }
+
+            //password = PasswordCreator.sha1Password(password, user.getSalt());
+
+            if (!password.equals(user.password)) {
+                throw new IllegalArgumentException("Password for user '" + name + "' doesn't match");
+            }
+
+            return user;
+        } catch (Exception e) {
+            //Logger.error("An error occurred on getting user by login and password. Login used: "+login, e);
+        }
+        return null;
     }
 }
 
