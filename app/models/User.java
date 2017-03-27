@@ -159,8 +159,11 @@ public class User extends com.avaje.ebean.Model {
         return errors;
     }
 
+    /**
+     * Hashes password before storing it
+     */
     public void setPassword(String password) {
-        this.password = hashPassword(password);
+        this.password = password == null  || password.equals("") ? null : hashPassword(password);
     }
 }
 

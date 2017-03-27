@@ -44,6 +44,19 @@ public class UserController extends Controller {
     }
 
     /**
+     * Returns user by name
+     */
+    public Result getByName(String name) {
+        User user = User.getByName(name);
+
+        if (user != null) {
+            return ok(Json.toJson(user));
+        } else {
+            return notFound();
+        }
+    }
+
+    /**
      * Creates user via web interface
      */
     public Result signup() {

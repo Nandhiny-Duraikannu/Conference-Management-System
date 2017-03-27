@@ -14,6 +14,8 @@ GET         /logout                  controllers.UserController.logout()
 
 # Create user via API
 POST /api/users controllers.UserController.create()
+# Returns user by name
+GET /api/users/:name controllers.UserController.getByName(name)
 
 
 # Routes from application template. To be removed.
