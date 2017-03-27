@@ -6,6 +6,9 @@ import play.mvc.Result;
 import play.mvc.Http;
 import play.mvc.Security;
 
+/**
+ * Provides methods for play framework to check if route is available for current user.
+ */
 public class UserStorage extends Security.Authenticator {
     @Override
     public String getUsername(Http.Context ctx) {
@@ -19,6 +22,11 @@ public class UserStorage extends Security.Authenticator {
         return username;
     }
 
+    /**
+     * Returns current user or null if it's not logged in
+     *
+     * @return user
+     */
     public static User getCurrentUser() {
         Http.Context context = Http.Context.current();
 
