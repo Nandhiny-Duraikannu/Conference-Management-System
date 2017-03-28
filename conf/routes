@@ -5,6 +5,20 @@
 # Default path will just redirect to the user list
 GET         /                        controllers.HomeController.index()
 
+# User login and signup from web interface
+GET         /login                   controllers.UserController.showLoginForm()
+POST        /login                   controllers.UserController.login()
+GET         /signup                  controllers.UserController.showSignupForm()
+POST        /signup                  controllers.UserController.signup()
+GET         /logout                  controllers.UserController.logout()
+
+# Create user via API
+POST /api/users controllers.UserController.create()
+# Returns user by name
+GET /api/users/:name controllers.UserController.getByName(name)
+
+
+# Routes from application template. To be removed.
 # users list (look at the default values for pagination parameters)
 GET         /users                   controllers.HomeController.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
 
@@ -18,12 +32,6 @@ POST        /users/:id               controllers.HomeController.update(id:Long)
 
 # Delete a user
 POST        /users/:id/delete        controllers.HomeController.delete(id:Long)
-
-GET         /login                   controllers.UserController.showLoginForm()
-POST        /login                   controllers.UserController.login()
-GET         /signup                  controllers.UserController.showSignupForm()
-POST        /signup                  controllers.UserController.signup()
-GET        /logout                  controllers.UserController.logout()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file            controllers.Assets.at(path="/public", file)

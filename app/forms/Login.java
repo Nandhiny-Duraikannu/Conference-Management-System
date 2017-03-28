@@ -6,6 +6,9 @@ import play.data.validation.ValidationError;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Login form
+ */
 public class Login {
     private String name;
     private String password;
@@ -18,6 +21,7 @@ public class Login {
             errors.add(new ValidationError("name", "Login or password is incorrect"));
             return errors;
         }
+
         return null;
     }
 
@@ -36,11 +40,5 @@ public class Login {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    @Override
-    public String toString() {
-        return "LoginForm {name: " + this.name + "}";
-    }
-
 }
 

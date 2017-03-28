@@ -8,21 +8,12 @@
 @main {
 
   <h1>Log in</h1>
-
-  @if(userForm.hasErrors) {
-    <ul class="alert alert-danger">
-    @for(error <- userForm.errors()) {
-      <li>@error._2.get(0).message()</li>
-    }
-    </ul>
-  }
-
   @b3.form(routes.UserController.login()) {
 
     <fieldset>
       @b3.text(userForm("name"), '_label -> "User name", '_help -> "")
       <br>
-      @b3.text(userForm("password"), '_label -> "Password", '_help -> "")
+      @b3.password(userForm("password"), '_label -> "Password", '_help -> "")
     </fieldset>
 
     <div class="actions">
