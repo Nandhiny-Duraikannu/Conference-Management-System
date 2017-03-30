@@ -20,9 +20,10 @@ create table paper (
 );
 
 create table paper_authors (
-  paper_id                      bigint,
-  author_id                     bigint,
-  type                          varchar(255)
+  paper_id                      bigint not null,
+  author_id                     bigint not null,
+  type                          varchar(255) not null,
+  constraint pk_paper_authors primary key (paper_id,author_id)
 );
 
 create table user (

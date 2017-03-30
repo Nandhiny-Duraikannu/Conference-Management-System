@@ -16,9 +16,10 @@ import play.data.validation.Constraints;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.Constraint;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Paper-Authors relationship entity managed by Ebean
@@ -28,19 +29,31 @@ public class PaperAuthors extends com.avaje.ebean.Model {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    public Paper paper;
+    @EmbeddedId
+    public PaperAuthorsPK pk;
 
     @ManyToOne
-    public User  author;
+    private Paper paper;
 
-    @Constraints.Required
+    @ManyToOne
+    private User author;
+
+    @NotNull
     public String type;
 
-    /**
-     * Generic query helper for entity User with id Long
-     */
+    public PaperAuthors() {
+    }
+
+    /*public PaperAuthorsPK getPrimaryKey() {
+        return this.pk;
+    }
+
+    public void setPrimaryKey(PaperAuthorsPK pk) {
+        this.pk = pk;
+    }
+*/
     public static Find<Long, PaperAuthors> find = new Find<Long, PaperAuthors>() {
     };
-
 }
+
+
