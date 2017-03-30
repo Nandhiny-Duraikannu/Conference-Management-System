@@ -1,6 +1,7 @@
 package controllers;
 
 import forms.Login;
+import forms.ResetPassword;
 import lib.UserStorage;
 import models.User;
 import play.Logger;
@@ -94,6 +95,54 @@ public class UserController extends Controller {
      */
     public Result showSignupForm() {
         return ok(views.html.user.signupForm.render(formFactory.form(User.class), flash()));
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email
+     */
+    public Result resetPasswordVerify() {
+        Form resetForm = formFactory.form(ResetPassword.class);
+        Form submittedForm = resetForm.bindFromRequest(request());
+        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
+
+        String name = resetPassword.getName();
+
+        User thisUser = models.User.getByName(name);
+
+        String securityQuestion = resetPassword.getSecurityQuestion();
+        String securityAnswer = resetPassword.getSecurityAnswer();
+        String securityAnswerTruth = thisUser.securityAnswer;
+
+
+        if(!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
+            return redirect("/resetpassword/new");
+        } else {
+            // Generate random password, set it and send an email
+            String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
+            Logger.debug("New Password: " + newRandomPassword);
+            thisUser.setPassword(newRandomPassword);
+            thisUser.update();
+            
+            // TODO: Send new password to the email
+
+            return redirect("/login");
+        }
+    }
+
+    /**
+     * Display the security question and get answer
+     */
+    public Result resetPassword(String name) {
+        String securityQuestionNumber = models.User.getByName(name).securityQuestion;
+        String securityQuestionString = models.User.getSecurityQuestions().get(securityQuestionNumber);
+        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class), flash(), name, securityQuestionString));
+    }
+
+    /**
+     * Display the Reset password form
+     */
+    public Result resetPasswordNew() {
+        return ok(views.html.user.resetPasswordForm.render(formFactory.form(User.class), flash()));
     }
 
     /**
