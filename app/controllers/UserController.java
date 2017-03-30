@@ -3,6 +3,7 @@ package controllers;
 import forms.Login;
 import forms.ResetPassword;
 import lib.UserStorage;
+import lib.Email;
 import models.User;
 import play.Logger;
 import play.data.Form;
@@ -122,8 +123,10 @@ public class UserController extends Controller {
             Logger.debug("New Password: " + newRandomPassword);
             thisUser.setPassword(newRandomPassword);
             thisUser.update();
-            
+
             // TODO: Send new password to the email
+            Email newEmail = new Email();
+            newEmail.sendResetPasswordEmail(newRandomPassword, this.User.email);
 
             return redirect("/login");
         }
