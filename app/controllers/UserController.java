@@ -122,8 +122,7 @@ public class UserController extends Controller {
             thisUser.setPassword(newRandomPassword);
             thisUser.update();
 
-            EmailHelper newEmail = new EmailHelper();
-            newEmail.sendEmail(thisUser.email, newRandomPassword);
+            EmailHelper.sendEmail(thisUser.email, "You new password for Conference Management System!", "Your new password is: " + newRandomPassword);
 
             result = true;
         }

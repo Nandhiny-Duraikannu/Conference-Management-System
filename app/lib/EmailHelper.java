@@ -7,9 +7,7 @@ import javax.activation.*;
 
 public class EmailHelper {
 
-    public void sendEmail(String toAddress, String messagePassword) {
-        String to = toAddress;
-
+    public static void sendEmail(String toAddress, String subject, String body) {
         String from = "soc@ritvikgautam.me";
         String fromPassword = "12345678";
         String host = "smtp.zoho.com";
@@ -36,11 +34,11 @@ public class EmailHelper {
 
             message.setFrom(new InternetAddress(from));
 
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
 
-            message.setSubject("You new password for Conference Management System!");
+            message.setSubject(subject);
 
-            message.setText("Your new password is: " + messagePassword);
+            message.setText(body);
 
             Transport.send(message);
         }catch (MessagingException mex) {
