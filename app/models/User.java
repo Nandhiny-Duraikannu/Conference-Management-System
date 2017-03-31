@@ -165,5 +165,21 @@ public class User extends com.avaje.ebean.Model {
     public void setPassword(String password) {
         this.password = password == null  || password.equals("") ? null : hashPassword(password);
     }
+
+    public void setEmail(String email) { this.email = email; }
+    public void setResearchAreas(String researchAreas) { this.researchAreas = researchAreas; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setTitle(String title) { this.title = title; }
+    public void setPosition(String position) { this.position = position; }
+    public void setAffiliation(String affiliation) { this.affiliation = affiliation; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setFax(String fax) { this.fax = fax; }
+    public void setAddress(String address) { this.address = address; }
+    public void setCity(String city) { this.city = city; }
+    public void setCountry(String country) { this.country = country; }
+    public void setZip(String zip) { this.zip = zip; }
+    public void setComments(String comments) { this.comments = comments; }
+
 }
 
