@@ -1,5 +1,6 @@
 package lib;
 
+import controllers.routes;
 import models.User;
 import play.Logger;
 import play.mvc.Result;
@@ -40,6 +41,6 @@ public class UserStorage extends Security.Authenticator {
     @Override
     public Result onUnauthorized(Http.Context ctx) {
         Logger.debug("User is unathorized to access to the protected ressource. We redirect him to login page");
-        return redirect(controllers.routes.UserController.showLoginForm());
+        return redirect(controllers.routes.HomeController.index());
     }
 }

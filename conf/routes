@@ -15,15 +15,39 @@ GET         /resetpassword/new       controllers.UserController.resetPasswordNew
 GET         /resetpassword           controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
 POST        /resetpassword           controllers.UserController.resetPasswordVerifyWeb()
 
+# User Profile
+GET         /profile                 controllers.HomeController.showProfile()
+POST        /profile                 controllers.HomeController.updateProfileWeb()
+
+# User Profile API
+POST        /api/profile             controllers.HomeController.updateProfileAPI()
+
+#My Papers Page
+GET         /papers                  controllers.PaperController.getPapers()
+#not implemented yet
+POST        /papers/upload           controllers.PaperController.uploadPaper(id: Long)
+GET         /papers/download         controllers.PaperController.downloadPaper(id: Long)
+GET         /papers/edit             controllers.PaperController.editPaper(id: Long)
+
+
 # Create user via API
-POST /api/users controllers.UserController.create()
+POST /api/users                      controllers.UserController.create()
 # Returns user by name
+
 GET /api/users/:name controllers.UserController.getByName(name)
 
 # Reset password for a user
 GET         /api/resetpassword        controllers.UserController.resetPasswordAPI(name: java.lang.String ?= null)
 POST        /api/resetpassword        controllers.UserController.resetPasswordVerifyAPI()
 
+GET /api/users/:name                 controllers.UserController.getByName(name)
+
+# get paper info by paper id
+GET /api/papers/:id                  controllers.PaperController.getPaper(id: Long)
+# get authors for paper id
+GET /api/papers/authors/:id          controllers.PaperController.getAuthors(id: Long)
+# get all papers or papers for user_id
+GET /api/papers                      controllers.PaperController.getAllPapers()
 
 # Routes from application template. To be removed.
 # users list (look at the default values for pagination parameters)
