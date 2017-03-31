@@ -3,16 +3,26 @@
 
 # --- !Ups
 
+create table conference (
+  id                            bigint auto_increment not null,
+  acronym                       varchar(255) not null,
+  title                         varchar(255) not null,
+  location                      varchar(255),
+  deadline                      datetime(6),
+  constraint pk_conference primary key (id)
+);
+
 create table paper (
   id                            bigint auto_increment not null,
-  title                         varchar(255),
-  topic                         varchar(255),
-  contact_email                 varchar(255),
-  award_candidate               varchar(255),
-  student_volunteer             varchar(255),
+  user_id                       bigint not null,
+  title                         varchar(255) not null,
+  topic                         varchar(255) not null,
+  contact_email                 varchar(255) not null,
+  award_candidate               varchar(255) not null,
+  student_volunteer             varchar(255) not null,
   status                        varchar(255),
-  paper_abstract                varchar(5000),
-  conference_id                 varchar(255),
+  paper_abstract                varchar(5000) not null,
+  conference_id                 bigint,
   file_format                   varchar(255),
   file_size                     varchar(255),
   submission_date               varchar(255),
@@ -20,10 +30,22 @@ create table paper (
 );
 
 create table paper_authors (
-  paper_id                      bigint not null,
-  author_id                     bigint not null,
+  id                            bigint auto_increment not null,
+  paper_id                      bigint,
   type                          varchar(255) not null,
-  constraint pk_paper_authors primary key (paper_id,author_id)
+  author_first_name             varchar(255),
+  author_last_name              varchar(255) not null,
+  author_affiliation            varchar(255),
+  author_email                  varchar(255),
+  constraint pk_paper_authors primary key (id)
+);
+
+create table paper_file (
+  paper_id                      bigint,
+  file                          longblob not null,
+  size                          integer,
+  format                        varchar(255),
+  constraint uq_paper_file_paper_id unique (paper_id)
 );
 
 create table user (
@@ -51,24 +73,38 @@ create table user (
   constraint pk_user primary key (id)
 );
 
+alter table paper add constraint fk_paper_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_paper_user_id on paper (user_id);
+
+alter table paper add constraint fk_paper_conference_id foreign key (conference_id) references conference (id) on delete restrict on update restrict;
+create index ix_paper_conference_id on paper (conference_id);
+
 alter table paper_authors add constraint fk_paper_authors_paper_id foreign key (paper_id) references paper (id) on delete restrict on update restrict;
 create index ix_paper_authors_paper_id on paper_authors (paper_id);
 
-alter table paper_authors add constraint fk_paper_authors_author_id foreign key (author_id) references user (id) on delete restrict on update restrict;
-create index ix_paper_authors_author_id on paper_authors (author_id);
+alter table paper_file add constraint fk_paper_file_paper_id foreign key (paper_id) references paper (id) on delete restrict on update restrict;
 
 
 # --- !Downs
 
+alter table paper drop foreign key fk_paper_user_id;
+drop index ix_paper_user_id on paper;
+
+alter table paper drop foreign key fk_paper_conference_id;
+drop index ix_paper_conference_id on paper;
+
 alter table paper_authors drop foreign key fk_paper_authors_paper_id;
 drop index ix_paper_authors_paper_id on paper_authors;
 
-alter table paper_authors drop foreign key fk_paper_authors_author_id;
-drop index ix_paper_authors_author_id on paper_authors;
+alter table paper_file drop foreign key fk_paper_file_paper_id;
+
+drop table if exists conference;
 
 drop table if exists paper;
 
 drop table if exists paper_authors;
+
+drop table if exists paper_file;
 
 drop table if exists user;
 

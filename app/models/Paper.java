@@ -1,20 +1,10 @@
 package models;
 
-import com.avaje.ebean.PagedList;
-import play.Logger;
-import play.data.validation.Constraints;
-import play.data.validation.ValidationError;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.avaje.ebean.*;
+import play.data.validation.*;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.util.*;
 
 
 /**
@@ -28,30 +18,34 @@ public class Paper extends com.avaje.ebean.Model {
     @Id
     public Long id;
 
-    @Constraints.Required
+    @NotNull
+    @ManyToOne
+    public User user;
+
+    @NotNull
     public String title;
 
-    @Constraints.Required
+    @NotNull
     public String topic;
 
-    @Constraints.Required
+    @NotNull
     @Constraints.Email
     public String contactEmail;
 
-    @Constraints.Required
+    @NotNull
     public String awardCandidate;
 
-    @Constraints.Required
+    @NotNull
     public String studentVolunteer;
 
     public String status;
 
-    @Constraints.Required
+    @NotNull
     @Column(length = 5000)
     public String paperAbstract;
 
-    @Constraints.Required
-    public String conferenceID;
+    @ManyToOne
+    public Conference conference;
 
     public String fileFormat;
 
@@ -60,7 +54,7 @@ public class Paper extends com.avaje.ebean.Model {
     public String submissionDate;
 
     /**
-     * Generic query helper for entity User with id Long
+     * Generic query helper for entity Paper with id Long
      */
     public static Find<Long, Paper> find = new Find<Long, Paper>() {
     };
@@ -75,15 +69,51 @@ public class Paper extends com.avaje.ebean.Model {
      * @param filter   filter applied on the name column
      */
     public static PagedList<Paper> page(int page, int pageSize, String sortBy, String order, String filter) {
-        return
-                find.where()
-                        .ilike("title", "%" + filter + "%")
-                        .orderBy(sortBy + " " + order)
-                        .findPagedList(page, pageSize);
+        return find.where()
+                   .ilike("title", "%" + filter + "%")
+                   .orderBy(sortBy + " " + order)
+                   .findPagedList(page, pageSize);
+    }
+
+    public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
+        ExpressionList<Paper> query = Paper.find.select("*")
+                                           .where().eq("user_id", author_id);
+        if (conference_id !=0){
+            query = query.eq("conference.id", conference_id);
+        }
+        List<Paper> papers = query.findList();
+        return papers;
+    }
+
+    public static List<Paper> getByAuthor(Long user_id){
+        return find.select("*")
+                .where().eq("user_id", user_id)
+                .findList();
+    }
+
+    public static ArrayList<String> getAuthors(Long paper_id){
+        List<PaperAuthors> items = PaperAuthors.
+                find.select("*")
+                .where().eq("paper_id", paper_id)
+                .findList();
+        ArrayList<String> authors = new ArrayList<String>();
+        for(int i=0; i<items.size(); i++)
+        {
+            authors.add(items.get(i).author_first_name + " " + items.get(i).author_last_name);
+        }
+        return authors;
+    }
+
+    public static List<Paper> getAllPapers(){
+        return find.findList();
     }
 
     public static List<Paper> getByTitle(String title) {
         return find.where().eq("title", title).findList();
+    }
+
+    public static Paper getById(Long id) {
+        return find.where().eq("id", id).findUnique();
     }
 
     public static List<String> getIsAwardCandidate() {

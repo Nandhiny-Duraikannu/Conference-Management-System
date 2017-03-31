@@ -29,29 +29,31 @@ public class PaperAuthors extends com.avaje.ebean.Model {
 
     private static final long serialVersionUID = 1L;
 
-    @EmbeddedId
-    public PaperAuthorsPK pk;
+    @Id
+    public Long id;
+
+    public Long paperId;
 
     @ManyToOne
-    private Paper paper;
-
-    @ManyToOne
-    private User author;
+    public Paper paper;
 
     @NotNull
     public String type;
 
+    public String author_first_name;
+
+    @NotNull
+    public String author_last_name;
+
+    public String author_affiliation;
+
+    @Constraints.Email
+    public String author_email;
+
+
     public PaperAuthors() {
     }
 
-    /*public PaperAuthorsPK getPrimaryKey() {
-        return this.pk;
-    }
-
-    public void setPrimaryKey(PaperAuthorsPK pk) {
-        this.pk = pk;
-    }
-*/
     public static Find<Long, PaperAuthors> find = new Find<Long, PaperAuthors>() {
     };
 }
