@@ -12,6 +12,13 @@ GET         /signup                  controllers.UserController.showSignupForm()
 POST        /signup                  controllers.UserController.signup()
 GET         /logout                  controllers.UserController.logout()
 
+# User Profile
+GET         /profile                 controllers.HomeController.showProfile()
+POST        /profile                 controllers.HomeController.updateProfileWeb()
+
+# User Profile API
+POST        /api/profile             controllers.HomeController.updateProfileAPI()
+
 # Create user via API
 POST /api/users controllers.UserController.create()
 # Returns user by name
