@@ -16,8 +16,8 @@ GET         /logout                  controllers.UserController.logout()
 GET         /papers                  controllers.PaperController.getPapers()
 #not implemented yet
 POST        /papers/upload           controllers.PaperController.uploadPaper(id: Long)
+GET         /papers/download         controllers.PaperController.downloadPaper(id: Long)
 GET         /papers/edit             controllers.PaperController.editPaper(id: Long)
-POST        /papers/edit             controllers.PaperController.editPaper(id: Long)
 
 # Create user via API
 POST /api/users                      controllers.UserController.create()

@@ -27,7 +27,7 @@
         </select>
     </form>
     <h2 id="homeTitle">Papers found: @list.size()</h2>
-    <table class="zebra-striped">
+    <table class="table-condensed zebra-striped">
         <thead>
       <tr>
           <th>Paper ID</th>
@@ -35,11 +35,9 @@
           <th>Topic</th>
           <th>Contact email</th>
           <th>Authors</th>
-          <th>Award Candidate</th>
-          <th>Student Volunteer</th>
           <th>Status</th>
-          <th>Abstract</th>
           <th>Conference</th>
+          <th>Submission Deadline</th>
           <th>File Info</th>
           <th>Submission Date</th>
           <th>Edit</th>
@@ -54,17 +52,15 @@
                     <td>@paper.topic</td>
                     <td>@paper.contactEmail</td>
                     <td>@String.join("; ", Paper.getAuthors(paper.id))</td>
-                    <td>@paper.awardCandidate</td>
-                    <td>@paper.studentVolunteer</td>
                     <td>@paper.status</td>
-                    <td>@paper.paperAbstract</td>
                     <td>@paper.conference.title</td>
+                    <td>@paper.conference.deadline</td>
                     <td>@if(paper.fileFormat == null){
                         @helper.form(action = routes.PaperController.uploadPaper(paper.id), 'enctype -> "multipart/form-data") {
                            <input type="file" name="file">
                            <input class="btn btn-default" type="submit">
                         }}else{
-                            @paper.fileFormat, @paper.fileSize Mb
+                        <a href="@routes.PaperController.downloadPaper(paper.id)">@paper.fileFormat, @paper.fileSize b</a>
                         }
                     </td>
                     <td>@paper.submissionDate</td>

@@ -38,6 +38,8 @@ public class Paper extends com.avaje.ebean.Model {
     @NotNull
     public String studentVolunteer;
 
+    //new -> uploaded -> submitted -> (others will be like reviewed, approved, TBD)
+    @Column(columnDefinition = "VARCHAR(255) default 'new'")
     public String status;
 
     @NotNull
@@ -49,9 +51,12 @@ public class Paper extends com.avaje.ebean.Model {
 
     public String fileFormat;
 
-    public String fileSize;
+    public Long fileSize;
 
     public String submissionDate;
+
+    @Lob
+    public byte[] fileContent;
 
     /**
      * Generic query helper for entity Paper with id Long
@@ -75,6 +80,9 @@ public class Paper extends com.avaje.ebean.Model {
                    .findPagedList(page, pageSize);
     }
 
+    /**
+     * papers list by user_id and conference_id
+     */
     public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
         ExpressionList<Paper> query = Paper.find.select("*")
                                            .where().eq("user_id", author_id);
@@ -85,12 +93,18 @@ public class Paper extends com.avaje.ebean.Model {
         return papers;
     }
 
+    /**
+     * papers list by user_id
+     */
     public static List<Paper> getByAuthor(Long user_id){
         return find.select("*")
                 .where().eq("user_id", user_id)
                 .findList();
     }
 
+    /**
+     * papers list by user_id and conference_id
+     */
     public static ArrayList<String> getAuthors(Long paper_id){
         List<PaperAuthors> items = PaperAuthors.
                 find.select("*")
@@ -104,18 +118,42 @@ public class Paper extends com.avaje.ebean.Model {
         return authors;
     }
 
+    /**
+     * all papers
+     */
     public static List<Paper> getAllPapers(){
         return find.findList();
     }
 
+    /**
+     * get paper by title - not used
+     */
     public static List<Paper> getByTitle(String title) {
         return find.where().eq("title", title).findList();
     }
 
+    /**
+     * get paper by paper_id
+     */
     public static Paper getById(Long id) {
         return find.where().eq("id", id).findUnique();
     }
 
+    /**
+     * upload file to database
+     */
+    public void upload(String format, Long size, byte[] content){
+        this.fileContent = content;
+        this.fileSize = size;
+        this.fileFormat = format;
+        this.status = "uploaded";
+        this.save();
+
+    }
+
+    /**
+     * list of values for award_candidate fields
+     */
     public static List<String> getIsAwardCandidate() {
         List<String> isAwardCandidate = new ArrayList<String>();
         isAwardCandidate.add("Yes");
@@ -123,6 +161,9 @@ public class Paper extends com.avaje.ebean.Model {
         return isAwardCandidate;
     }
 
+    /**
+     * list of values for student_volunteer fields
+     */
     public static List<String> getIsStudentVolunteer() {
         List<String> isStudentVolunteer = new ArrayList<String>();
         isStudentVolunteer.add("Yes");

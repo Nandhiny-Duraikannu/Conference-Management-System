@@ -1,13 +1,17 @@
 package controllers;
 
 import lib.UserStorage;
-import models.Conference;
 import models.Paper;
 import models.User;
+import play.mvc.Http.MultipartFormData;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -25,7 +29,7 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Retrieves Papers for My papers page Html
+     * Retrieves Papers for My papers page - web
      */
     public Result getPapers() {
         String param = request().getQueryString("conf_id");
@@ -74,11 +78,50 @@ public class PaperController extends Controller {
         return ok(Json.toJson(Paper.getAuthors(id)));
     }
 
+    /**
+     * upload file to database - web
+     */
     public Result uploadPaper(Long id) {
-
-        return ok("redirect to file upload form");
+        MultipartFormData<File> body = request().body().asMultipartFormData();
+        MultipartFormData.FilePart<File> file = body.getFile("file");
+        Paper paper = Paper.getById(id);
+        if (file != null) {
+            try {
+                byte[] array = Files.readAllBytes(file.getFile().toPath());
+                paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                return redirect(routes.PaperController.getPapers());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            flash("error", "Missing file");
+        }
+        return badRequest();
     }
 
+    /**
+     * download file from database - web
+     */
+    public Result downloadPaper(Long id){
+        Paper paper = Paper.getById(id);
+        Result r = ok(paper.fileContent);
+        response().setHeader("Content-Disposition", "attachment; filename=paper"+paper.id+"."+paper.fileFormat);
+        return r;
+    }
+
+    /**
+     * helper function for getting file extension
+     */
+    private static String getFileExtension(String fileName) {
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".")+1);
+        else return "";
+    }
+
+    /**
+     * redirect to paper edit (submission) page - web
+     * IMPLEMENT
+     */
     public Result editPaper(Long id) {
         return ok("redirect to paper submission form");
     }
