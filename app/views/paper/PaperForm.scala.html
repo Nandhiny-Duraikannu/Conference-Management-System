@@ -1,0 +1,93 @@
+@(PaperSubmission: play.data.Form[forms.PaperSubmission], flash: play.mvc.Http.Flash)
+@currentUser = @{
+lib.UserStorage.getCurrentUser()
+}
+@import helper._
+
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+
+<h1>Paper Submission</h1>
+@b3.form(routes.PaperController.create()) {
+  <p>Please submit your abstract using the form below. Note that all the fields are mandatory. After submission you will receive a password that will allow you to access your paper in the system, upload the file of your paper, and modify the metadata associated with this paper.</p>
+
+
+    <fieldset>
+      @b3.hidden(PaperSubmission("user_id"), '_label -> "userid", '_help -> "")
+      @b3.text(PaperSubmission("title"), '_label -> "Title", '_help -> "")
+      <br>
+      @b3.email(PaperSubmission("contactEmail"), '_label -> "Email of contact author", '_help -> "")
+      <br>
+      @b3.email(PaperSubmission("confirmEmail"), '_label -> "Confirm email",  '_help -> "")
+      <br>
+
+      @inputRadioGroup(PaperSubmission("awardCandidate"), options = options("Y"->"Yes","N"->"No"),'_label -> "Best student paper award candidate?", '_help -> "")
+      @inputRadioGroup(PaperSubmission("studentVolunteer"), options = options("Y"->"Yes","N"->"No"),'_label -> "Student Volunteer?",'_help -> "")
+      @b3.select(PaperSubmission("topic"),options(models.Paper.getTopics),'_label -> "Topic", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("conferenceID"),'_label -> "Conference ID", '_help -> "")
+      <br>
+      @b3.textarea(PaperSubmission("paperAbstract"),args = 'rows -> 8, 'cols -> 100, '_label -> "Abstract", '_help -> "")
+
+      <h3>Author's Details</h3>
+      <div class="form-inline">
+      @defining(b3.inline.fieldConstructorSpecific) { implicit ifc =>
+      <br>
+
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+
+
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      @b3.text(PaperSubmission("author_first_name"), '_label -> "First name", '_help -> "")
+      @b3.text(PaperSubmission("author_last_name"), '_label -> "Last name", '_help -> "")
+      @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
+      @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
+      @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
+      <br>
+      }
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <input type="submit" value="Submit" class="btn primary">
+    </div>
+
+}
+}
