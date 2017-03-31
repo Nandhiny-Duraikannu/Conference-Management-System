@@ -32,6 +32,8 @@ public class Paper extends com.avaje.ebean.Model {
     @Constraints.Email
     public String contactEmail;
 
+    public String confirmEmail;
+
     @NotNull
     public String awardCandidate;
 
@@ -170,5 +172,15 @@ public class Paper extends com.avaje.ebean.Model {
         isStudentVolunteer.add("No");
         isStudentVolunteer.add("To be decided");
         return isStudentVolunteer;
+    }
+
+    public static Map<String, String> getTopics() {
+        Map<String, String> topics = new HashMap<String, String>();
+        topics.put("1", "Legacy systems migration and modernization");
+        topics.put("2", "Service innovation");
+        topics.put("3", "Service monitoring and adaptive management");
+        topics.put("4", "Architectures for multi-host container deployments");
+        topics.put("5", "Services for Big Data");
+        return topics;
     }
 }
