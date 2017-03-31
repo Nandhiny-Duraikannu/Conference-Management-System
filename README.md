@@ -7,7 +7,7 @@ What do you need to setup the project:
 
 * SBT (http://www.scala-sbt.org/download.html)
 * MySQL database (create one before running the project)
-* Intellij Idea (this is probably optional)
+* Intellij Idea with scala plugin (or use IDE of your choice, but I don't have instructions for you then)
 
 I used intellij idea to set up a project. Intellij will download all the dependencies when you open the project.
 After that, setup your database connection in *conf/application_template.conf* (read the instructions in that file).
