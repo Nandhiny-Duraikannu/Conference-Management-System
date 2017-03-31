@@ -31,10 +31,10 @@ public class HomeController  extends Controller {
     );
     
     /**
-     * Handle default path requests, redirect to Users list
+     * Main page
      */
     public Result index() {
-        return GO_HOME;
+        return ok(views.html.index.render());
     }
 
     /**
