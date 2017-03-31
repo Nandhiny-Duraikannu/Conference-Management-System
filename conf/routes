@@ -12,15 +12,17 @@ GET         /signup                  controllers.UserController.showSignupForm()
 POST        /signup                  controllers.UserController.signup()
 GET         /logout                  controllers.UserController.logout()
 GET         /resetpassword/new       controllers.UserController.resetPasswordNew()
-GET         /resetpassword           controllers.UserController.resetPassword(name: java.lang.String ?= null)
-POST        /resetpassword           controllers.UserController.resetPasswordVerify()
+GET         /resetpassword           controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
+POST        /resetpassword           controllers.UserController.resetPasswordVerifyWeb()
 
 # Create user via API
 POST /api/users controllers.UserController.create()
 # Returns user by name
 GET /api/users/:name controllers.UserController.getByName(name)
+
 # Reset password for a user
-# GET /api/resetpassword/:name controllers.UserController.resetPassword()
+GET         /api/resetpassword        controllers.UserController.resetPasswordAPI(name: java.lang.String ?= null)
+POST        /api/resetpassword        controllers.UserController.resetPasswordVerifyAPI()
 
 
 # Routes from application template. To be removed.

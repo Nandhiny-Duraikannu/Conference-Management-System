@@ -3,7 +3,7 @@ package controllers;
 import forms.Login;
 import forms.ResetPassword;
 import lib.UserStorage;
-import lib.Email;
+import lib.EmailHelper;
 import models.User;
 import play.Logger;
 import play.data.Form;
@@ -101,11 +101,7 @@ public class UserController extends Controller {
     /**
      * Validate security question answer; if true, set password and send email
      */
-    public Result resetPasswordVerify() {
-        Form resetForm = formFactory.form(ResetPassword.class);
-        Form submittedForm = resetForm.bindFromRequest(request());
-        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
-
+    public boolean resetPasswordVerify(ResetPassword resetPassword) {
         String name = resetPassword.getName();
 
         User thisUser = models.User.getByName(name);
@@ -114,9 +110,11 @@ public class UserController extends Controller {
         String securityAnswer = resetPassword.getSecurityAnswer();
         String securityAnswerTruth = thisUser.securityAnswer;
 
+        boolean result;
+
 
         if(!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
-            return redirect("/resetpassword/new");
+            result = false;
         } else {
             // Generate random password, set it and send an email
             String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
@@ -124,21 +122,72 @@ public class UserController extends Controller {
             thisUser.setPassword(newRandomPassword);
             thisUser.update();
 
-            // TODO: Send new password to the email
-            Email newEmail = new Email();
-            newEmail.sendResetPasswordEmail(newRandomPassword, this.User.email);
+            EmailHelper newEmail = new EmailHelper();
+            newEmail.sendEmail(thisUser.email, newRandomPassword);
 
+            result = true;
+        }
+
+        return result;
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email - Web
+     */
+    public Result resetPasswordVerifyWeb() {
+        Form resetForm = formFactory.form(ResetPassword.class);
+        Form submittedForm = resetForm.bindFromRequest(request());
+        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
+
+        boolean result = this.resetPasswordVerify(resetPassword);
+
+        if(result) {
             return redirect("/login");
+        } else {
+            return redirect("/resetpassword/new");
+        }
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email - Web
+     */
+    public Result resetPasswordVerifyAPI() {
+        Form resetForm = formFactory.form(ResetPassword.class);
+        Form submittedForm = resetForm.bindFromRequest(request());
+        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
+
+        boolean result = this.resetPasswordVerify(resetPassword);
+
+        if(result) {
+            return ok();
+        } else {
+            return badRequest();
         }
     }
 
     /**
      * Display the security question and get answer
      */
-    public Result resetPassword(String name) {
+    public String resetPassword(String name) {
         String securityQuestionNumber = models.User.getByName(name).securityQuestion;
         String securityQuestionString = models.User.getSecurityQuestions().get(securityQuestionNumber);
+        return securityQuestionString;
+    }
+
+    /**
+     * Display the security question and get answer - Web
+     */
+    public Result resetPasswordWeb(String name) {
+        String securityQuestionString =  this.resetPassword(name);
         return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class), flash(), name, securityQuestionString));
+    }
+
+    /**
+     * Display the security question and get answer - API
+     */
+    public Result resetPasswordAPI(String name) {
+        String securityQuestionString = this.resetPassword(name);
+        return ok(Json.toJson(securityQuestionString));
     }
 
     /**
