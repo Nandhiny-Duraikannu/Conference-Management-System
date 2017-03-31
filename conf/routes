@@ -12,11 +12,24 @@ GET         /signup                  controllers.UserController.showSignupForm()
 POST        /signup                  controllers.UserController.signup()
 GET         /logout                  controllers.UserController.logout()
 
-# Create user via API
-POST /api/users controllers.UserController.create()
-# Returns user by name
-GET /api/users/:name controllers.UserController.getByName(name)
+#My Papers Page
+GET         /papers                  controllers.PaperController.getPapers()
+#not implemented yet
+POST        /papers/upload           controllers.PaperController.uploadPaper(id: Long)
+GET         /papers/download         controllers.PaperController.downloadPaper(id: Long)
+GET         /papers/edit             controllers.PaperController.editPaper(id: Long)
 
+# Create user via API
+POST /api/users                      controllers.UserController.create()
+# Returns user by name
+GET /api/users/:name                 controllers.UserController.getByName(name)
+
+# get paper info by paper id
+GET /api/papers/:id                  controllers.PaperController.getPaper(id: Long)
+# get authors for paper id
+GET /api/papers/authors/:id          controllers.PaperController.getAuthors(id: Long)
+# get all papers or papers for user_id
+GET /api/papers                      controllers.PaperController.getAllPapers()
 
 # Routes from application template. To be removed.
 # users list (look at the default values for pagination parameters)
