@@ -1,7 +1,9 @@
 package controllers;
 
 import forms.Login;
+import forms.ResetPassword;
 import lib.UserStorage;
+import lib.EmailHelper;
 import models.User;
 import play.Logger;
 import play.data.Form;
@@ -94,6 +96,104 @@ public class UserController extends Controller {
      */
     public Result showSignupForm() {
         return ok(views.html.user.signupForm.render(formFactory.form(User.class), flash()));
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email
+     */
+    public boolean resetPasswordVerify(ResetPassword resetPassword) {
+        String name = resetPassword.getName();
+
+        User thisUser = models.User.getByName(name);
+
+        String securityQuestion = resetPassword.getSecurityQuestion();
+        String securityAnswer = resetPassword.getSecurityAnswer();
+        String securityAnswerTruth = thisUser.securityAnswer;
+
+        boolean result;
+
+
+        if(!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
+            result = false;
+        } else {
+            // Generate random password, set it and send an email
+            String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
+            Logger.debug("New Password: " + newRandomPassword);
+            thisUser.setPassword(newRandomPassword);
+            thisUser.update();
+
+            EmailHelper.sendEmail(thisUser.email, "You new password for Conference Management System!", "Your new password is: " + newRandomPassword);
+
+            result = true;
+        }
+
+        return result;
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email - Web
+     */
+    public Result resetPasswordVerifyWeb() {
+        Form resetForm = formFactory.form(ResetPassword.class);
+        Form submittedForm = resetForm.bindFromRequest(request());
+        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
+
+        boolean result = this.resetPasswordVerify(resetPassword);
+
+        if(result) {
+            return redirect("/login");
+        } else {
+            return redirect("/resetpassword/new");
+        }
+    }
+
+    /**
+     * Validate security question answer; if true, set password and send email - Web
+     */
+    public Result resetPasswordVerifyAPI() {
+        Form resetForm = formFactory.form(ResetPassword.class);
+        Form submittedForm = resetForm.bindFromRequest(request());
+        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
+
+        boolean result = this.resetPasswordVerify(resetPassword);
+
+        if(result) {
+            return ok();
+        } else {
+            return badRequest();
+        }
+    }
+
+    /**
+     * Display the security question and get answer
+     */
+    public String resetPassword(String name) {
+        String securityQuestionNumber = models.User.getByName(name).securityQuestion;
+        String securityQuestionString = models.User.getSecurityQuestions().get(securityQuestionNumber);
+        return securityQuestionString;
+    }
+
+    /**
+     * Display the security question and get answer - Web
+     */
+    public Result resetPasswordWeb(String name) {
+        String securityQuestionString =  this.resetPassword(name);
+        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class), flash(), name, securityQuestionString));
+    }
+
+    /**
+     * Display the security question and get answer - API
+     */
+    public Result resetPasswordAPI(String name) {
+        String securityQuestionString = this.resetPassword(name);
+        return ok(Json.toJson(securityQuestionString));
+    }
+
+    /**
+     * Display the Reset password form
+     */
+    public Result resetPasswordNew() {
+        return ok(views.html.user.resetPasswordForm.render(formFactory.form(User.class), flash()));
     }
 
     /**

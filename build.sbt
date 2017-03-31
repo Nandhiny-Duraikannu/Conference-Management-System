@@ -9,3 +9,4 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayEbean)
 libraryDependencies += jdbc
 libraryDependencies += "com.adrianhurt" %% "play-bootstrap" % "1.0-P25-B3"
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.41"
+libraryDependencies += "com.typesafe.play" %% "play-mailer" % "5.0.0"

@@ -122,6 +122,7 @@ public class User extends com.avaje.ebean.Model {
         return null;
     }
 
+
     public static Map<String, String> getSecurityQuestions() {
         Map<String, String> questions = new HashMap<String, String>();
         questions.put("1", "My favorite computer science paper");

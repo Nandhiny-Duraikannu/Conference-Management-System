@@ -92,3 +92,5 @@ drop table if exists conference;
 drop table if exists paper;
 
 drop table if exists paper_authors;
+
+drop table if exists user;
