@@ -8,7 +8,7 @@ import java.util.*;
 
 
 /**
- * Paper entity managed by Ebean
+ * Conference entity managed by Ebean
  */
 @Entity
 public class Conference extends Model {
@@ -34,6 +34,9 @@ public class Conference extends Model {
     public static Find<Long, Conference> find = new Find<Long, Conference>() {
     };
 
+    /**
+     * list of all conferences
+     */
     public static List<Conference> getAllConferences(){
         List<Conference> items = Conference.
                 find.select("*")
@@ -41,7 +44,10 @@ public class Conference extends Model {
         return items;
     }
 
-    public static List<Conference> getConferencesByUser(Long userId){ //test
+    /**
+     * conferences for which user submitted papers
+     */
+    public static List<Conference> getConferencesByUser(Long userId){
         List<Paper> items = Paper.
                 find.select("*")
                 .where().eq("user_id", userId)
