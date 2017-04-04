@@ -21,7 +21,7 @@
                     selected
                 }
                 >
-                    @conf.title
+                    @conf.acronym
                 </option>
             }
         </select>
@@ -53,7 +53,7 @@
                     <td>@paper.contactEmail</td>
                     <td>@String.join("; ", Paper.getAuthors(paper.id))</td>
                     <td>@paper.status</td>
-                    <td>@paper.conference.title</td>
+                    <td>@paper.conference.acronym</td>
                     <td>@paper.conference.deadline</td>
                     <td>@if(paper.fileFormat == null){
                         @helper.form(action = routes.PaperController.uploadPaper(paper.id), 'enctype -> "multipart/form-data") {
