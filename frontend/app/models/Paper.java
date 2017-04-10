@@ -62,6 +62,7 @@ public class Paper {
      * @param filter   filter applied on the name column
      */
     public static PagedList<Paper> page(int page, int pageSize, String sortBy, String order, String filter) {
+        // TODO Call API
         return null;
     }
 
@@ -69,6 +70,7 @@ public class Paper {
      * papers list by user_id and conference_id
      */
     public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
+        // TODO Call API
         return null;
     }
 
@@ -76,6 +78,7 @@ public class Paper {
      * papers list by user_id
      */
     public static List<Paper> getByAuthor(Long user_id){
+        // TODO Call API
         return null;
     }
 
@@ -90,6 +93,7 @@ public class Paper {
      * all papers
      */
     public static List<Paper> getAllPapers(){
+        // TODO Call API
         return null;
     }
 
@@ -97,6 +101,7 @@ public class Paper {
      * get paper by title - not used
      */
     public static List<Paper> getByTitle(String title) {
+        // TODO Call API
         return null;
     }
 
@@ -104,6 +109,7 @@ public class Paper {
      * get paper by paper_id
      */
     public static Paper getById(Long id) {
+        // TODO Call API
         return null;
     }
 

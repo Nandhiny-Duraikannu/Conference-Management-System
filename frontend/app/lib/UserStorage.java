@@ -17,7 +17,8 @@ public class UserStorage extends Security.Authenticator {
         String username = ctx.session().get("username");
 
         if (!Http.Context.current().args.containsKey("user")) {
-            Http.Context.current().args.put("user", User.getByName(username));
+            User user = username != null && username.length() > 0 ? Api.getInstance().getUserByName(username) : null;
+            Http.Context.current().args.put("user", user);
         }
 
         return username;
@@ -30,9 +31,11 @@ public class UserStorage extends Security.Authenticator {
      */
     public static User getCurrentUser() {
         Http.Context context = Http.Context.current();
+        String username = context.session().get("username");
 
         if (!context.args.containsKey("user")) {
-            context.args.put("user", User.getByName(context.session().get("username")));
+            User user = username != null && username.length() > 0 ? Api.getInstance().getUserByName(username) : null;
+            context.args.put("user", user);
         }
 
         return (User) context.args.get("user");

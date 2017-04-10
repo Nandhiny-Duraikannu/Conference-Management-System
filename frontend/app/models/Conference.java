@@ -17,6 +17,7 @@ public class Conference {
      * list of all conferences
      */
     public static List<Conference> getAllConferences() {
+        // TODO Call API
         return null;
         /*List<Conference> items = Conference.
                 find.select("*")
@@ -28,6 +29,7 @@ public class Conference {
      * conferences for which user submitted papers
      */
     public static List<Conference> getConferencesByUser(Long userId) {
+        // TODO Call API
         return null;
     }
 }

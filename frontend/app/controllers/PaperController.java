@@ -56,10 +56,10 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Creates user via REST api
+     * Creates paper
      */
     public Result create() {
-
+        // TODO save via API
 
         Form formA = savePaper();
         Form formB = SaveAuthors();
@@ -120,6 +120,7 @@ public class PaperController extends Controller {
         if (!submittedForm.hasErrors()) {
             PaperAuthors authors = (PaperAuthors) submittedForm.get();
             Logger.debug("in save has no errors");
+            // TODO save via API
             //authors.save();
         }
 
@@ -147,36 +148,6 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Retrieves Papers for My papers page - api
-     */
-    public Result getPaper(Long id) {
-        Paper paper = Paper.getById(id);
-        return ok(Json.toJson(paper));
-    }
-
-    /**
-     * Retrieves All Papers - api
-     */
-    public Result getAllPapers() {
-        String param = request().getQueryString("user_id");
-        List<Paper> papers = new ArrayList<Paper>();
-        if (param != null && !param.isEmpty()) {
-            papers = Paper.getByAuthor(Long.parseLong(param));
-        } else {
-            papers = Paper.getAllPapers();
-        }
-
-        return ok(Json.toJson(papers));
-    }
-
-    /**
-     * Find paper's authors and return them as string - api
-     */
-    public Result getAuthors(Long id) {
-        return ok(Json.toJson(Paper.getAuthors(id)));
-    }
-
-    /**
      * upload file to database - web
      */
     public Result uploadPaper(Long id) {
@@ -186,6 +157,7 @@ public class PaperController extends Controller {
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
+                // TODO Upload via API
                 //paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
                 return redirect(routes.PaperController.getPapers());
             } catch (IOException e) {
@@ -201,6 +173,7 @@ public class PaperController extends Controller {
      * download file from database - web
      */
     public Result downloadPaper(Long id) {
+        // TODO Call API
         Paper paper = Paper.getById(id);
         Result r = ok(paper.fileContent);
         response().setHeader("Content-Disposition", "attachment; filename=paper" + paper.id + "." + paper.fileFormat);

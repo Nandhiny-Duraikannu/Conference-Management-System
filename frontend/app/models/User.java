@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lib.Api;
 
 /**
  * User entity
@@ -65,31 +66,25 @@ public class User {
     @Column(length = 5000)
     public String comments;
 
-    /**
-     * Return a paged list of user
-     *
-     * @param page     Page to display
-     * @param pageSize Number of users per page
-     * @param sortBy   user property used for sorting
-     * @param order    Sort order (either or asc or desc)
-     * @param filter   Filter applied on the name column
-     */
-    public static PagedList<User> page(int page, int pageSize, String sortBy, String order, String filter) {
-        return null;
-    }
-
     public static User getByName(String name) {
-        return null;
-    }
-
-    public static User getByEmail(String email) {
-        return null;
+        return Api.getInstance().getUserByName(name);
     }
 
     public static User getByNameAndPassword(String name, String password) {
-        return null;
-    }
+        User user = Api.getInstance().getUserByName(name);
 
+        if (user == null) {
+            System.out.println("User " + name + " not found");
+            return null;
+        }
+
+        if (!hashPassword(password).equals(user.password)) {
+            System.out.println("password invalid " + hashPassword(password) + " " + user.password);
+            return null;
+        }
+
+        return user;
+    }
 
     public static Map<String, String> getSecurityQuestions() {
         Map<String, String> questions = new HashMap<String, String>();
@@ -116,27 +111,156 @@ public class User {
         }
     }
 
-    /**
-     * Hashes password before storing it
-     */
-    public void setPassword(String password) {
-        this.password = password == null  || password.equals("") ? null : hashPassword(password);
+    public Long getId() {
+        return id;
     }
 
-    public void setEmail(String email) { this.email = email; }
-    public void setResearchAreas(String researchAreas) { this.researchAreas = researchAreas; }
-    public void setFirstName(String firstName) { this.firstName = firstName; }
-    public void setLastName(String lastName) { this.lastName = lastName; }
-    public void setTitle(String title) { this.title = title; }
-    public void setPosition(String position) { this.position = position; }
-    public void setAffiliation(String affiliation) { this.affiliation = affiliation; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public void setFax(String fax) { this.fax = fax; }
-    public void setAddress(String address) { this.address = address; }
-    public void setCity(String city) { this.city = city; }
-    public void setCountry(String country) { this.country = country; }
-    public void setZip(String zip) { this.zip = zip; }
-    public void setComments(String comments) { this.comments = comments; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getResearchAreas() {
+        return researchAreas;
+    }
+
+    public void setResearchAreas(String researchAreas) {
+        this.researchAreas = researchAreas;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 }
 

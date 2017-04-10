@@ -2,11 +2,13 @@ package controllers;
 
 import forms.Login;
 import forms.ResetPassword;
+import lib.Api;
 import lib.UserStorage;
 import models.User;
 import play.Logger;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.*;
 
@@ -29,32 +31,6 @@ public class UserController extends Controller {
      */
     public Result showLoginForm() {
         return ok(views.html.user.loginForm.render(formFactory.form(Login.class), flash()));
-    }
-
-    /**
-     * Creates user via REST api
-     */
-    public Result create() {
-        Form form = save();
-
-        if (form.hasErrors()) {
-            return badRequest(form.errorsAsJson());
-        } else {
-            return created(Json.toJson((User) form.get()));
-        }
-    }
-
-    /**
-     * Returns user by name
-     */
-    public Result getByName(String name) {
-        User user = User.getByName(name);
-
-        if (user != null) {
-            return ok(Json.toJson(user));
-        } else {
-            return notFound();
-        }
     }
 
     /**
@@ -112,13 +88,14 @@ public class UserController extends Controller {
         boolean result;
 
 
-        if(!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
+        if (!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
             result = false;
         } else {
             // Generate random password, set it and send an email
             String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
             Logger.debug("New Password: " + newRandomPassword);
-            thisUser.setPassword(newRandomPassword);
+            // TODO Call API
+            //thisUser.setPassword(newRandomPassword);
             //thisUser.update();
 
             result = true;
@@ -135,29 +112,13 @@ public class UserController extends Controller {
         Form submittedForm = resetForm.bindFromRequest(request());
         ResetPassword resetPassword = (ResetPassword) submittedForm.get();
 
+        // TODO Call API
         boolean result = this.resetPasswordVerify(resetPassword);
 
-        if(result) {
+        if (result) {
             return redirect("/login");
         } else {
             return redirect("/resetpassword/new");
-        }
-    }
-
-    /**
-     * Validate security question answer; if true, set password and send email - Web
-     */
-    public Result resetPasswordVerifyAPI() {
-        Form resetForm = formFactory.form(ResetPassword.class);
-        Form submittedForm = resetForm.bindFromRequest(request());
-        ResetPassword resetPassword = (ResetPassword) submittedForm.get();
-
-        boolean result = this.resetPasswordVerify(resetPassword);
-
-        if(result) {
-            return ok();
-        } else {
-            return badRequest();
         }
     }
 
@@ -174,8 +135,11 @@ public class UserController extends Controller {
      * Display the security question and get answer - Web
      */
     public Result resetPasswordWeb(String name) {
-        String securityQuestionString =  this.resetPassword(name);
-        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class), flash(), name, securityQuestionString));
+        String securityQuestionString = this.resetPassword(name);
+        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class),
+                                                                   flash(),
+                                                                   name,
+                                                                   securityQuestionString));
     }
 
     /**
@@ -207,8 +171,12 @@ public class UserController extends Controller {
         Form submittedForm = signupForm.bindFromRequest();
 
         if (!submittedForm.hasErrors()) {
-            User user = (User) submittedForm.get();
-            //user.save();
+            boolean created = Api.getInstance().createUser(submittedForm.data());
+
+            if (!created) {
+                submittedForm.globalErrors().add(0,
+                                                 new ValidationError("name", "Could not create user. Try again later"));
+            }
         }
 
         return submittedForm;

@@ -39,7 +39,6 @@ public class HomeController  extends Controller {
         return ok(views.html.user.profileForm.render(formFactory.form(User.class), flash()));
     }
 
-
     /**
      * Update the profile of the user - Web
      */
