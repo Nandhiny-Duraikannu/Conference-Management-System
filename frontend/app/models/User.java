@@ -16,18 +16,13 @@ import java.util.Map;
 
 
 /**
- * User entity managed by Ebean
+ * User entity
  */
-@Entity
-public class User extends com.avaje.ebean.Model {
-
-    private static final long serialVersionUID = 1L;
-
+public class User {
     @Id
     public Long id;
 
     @Constraints.Required
-    @Column(unique = true)
     public String name;
 
     @Constraints.Required
@@ -41,7 +36,6 @@ public class User extends com.avaje.ebean.Model {
 
     @Constraints.Required
     @Constraints.Email
-    @Column(unique = true)
     public String email;
 
     public String title;
@@ -72,12 +66,6 @@ public class User extends com.avaje.ebean.Model {
     public String comments;
 
     /**
-     * Generic query helper for entity User with id Long
-     */
-    public static Find<Long, User> find = new Find<Long, User>() {
-    };
-
-    /**
      * Return a paged list of user
      *
      * @param page     Page to display
@@ -87,38 +75,18 @@ public class User extends com.avaje.ebean.Model {
      * @param filter   Filter applied on the name column
      */
     public static PagedList<User> page(int page, int pageSize, String sortBy, String order, String filter) {
-        return
-                find.where()
-                    .ilike("name", "%" + filter + "%")
-                    .orderBy(sortBy + " " + order)
-                    .findPagedList(page, pageSize);
+        return null;
     }
 
     public static User getByName(String name) {
-        return find.where().eq("name", name).findUnique();
+        return null;
     }
 
     public static User getByEmail(String email) {
-        return find.where().eq("email", email).findUnique();
+        return null;
     }
 
     public static User getByNameAndPassword(String name, String password) {
-        try {
-            User user = getByName(name);
-
-            if (user == null) {
-                throw new IllegalArgumentException("User with login '" + name + "' was not found");
-            }
-
-            if (!hashPassword(password).equals(user.password)) {
-                throw new IllegalArgumentException("Password for user '" + name + "' doesn't match");
-            }
-
-            return user;
-        } catch (Exception e) {
-            Logger.error("An error occurred on getting user by login and password. Login used: " + name, e);
-        }
-
         return null;
     }
 
@@ -146,18 +114,6 @@ public class User extends com.avaje.ebean.Model {
         } catch (NoSuchAlgorithmException e) {
             return password;
         }
-    }
-
-    public List<ValidationError> validate() {
-        List errors = new ArrayList();
-
-        if (User.getByName(name) != null) {
-            errors.add(new ValidationError("name", "This user already exists"));
-        } else if (User.getByEmail(email) != null) {
-            errors.add(new ValidationError("email", "This user already exists"));
-        }
-
-        return errors;
     }
 
     /**

@@ -3,7 +3,6 @@ package controllers;
 import forms.Login;
 import forms.ResetPassword;
 import lib.UserStorage;
-import lib.EmailHelper;
 import models.User;
 import play.Logger;
 import play.data.Form;
@@ -120,9 +119,7 @@ public class UserController extends Controller {
             String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
             Logger.debug("New Password: " + newRandomPassword);
             thisUser.setPassword(newRandomPassword);
-            thisUser.update();
-
-            EmailHelper.sendEmail(thisUser.email, "You new password for Conference Management System!", "Your new password is: " + newRandomPassword);
+            //thisUser.update();
 
             result = true;
         }
@@ -211,7 +208,7 @@ public class UserController extends Controller {
 
         if (!submittedForm.hasErrors()) {
             User user = (User) submittedForm.get();
-            user.save();
+            //user.save();
         }
 
         return submittedForm;

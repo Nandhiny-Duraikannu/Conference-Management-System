@@ -98,7 +98,7 @@ public class PaperController extends Controller {
             } else {
                 Logger.debug("in save has no errors" + paper.user.id);
                 //  user_id = Paper.save(UserStorage.getCurrentUser());
-                paper.save();
+                //paper.save();
 
             }
         }
@@ -120,7 +120,7 @@ public class PaperController extends Controller {
         if (!submittedForm.hasErrors()) {
             PaperAuthors authors = (PaperAuthors) submittedForm.get();
             Logger.debug("in save has no errors");
-            authors.save();
+            //authors.save();
         }
 
         return submittedForm;
@@ -186,7 +186,7 @@ public class PaperController extends Controller {
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
-                paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                //paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
                 return redirect(routes.PaperController.getPapers());
             } catch (IOException e) {
                 e.printStackTrace();
