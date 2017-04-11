@@ -1,6 +1,3 @@
-# --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions
-
 # --- !Ups
 
 create table conference (
@@ -43,6 +40,14 @@ create table paper_authors (
   constraint pk_paper_authors primary key (id)
 );
 
+create table review (
+  id                            bigint auto_increment not null,
+  user_id                       bigint not null,
+  paper_id                      bigint not null,
+  content                       varchar(10000),
+  constraint pk_review primary key (id)
+);
+
 create table user (
   id                            bigint auto_increment not null,
   name                          varchar(255),
@@ -77,6 +82,12 @@ create index ix_paper_conference_id on paper (conference_id);
 alter table paper_authors add constraint fk_paper_authors_paper_id foreign key (paper_id) references paper (id) on delete restrict on update restrict;
 create index ix_paper_authors_paper_id on paper_authors (paper_id);
 
+alter table review add constraint fk_review_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_review_user_id on review (user_id);
+
+alter table review add constraint fk_review_paper_id foreign key (paper_id) references paper (id) on delete restrict on update restrict;
+create index ix_review_paper_id on review (paper_id);
+
 
 # --- !Downs
 
@@ -89,11 +100,18 @@ drop index ix_paper_conference_id on paper;
 alter table paper_authors drop foreign key fk_paper_authors_paper_id;
 drop index ix_paper_authors_paper_id on paper_authors;
 
+alter table review drop foreign key fk_review_user_id;
+drop index ix_review_user_id on review;
+
+alter table review drop foreign key fk_review_paper_id;
+drop index ix_review_paper_id on review;
+
 drop table if exists conference;
 
 drop table if exists paper;
 
 drop table if exists paper_authors;
 
-drop table if exists user;
+drop table if exists review;
 
+drop table if exists user;

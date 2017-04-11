@@ -1,7 +1,7 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET / controllers.HomeController.helloWorld()
+GET         /                              controllers.HomeController.helloWorld()
 
 ## Users
 # Create user
@@ -22,3 +22,6 @@ GET         /api/papers/authors/:id        controllers.PaperController.getAuthor
 GET         /api/papers                    controllers.PaperController.getAllPapers()
 POST        /api/papers/upload             controllers.PaperController.uploadPaper(id: Long)
 GET         /api/papers/download           controllers.PaperController.downloadPaper(id: Long)
+
+# Reviews
+POST        /api/reviews                   controllers.ReviewController.create()
