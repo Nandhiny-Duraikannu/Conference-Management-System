@@ -1,8 +1,13 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
@@ -28,6 +33,11 @@ public class Conference extends Model {
     public Date deadline;
 
     public String status;
+
+    @JsonManagedReference
+    @OneToMany
+    public List<Paper> papers;
+
     /**
      * Generic query helper for entity Conference with id Long
      */
@@ -37,24 +47,23 @@ public class Conference extends Model {
     /**
      * list of all conferences
      */
-    public static List<Conference> getAllConferences(){
+    public static List<Conference> getAllConferences() {
         List<Conference> items = Conference.
                 find.select("*")
-                .findList();
+                    .findList();
         return items;
     }
 
     /**
      * conferences for which user submitted papers
      */
-    public static List<Conference> getConferencesByUser(Long userId){
+    public static List<Conference> getConferencesByUser(Long userId) {
         List<Paper> items = Paper.
                 find.select("*")
-                .where().eq("user_id", userId)
-                .findList();
+                    .where().eq("user_id", userId)
+                    .findList();
         Set<Conference> conf = new HashSet<Conference>();
-        for(int i=0; i<items.size(); i++)
-        {
+        for (int i = 0; i < items.size(); i++) {
             conf.add(items.get(i).conference);
         }
         return new ArrayList<>(conf);

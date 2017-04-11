@@ -1,27 +1,35 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET         /                              controllers.HomeController.helloWorld()
+GET         /                                controllers.HomeController.helloWorld()
 
 ## Users
 # Create user
-POST        /api/users                     controllers.UserController.create()
+POST        /api/users                       controllers.UserController.create()
 # Returns user by name
-GET         /api/users/:name               controllers.UserController.getByName(name)
-POST        /api/profile                   controllers.HomeController.updateProfileAPI()
+GET         /api/users/:name                 controllers.UserController.getByName(name)
+POST        /api/profile                     controllers.HomeController.updateProfileAPI()
 # Reset password for a user
-GET         /api/resetpassword             controllers.UserController.resetPasswordAPI(name: java.lang.String ?= null)
-POST        /api/resetpassword             controllers.UserController.resetPasswordVerifyAPI()
+GET         /api/resetpassword               controllers.UserController.resetPasswordAPI(name: java.lang.String ?= null)
+POST        /api/resetpassword               controllers.UserController.resetPasswordVerifyAPI()
 
 ## Papers
 # get paper info by paper id
-GET         /api/papers/:id                controllers.PaperController.getPaper(id: Long)
+GET         /api/papers/:id                  controllers.PaperController.getPaper(id: Long)
 # get authors for paper id
-GET         /api/papers/authors/:id        controllers.PaperController.getAuthors(id: Long)
+GET         /api/papers/authors/:id          controllers.PaperController.getAuthors(id: Long)
 # get all papers or papers for user_id
-GET         /api/papers                    controllers.PaperController.getAllPapers()
-POST        /api/papers/upload             controllers.PaperController.uploadPaper(id: Long)
-GET         /api/papers/download           controllers.PaperController.downloadPaper(id: Long)
+GET         /api/papers                      controllers.PaperController.getAllPapers()
+POST        /api/papers/upload               controllers.PaperController.uploadPaper(id: Long)
+GET         /api/papers/download             controllers.PaperController.downloadPaper(id: Long)
 
 # Reviews
-POST        /api/reviews                   controllers.ReviewController.create()
+# create
+POST        /api/reviews                     controllers.ReviewController.create()
+# get by id
+GET         /api/reviews/:id                 controllers.ReviewController.getById(id: Long)
+# get reviews by user id
+GET         /api/reviews/user/:userId        controllers.ReviewController.getByUser(userId: Long)
+
+## Conferences
+GET /api/conferences/:id controllers.ConferenceController.getById(id: Long)

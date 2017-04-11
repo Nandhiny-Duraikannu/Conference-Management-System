@@ -2,6 +2,7 @@ package controllers;
 
 import forms.ResetPassword;
 import lib.EmailHelper;
+import models.Paper;
 import models.Review;
 import models.User;
 import play.Logger;
@@ -35,14 +36,19 @@ public class ReviewController extends Controller {
         if (!submittedForm.hasErrors()) {
             Review review = (Review) submittedForm.get();
             review.save();
-            return created(Json.toJson(review));
+            return created();
         } else {
             return badRequest(submittedForm.errorsAsJson());
         }
     }
 
-    /*public Result getByAllUserAndConference(long userId, long conferenceId) {
+    public Result getById(Long id) {
+        Review review = Review.getById(id);
+        return ok(Json.toJson(review));
+    }
 
-    }*/
+    public Result getByUser(long userId) {
+        return ok(Json.toJson(Review.getByUser(userId)));
+    }
 }
             

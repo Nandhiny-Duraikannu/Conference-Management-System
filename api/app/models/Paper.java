@@ -1,7 +1,10 @@
 package models;
 
 import com.avaje.ebean.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import play.data.validation.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.*;
@@ -48,9 +51,6 @@ public class Paper extends com.avaje.ebean.Model {
     @Column(length = 5000)
     public String paperAbstract;
 
-    @ManyToOne
-    public Conference conference;
-
     public String fileFormat;
 
     public Long fileSize;
@@ -59,6 +59,15 @@ public class Paper extends com.avaje.ebean.Model {
 
     @Lob
     public byte[] fileContent;
+
+    @JsonManagedReference
+    @OneToMany
+    public List<Review> reviews;
+
+    @JsonBackReference
+    @ManyToOne
+    public Conference conference;
+
 
     /**
      * Generic query helper for entity Paper with id Long
@@ -85,10 +94,10 @@ public class Paper extends com.avaje.ebean.Model {
     /**
      * papers list by user_id and conference_id
      */
-    public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
+    public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id) {
         ExpressionList<Paper> query = Paper.find.select("*")
-                                           .where().eq("user_id", author_id);
-        if (conference_id !=0){
+                                                .where().eq("user_id", author_id);
+        if (conference_id != 0) {
             query = query.eq("conference.id", conference_id);
         }
         List<Paper> papers = query.findList();
@@ -98,23 +107,22 @@ public class Paper extends com.avaje.ebean.Model {
     /**
      * papers list by user_id
      */
-    public static List<Paper> getByAuthor(Long user_id){
+    public static List<Paper> getByAuthor(Long user_id) {
         return find.select("*")
-                .where().eq("user_id", user_id)
-                .findList();
+                   .where().eq("user_id", user_id)
+                   .findList();
     }
 
     /**
      * papers list by user_id and conference_id
      */
-    public static ArrayList<String> getAuthors(Long paper_id){
+    public static ArrayList<String> getAuthors(Long paper_id) {
         List<PaperAuthors> items = PaperAuthors.
                 find.select("*")
-                .where().eq("paper_id", paper_id)
-                .findList();
+                    .where().eq("paper_id", paper_id)
+                    .findList();
         ArrayList<String> authors = new ArrayList<String>();
-        for(int i=0; i<items.size(); i++)
-        {
+        for (int i = 0; i < items.size(); i++) {
             authors.add(items.get(i).author_first_name + " " + items.get(i).author_last_name);
         }
         return authors;
@@ -123,7 +131,7 @@ public class Paper extends com.avaje.ebean.Model {
     /**
      * all papers
      */
-    public static List<Paper> getAllPapers(){
+    public static List<Paper> getAllPapers() {
         return find.findList();
     }
 
@@ -144,7 +152,7 @@ public class Paper extends com.avaje.ebean.Model {
     /**
      * upload file to database
      */
-    public void upload(String format, Long size, byte[] content){
+    public void upload(String format, Long size, byte[] content) {
         this.fileContent = content;
         this.fileSize = size;
         this.fileFormat = format;
