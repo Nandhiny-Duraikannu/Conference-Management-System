@@ -20,7 +20,7 @@ public class Paper extends com.avaje.ebean.Model {
 
     @NotNull
     @ManyToOne
-    public User user;
+    public String user;
 
     @NotNull
     public String title;
