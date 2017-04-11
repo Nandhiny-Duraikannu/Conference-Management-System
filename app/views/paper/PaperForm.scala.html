@@ -16,7 +16,6 @@
 
 
     <fieldset>
-      @b3.hidden(PaperSubmission("user_id"), '_label -> "userid", '_help -> "")
       @b3.text(PaperSubmission("title"), '_label -> "Title", '_help -> "")
       <br>
       @b3.email(PaperSubmission("contactEmail"), '_label -> "Email of contact author", '_help -> "")
@@ -80,7 +79,7 @@
         @b3.text(PaperSubmission("author_affiliation"), '_label -> "Affiliation", '_help -> "")
         @b3.email(PaperSubmission("author_email"), '_label -> "Email", '_help -> "")
         @b3.select(PaperSubmission("type"),options(models.PaperAuthors.getType), '_label -> "Author Type", '_help -> "")
-              <input type="hidden" name="user_id" value="@currentUser.id">
+              <input type="hidden" name="user" value="@currentUser.id">
         <br>
       }
       </div>
