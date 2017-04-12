@@ -19,6 +19,7 @@ create table paper (
   title                         varchar(255) not null,
   topic                         varchar(255) not null,
   contact_email                 varchar(255) not null,
+  confirm_email                 varchar(255),
   award_candidate               varchar(255) not null,
   student_volunteer             varchar(255) not null,
   status                        varchar(255) default 'new',
