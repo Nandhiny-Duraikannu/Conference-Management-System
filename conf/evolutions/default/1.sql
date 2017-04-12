@@ -6,9 +6,10 @@
 create table conference (
   id                            bigint auto_increment not null,
   acronym                       varchar(255) not null,
-  title                         varchar(255) not null,
+  title                         varchar(255),
   location                      varchar(255),
   deadline                      datetime(6),
+  status                        varchar(255),
   constraint pk_conference primary key (id)
 );
 

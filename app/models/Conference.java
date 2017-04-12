@@ -21,12 +21,13 @@ public class Conference extends Model {
     @NotNull
     public String acronym;
 
-    @NotNull
     public String title;
 
     public String location;
 
     public Date deadline;
+
+    public String status;
 
     /**
      * Generic query helper for entity Conference with id Long
