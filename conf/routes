@@ -72,3 +72,6 @@ GET         /paper                   controllers.PaperController.showPaperSubmis
 POST        /paper                   controllers.PaperController.create()
 
 GET         /postSubmission            controllers.PaperController.postSubmission()
+
+# Conferences
+GET   /conferences                      controllers.ConferenceController.showConferencePage()
