@@ -37,5 +37,15 @@ public class ConferenceController extends Controller {
         List<Conference> conf = Conference.getConferencesByUser(user_id);
         return ok(Json.toJson(conf));
     }
+
+    /**
+     * Returns conferences for which given user has papers to review
+     *
+     * @param userId
+     * @return
+     */
+    public Result getWithAssignedReviewer(Long userId) {
+        return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
+    }
 }
             

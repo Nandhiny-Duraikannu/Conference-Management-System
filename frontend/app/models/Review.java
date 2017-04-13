@@ -1,5 +1,8 @@
 package models;
 
+/**
+ * Paper review
+ */
 
 public class Review {
     public Long id;
@@ -9,4 +12,8 @@ public class Review {
     public Paper paper;
 
     public String content;
+
+    public Long paperId;
+
+    public String paperTitle;
 }

@@ -10,6 +10,9 @@ import java.util.*;
  * Conference entity
  */
 public class Conference {
+
+    private static final long serialVersionUID = 1L;
+
     public Long id;
     public String acronym;
     public String title;
@@ -33,6 +36,7 @@ public class Conference {
      */
     public static List<Conference> getConferencesByUser() {
         User user = UserStorage.getCurrentUser();
+        System.out.println("result: "+Api.getInstance().getConferences(user.id));
         List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
                 Api.getInstance().getConferences(user.id)
         ));

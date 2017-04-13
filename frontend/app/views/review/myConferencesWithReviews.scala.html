@@ -1,0 +1,36 @@
+@import json.UserConferenceReviews
+@(list: List[UserConferenceReviews], flash: play.mvc.Http.Flash)
+@import helper._
+
+
+@main {
+  <h2>Assigned conferences</h2>
+  <h2 id="homeTitle">Conferences found: @list.size()</h2>
+  <table class="table-condensed zebra-striped">
+    <thead>
+      <tr>
+        <th>Conference</th>
+        <th>Assigned papers</th>
+        <th>Reviewed papers</th>
+        <th>Papers left</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+    @for(review <- list) {
+      <tr>
+        <td>@review.conferenceTitle</td>
+        <td>@review.assignedPapersNumber</td>
+        <td>@review.reviewedPapersNumber</td>
+        <td>@review.getPapersLeft()</td>
+        <td>
+          <a href="@routes.ReviewController.myConferenceReviews(review.conferenceId)">
+            See papers for review
+          </a>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}
