@@ -88,7 +88,8 @@ public class PaperController extends Controller {
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
             Paper paper = (Paper) submittedForm.get();
-            paper.save();
+            // save in api
+           // paper.save();
         }
 
         return submittedForm;
