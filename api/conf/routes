@@ -33,3 +33,6 @@ GET         /api/reviews/user/:userId        controllers.ReviewController.getByU
 
 ## Conferences
 GET /api/conferences/:id controllers.ConferenceController.getById(id: Long)
+
+# PaperSubmission
+POST        /api/paper                           controllers.PaperController.create()
