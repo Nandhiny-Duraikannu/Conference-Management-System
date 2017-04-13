@@ -11,4 +11,8 @@ public class Review {
     public Paper paper;
 
     public String content;
+  
+    public Long paperId;
+    
+    public String paperTitle;
 }
