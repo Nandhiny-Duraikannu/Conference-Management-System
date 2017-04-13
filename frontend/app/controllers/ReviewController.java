@@ -3,6 +3,7 @@ package controllers;
 import json.UserConferenceReviews;
 import lib.Api;
 import lib.UserStorage;
+import models.Paper;
 import models.Review;
 import models.User;
 import play.data.Form;
@@ -13,6 +14,7 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Provides web and api endpoints for user actions
@@ -37,7 +39,10 @@ public class ReviewController extends Controller {
 
     // Displays a page with papers for conference that were assigned for review to current user
     public Result myConferenceReviews(Long confId) {
-        return ok(views.html.review.myConferenceReviews.render(flash()));
+        ArrayList<Paper> conferences = new ArrayList<Paper>(Arrays.asList(
+                    Api.getInstance().getReviewPapersByConf(UserStorage.getCurrentUser().getId(), confId)
+                ));
+        return ok(views.html.review.myConferenceReviews.render(conferences, flash()));
     }
 }
             

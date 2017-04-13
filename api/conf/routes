@@ -32,11 +32,13 @@ POST        /api/reviews                                       controllers.Revie
 GET         /api/reviews/:id                                   controllers.ReviewController.getById(id: Long)
 # get reviews by user id
 GET         /api/reviews/user/:userId                          controllers.ReviewController.getByUser(userId: Long)
+# get reviews by user id and cond id
+GET         /api/reviews/user/:uid/conference/:cid             controllers.ReviewController.getByUserAndConf(uid:Long, cid: Long)
 
 ## Conferences
 GET /api/conferences/:id                     controllers.ConferenceController.getById(id: Long)
 # get all conferences
 GET /api/conferences                         controllers.ConferenceController.getAllConferences()
 # get conferences for user_id
-GET /api/conferences/users/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
-GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
+GET /api/conferences/user/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
+GET  /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)

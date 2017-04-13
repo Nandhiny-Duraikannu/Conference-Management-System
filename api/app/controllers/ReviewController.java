@@ -50,5 +50,9 @@ public class ReviewController extends Controller {
     public Result getByUser(long userId) {
         return ok(Json.toJson(Review.getByUser(userId)));
     }
+
+    public Result getByUserAndConf(long user_id, long conf_id) {
+        return ok(Json.toJson(Review.getByUserAndConf(user_id, conf_id)));
+    }
 }
             

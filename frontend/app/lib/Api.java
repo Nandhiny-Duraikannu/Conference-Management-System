@@ -139,7 +139,7 @@ public class Api {
         if ( user_id != null || user_id != 0){
             //list of conferences for user id
             try {
-                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/user/" + user_id)).asObject(Conference[].class);
                 return response.getBody();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -181,6 +181,16 @@ public class Api {
     public Review getReview(Long id) {
         try {
             HttpResponse<Review> response = Unirest.get(getUrl("reviews/" + id)).asObject(Review.class);
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public Paper[] getReviewPapersByConf(Long user_id, Long conf_id) {
+        try {
+            HttpResponse<Paper[]> response = Unirest.get(getUrl("reviews/user/" + user_id + "/conference/"+conf_id)).asObject(Paper[].class);
             return response.getBody();
         } catch (Exception e) {
             System.out.println(e.getMessage());

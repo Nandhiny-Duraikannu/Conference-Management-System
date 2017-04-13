@@ -7,6 +7,7 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,27 @@ public class Review extends Model {
      */
     public static List<Review> getByUser(Long userId) {
         return find.where().eq("user.id", userId).findList();
+    }
+
+    /**
+     * Get reviews by reviewer id for conference id
+     *
+     * @param user_id
+     * @param conf_id
+     * @return
+     */
+    public static List<Paper> getByUserAndConf(Long user_id, Long conf_id) {
+        List<Review> items = find.where().eq("user.id", user_id).findList();
+        List<Paper> papers = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            Paper paper = Paper.find.where().eq("id", items.get(i).getPaperId()).findUnique();
+            if (paper.conference.id != conf_id)
+            {
+                items.remove(i);
+                papers.add(paper);
+            }
+        }
+        return papers;
     }
 
     public User getUser() {
