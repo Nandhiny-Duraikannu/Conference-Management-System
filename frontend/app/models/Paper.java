@@ -45,40 +45,11 @@ public class Paper {
 
     public String submissionDate;
 
+    public List<Review> reviews;
+
     public byte[] fileContent;
 
     public Conference conference;
-    public List<Review> reviews;
-
-    /**
-     * Return a paged list of papers
-     *
-     * @param page     page to display
-     * @param pageSize number of papers per page
-     * @param sortBy   property used for sorting
-     * @param order    sort order (either or asc or desc)
-     * @param filter   filter applied on the name column
-     */
-    public static PagedList<Paper> page(int page, int pageSize, String sortBy, String order, String filter) {
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * papers list by user_id and conference_id
-     */
-    public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * papers list by user_id
-     */
-    public static List<Paper> getByAuthor(Long user_id){
-        // TODO Call API
-        return null;
-    }
 
     /**
      * papers list by user_id and conference_id

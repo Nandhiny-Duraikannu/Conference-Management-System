@@ -22,7 +22,7 @@ GET         /api/papers/authors/:id                            controllers.Paper
 GET         /api/papers                      controllers.PaperController.getAllPapers()
 # get all papers for user_id and conf_id
 GET         /api/papers/:uid/conf/:cid       controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
-POST        /api/papers/upload               controllers.PaperController.uploadPaper(id: Long)
+POST        /api/papers/upload                                 controllers.PaperController.uploadPaper(id: Long)
 GET         /api/papers/download                               controllers.PaperController.downloadPaper(id: Long)
 
 # Reviews
@@ -38,5 +38,5 @@ GET /api/conferences/:id                     controllers.ConferenceController.ge
 # get all conferences
 GET /api/conferences                         controllers.ConferenceController.getAllConferences()
 # get conferences for user_id
-GET /api/conferences/users/:id                                 controllers.ConferenceController.getConferencesByUser(id: Long)
-GET /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
+GET /api/conferences/users/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
+GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)

@@ -3,7 +3,6 @@ package models;
 /**
  * Paper review
  */
-
 public class Review {
     public Long id;
 
