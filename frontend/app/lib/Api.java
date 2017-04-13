@@ -8,12 +8,17 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import json.UserConferenceReviews;
+import models.Review;
 import models.User;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import javax.xml.ws.Response;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -73,6 +78,40 @@ public class Api {
     }
 
     /**
+     * Returns conferences for which given user has papers to review
+     *
+     * @param userId
+     * @return
+     */
+    public ArrayList<UserConferenceReviews> getConferencesWithAssignedReviewer(Long userId) {
+        try {
+            HttpResponse<UserConferenceReviews[]> response = Unirest.get(getUrl("conferences/reviewers/assigned/" + userId)).asObject(
+                    UserConferenceReviews[].class);
+            return new ArrayList<UserConferenceReviews>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Returns reviews by conference id and reviewer id
+     *
+     * @param userId
+     * @return
+     */
+    public ArrayList<Review> getReviewsByUserAndConference(Long userId, Long confId) {
+        try {
+            HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/user/" + userId + "/conference/" + confId)).asObject(
+                    Review[].class);
+            return new ArrayList<Review>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Creates new user in API
      */
     public boolean createUser(Map<String, String> data) {
@@ -80,6 +119,41 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("users")).header("content-type",
                                                                            "application/x-www-form-urlencoded");
             req.body(mapToQueryString(data));
+            HttpResponse<JsonNode> response = req.asJson();
+
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Returns review by id
+     *
+     * @param id
+     * @return
+     */
+    public Review getReview(Long id) {
+        try {
+            HttpResponse<Review> response = Unirest.get(getUrl("reviews/" + id)).asObject(Review.class);
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Modify paper review
+     */
+    public boolean editReview(Long reviewId, String content) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("reviews/" + reviewId)).header("content-type",
+                                                                           "application/x-www-form-urlencoded");
+            HashMap<String, String> params = new HashMap<>();
+            params.put("content", content);
+            req.body(mapToQueryString(params));
             HttpResponse<JsonNode> response = req.asJson();
 
             return response.getStatus() >= 200 && response.getStatus() < 400;

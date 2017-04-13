@@ -82,18 +82,19 @@ public class Conference extends Model {
         for (int i = 0; i < userReviews.size(); i++) {
             Review review = userReviews.get(i);
             Conference conf = review.paper.conference;
+            UserConferenceReviews item;
 
             if (!result.containsKey(conf.id)) {
-                UserConferenceReviews item = new UserConferenceReviews();
+                item = new UserConferenceReviews();
                 item.conferenceId = conf.id;
                 item.conferenceTitle = conf.title;
                 item.assignedPapersNumber = 0;
                 item.reviewedPapersNumber = 0;
 
                 result.put(conf.id, item);
+            } else {
+                item = result.get(conf.id);
             }
-
-            UserConferenceReviews item = result.get(conf.id);
 
             if (review.isReviewed()) {
                 item.reviewedPapersNumber++;

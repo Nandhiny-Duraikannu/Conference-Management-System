@@ -1,0 +1,36 @@
+@(list: List[Review], flash: play.mvc.Http.Flash)
+@import helper._
+
+@main {
+  <h2>List of papers assigned to you</h2>
+  <div class="alert alert-info">
+    Use the download link to get the file, and the submit review link to enter or modify your review results
+  </div>
+  <table class="table-condensed zebra-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    @for(review <- list) {
+      <tr>
+        <td>@review.paperTitle</td>
+        <td>
+          @* TODO: fix download url? when there's no file in paper, it should not be displayed *@
+        <a href="//localhost:9000/api/papers/download/@review.paperId">
+            Download paper
+        </a>
+        </td>
+        <td>
+          <a href="@routes.ReviewController.showEditForm(review.id)">
+            Modify review
+          </a>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+}

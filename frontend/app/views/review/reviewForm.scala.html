@@ -1,0 +1,13 @@
+@(review: models.Review, reviewForm: play.data.Form[models.Review], flash: play.mvc.Http.Flash)
+@import b3.vertical.fieldConstructor
+
+@main {
+  <h1>Review submission</h1>
+  @b3.form(routes.ReviewController.edit(review.id)) {
+    @b3.textarea(reviewForm("content"), '_label -> "Review text", '_help -> "Please provide your thoughts on the paper and how it reflects the conference subject.", 'rows -> 10)
+
+    <div class="actions">
+      <input type="submit" value="Submit" class="btn primary">
+    </div>
+  }
+}

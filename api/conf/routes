@@ -20,8 +20,8 @@ GET         /api/papers/:id                                     controllers.Pape
 GET         /api/papers/authors/:id                             controllers.PaperController.getAuthors(id: Long)
 # get all papers or papers for user_id
 GET         /api/papers                                         controllers.PaperController.getAllPapers()
-POST        /api/papers/upload                                  controllers.PaperController.uploadPaper(id: Long)
-GET         /api/papers/download                                controllers.PaperController.downloadPaper(id: Long)
+POST        /api/papers/upload/:id                              controllers.PaperController.uploadPaper(id: Long)
+GET         /api/papers/download/:id                            controllers.PaperController.downloadPaper(id: Long)
 
 # Reviews
 # create
