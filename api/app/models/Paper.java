@@ -64,7 +64,6 @@ public class Paper extends com.avaje.ebean.Model {
     @OneToMany
     public List<Review> reviews;
 
-    @JsonBackReference
     @ManyToOne
     public Conference conference;
 
@@ -95,6 +94,7 @@ public class Paper extends com.avaje.ebean.Model {
      * papers list by user_id and conference_id
      */
     public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id) {
+        System.out.println(author_id + " " + conference_id);
         ExpressionList<Paper> query = Paper.find.select("*")
                                                 .where().eq("user_id", author_id);
         if (conference_id != 0) {
@@ -158,7 +158,6 @@ public class Paper extends com.avaje.ebean.Model {
         this.fileFormat = format;
         this.status = "uploaded";
         this.save();
-
     }
 
     /**

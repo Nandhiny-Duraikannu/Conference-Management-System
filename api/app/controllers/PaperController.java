@@ -102,6 +102,16 @@ public class PaperController extends Controller {
     }
 
     /**
+     * Retrieves Papers by Conference ID - api
+     */
+    public Result getPapersByConf(Long user_id, int id) {
+        String param = request().getQueryString("user_id");
+        List<Paper> papers = new ArrayList<Paper>();
+        papers = Paper.getByAuthorAndConference(user_id, id);
+        return ok(Json.toJson(papers));
+    }
+
+    /**
      * Retrieves Papers for My papers page - api
      */
     public Result getPaper(Long id) {

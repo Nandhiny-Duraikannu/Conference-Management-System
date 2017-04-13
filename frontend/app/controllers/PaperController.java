@@ -1,6 +1,8 @@
 package controllers;
 
 import lib.UserStorage;
+import lib.Api;
+
 import models.Paper;
 import models.User;
 import play.mvc.Http.MultipartFormData;
@@ -23,6 +25,7 @@ import play.data.*;
 import forms.PaperSubmission.*;
 import models.*;
 import forms.PaperSubmission;
+import play.mvc.WebSocket;
 import views.html.paper.PaperForm;
 
 import java.util.ArrayList;
@@ -142,7 +145,9 @@ public class PaperController extends Controller {
             System.out.println("User not authorized");
             return redirect(routes.HomeController.index());
         } else {
-            List<Paper> papers = Paper.getByAuthorAndConference(user.id, conf_id);
+            List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                            Api.getInstance().getByAuthorAndConference(user.id, conf_id)
+                        ));
             return ok(views.html.paper.myPapersPage.render(papers, conf_id, flash()));
         }
     }
@@ -153,7 +158,7 @@ public class PaperController extends Controller {
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
         MultipartFormData.FilePart<File> file = body.getFile("file");
-        Paper paper = Paper.getById(id);
+        Paper paper;// = Paper.getById(id); //!!!!!!!!!!
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
@@ -174,7 +179,7 @@ public class PaperController extends Controller {
      */
     public Result downloadPaper(Long id) {
         // TODO Call API
-        Paper paper = Paper.getById(id);
+        Paper paper = null;//Paper.getById(id);
         Result r = ok(paper.fileContent);
         response().setHeader("Content-Disposition", "attachment; filename=paper" + paper.id + "." + paper.fileFormat);
         return r;

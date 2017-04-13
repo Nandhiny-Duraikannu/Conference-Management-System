@@ -4,7 +4,7 @@
 }
 
   @firstConference = @{
-    models.Conference.getConferencesByUser(lib.UserStorage.getCurrentUser().id.toLong).get(0)
+    models.Conference.getConferencesByUser().get(0)
   }
 
 <!DOCTYPE html>
@@ -40,7 +40,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Paper Management<span class="caret"></span></a>
             <ul class="dropdown-menu ">
               <li><a href="/paper">Submit Paper</a></li>
-              <li><a href="@routes.PaperController.getPapers()">My papers</a></li>
+              <li><a href=@routes.PaperController.getPapers()">My papers</a></li>
             </ul>
           </li>
           </ul>

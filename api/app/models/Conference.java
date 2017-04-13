@@ -2,6 +2,7 @@ package models;
 
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -33,10 +34,6 @@ public class Conference extends Model {
     public Date deadline;
 
     public String status;
-
-    @JsonManagedReference
-    @OneToMany
-    public List<Paper> papers;
 
     /**
      * Generic query helper for entity Conference with id Long

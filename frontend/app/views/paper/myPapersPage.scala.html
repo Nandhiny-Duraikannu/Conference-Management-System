@@ -1,5 +1,4 @@
-@import forms.PaperList
-@(list: List[Paper], conf_id:Int ,flash: play.mvc.Http.Flash)
+@(list: List[Paper], conf_id:Int, flash: play.mvc.Http.Flash)
 @import helper._
 
 
@@ -15,7 +14,7 @@
                 }
             >
             </option>
-            @for(conf <- Conference.getConferencesByUser(lib.UserStorage.getCurrentUser().id)) {
+            @for(conf <- Conference.getConferencesByUser()) {
                 <option value=@conf.id
                     @if(conf_id == conf.id) {
                     selected

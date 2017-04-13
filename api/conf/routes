@@ -20,6 +20,8 @@ GET         /api/papers/:id                  controllers.PaperController.getPape
 GET         /api/papers/authors/:id          controllers.PaperController.getAuthors(id: Long)
 # get all papers or papers for user_id
 GET         /api/papers                      controllers.PaperController.getAllPapers()
+# get all papers for user_id and conf_id
+GET         /api/papers/:uid/conf/:cid       controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
 POST        /api/papers/upload               controllers.PaperController.uploadPaper(id: Long)
 GET         /api/papers/download             controllers.PaperController.downloadPaper(id: Long)
 
@@ -32,4 +34,8 @@ GET         /api/reviews/:id                 controllers.ReviewController.getByI
 GET         /api/reviews/user/:userId        controllers.ReviewController.getByUser(userId: Long)
 
 ## Conferences
-GET /api/conferences/:id controllers.ConferenceController.getById(id: Long)
+GET /api/conferences/:id                     controllers.ConferenceController.getById(id: Long)
+# get all conferences
+GET /api/conferences                         controllers.ConferenceController.getAllConferences()
+# get conferences for user_id
+GET /api/conferences/users/:id              controllers.ConferenceController.getConferencesByUser(id: Long)

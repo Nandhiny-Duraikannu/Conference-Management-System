@@ -1,5 +1,8 @@
 package models;
 
+import lib.Api;
+import lib.UserStorage;
+
 import java.util.*;
 
 
@@ -12,24 +15,27 @@ public class Conference {
     public String title;
     public String location;
     public Date deadline;
+    public String status;
 
     /**
      * list of all conferences
      */
     public static List<Conference> getAllConferences() {
-        // TODO Call API
+        User user = UserStorage.getCurrentUser();
+        List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
+                Api.getInstance().getConferences(null)
+        ));
         return null;
-        /*List<Conference> items = Conference.
-                find.select("*")
-                .findList();
-        return items;*/
     }
 
     /**
      * conferences for which user submitted papers
      */
-    public static List<Conference> getConferencesByUser(Long userId) {
-        // TODO Call API
-        return null;
+    public static List<Conference> getConferencesByUser() {
+        User user = UserStorage.getCurrentUser();
+        List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
+                Api.getInstance().getConferences(user.id)
+        ));
+        return conferences;
     }
 }
