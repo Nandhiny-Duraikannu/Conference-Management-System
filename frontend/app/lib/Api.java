@@ -11,6 +11,8 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 import models.Conference;
 import models.Paper;
 import models.PaperAuthors;
+import json.UserConferenceReviews;
+import models.Review;
 import models.User;
 import org.apache.http.client.utils.URLEncodedUtils;
 
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -78,6 +82,23 @@ public class Api {
     }
 
     /**
+     * Returns conferences for which given user has papers to review
+     *
+     * @param userId
+     * @return
+     */
+    public ArrayList<UserConferenceReviews> getConferencesWithAssignedReviewer(Long userId) {
+        try {
+            HttpResponse<UserConferenceReviews[]> response = Unirest.get(getUrl("conferences/reviewers/assigned/" + userId)).asObject(
+                    UserConferenceReviews[].class);
+            return new ArrayList<UserConferenceReviews>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Creates new user in API
      */
     public boolean createUser(Map<String, String> data) {
@@ -100,6 +121,19 @@ public class Api {
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
+          
+    /**
+     * Returns review by id
+     *
+     * @param id
+     * @return
+     */
+    public Review getReview(Long id) {
+        try {
+            HttpResponse<Review> response = Unirest.get(getUrl("reviews/" + id)).asObject(Review.class);
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }

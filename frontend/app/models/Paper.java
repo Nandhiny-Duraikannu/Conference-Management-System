@@ -44,7 +44,7 @@ public class Paper {
     public Long fileSize;
 
     public String submissionDate;
-
+  
     public List<Review> reviews;
 
     public byte[] fileContent;

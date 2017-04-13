@@ -48,7 +48,7 @@ public class Review extends Model {
     }
 
     /**
-     * Get reviews by user id
+     * Get reviews by reviewer id
      *
      * @param userId
      * @return
@@ -81,5 +81,21 @@ public class Review extends Model {
     @JsonIgnore
     public boolean isReviewed() {
         return this.content != null && this.content.length() > 0;
+    }
+
+    public String getPaperTitle() {
+        return paper.title;
+    }
+
+    public Long getPaperId() {
+        return paper.id;
+    }
+
+    public void setContent(String content) {
+        if (content == null || content.length() == 0) {
+            this.content = null;
+        } else {
+            this.content = content;
+        }
     }
 }
