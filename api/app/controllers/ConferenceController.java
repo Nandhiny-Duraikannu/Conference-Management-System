@@ -9,6 +9,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides web and api endpoints for conference actions
@@ -25,6 +27,11 @@ public class ConferenceController extends Controller {
     public Result getById(Long id) {
         Conference conf = Conference.find.byId(id);
         return ok(Json.toJson(conf));
+    }
+       
+    public Result getAllConferences() {
+        List<Conference> conferences = new ArrayList<Conference>();
+        return ok(Json.toJson(conferences));
     }
 }
             
