@@ -7,15 +7,16 @@ What do you need to setup the project:
 
 * SBT (http://www.scala-sbt.org/download.html)
 * MySQL database (create one before running the project)
-* Intellij Idea (this is probably optional)
+* Intellij Idea with scala plugin (or use IDE of your choice, but I don't have instructions for you then)
 
-I used intellij idea to set up a project. Intellij will download all the dependencies when you open the project.
-After that, setup your database connection in *conf/application_template.conf* (read the instructions in that file).
+Open 2 intellij projects - one in `api` folder, one in `frontend` folder.
+
+Setup your database connection in *api/conf/application_template.conf* (read the instructions in that file).
 Your database credentials will not be kept in git so anyone can have any password they want.
 
-Then try to run the project. You can do it from console with *sbt run* or from intellij 
+Then try to run both projects. You can do it from console with *sbt run* or from intellij 
 (right-click on *app/controllers/HomeController* - *Run play 2 app*).
-Then the app should be available at *localhost:9000*.
+Then the API should be available at *localhost:9000* and web interface at *localhost:9001*.
 At the first run, it may show an error and ask to apply 'database evolution'.
 Just press the button on this web page and it should work.
  

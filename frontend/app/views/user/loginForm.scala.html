@@ -1,0 +1,26 @@
+@(userForm: play.data.Form[forms.Login], flash: play.mvc.Http.Flash)
+@import helper._
+
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+
+  <h1>Log in</h1>
+  @b3.form(routes.UserController.login()) {
+
+    <fieldset>
+      @b3.text(userForm("name"), '_label -> "User name", '_help -> "")
+      <br>
+      @b3.password(userForm("password"), '_label -> "Password", '_help -> "")
+    </fieldset>
+
+    <div class="actions">
+      <input type="submit" value="Log in" class="btn primary">
+      <a href=@routes.UserController.resetPasswordNew() class="btn">Reset Password</a>
+    </div>
+
+  }
+
+}
