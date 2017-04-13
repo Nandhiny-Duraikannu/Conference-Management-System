@@ -52,6 +52,8 @@ public class Paper {
     @Lob
     public byte[] fileContent;
 
+    public List<Review> reviews;
+
     /**
      * Return a paged list of papers
      *
