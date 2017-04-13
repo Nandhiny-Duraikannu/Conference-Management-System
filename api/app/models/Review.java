@@ -48,13 +48,24 @@ public class Review extends Model {
     }
 
     /**
-     * Get reviews by user id
+     * Get reviews by reviewer id
      *
      * @param userId
      * @return
      */
     public static List<Review> getByUser(Long userId) {
         return find.where().eq("user.id", userId).findList();
+    }
+
+    /**
+     * Get reviews by reviewer id and conference id
+     *
+     * @param userId
+     * @param confId
+     * @return
+     */
+    public static List<Review> getByUserAndConference(Long userId, Long confId) {
+        return find.where().eq("user.id", userId).eq("paper.conference.id", confId).findList();
     }
 
     public User getUser() {
@@ -81,5 +92,21 @@ public class Review extends Model {
     @JsonIgnore
     public boolean isReviewed() {
         return this.content != null && this.content.length() > 0;
+    }
+
+    public String getPaperTitle() {
+        return paper.title;
+    }
+
+    public Long getPaperId() {
+        return paper.id;
+    }
+
+    public void setContent(String content) {
+        if (content == null || content.length() == 0) {
+            this.content = null;
+        } else {
+            this.content = content;
+        }
     }
 }

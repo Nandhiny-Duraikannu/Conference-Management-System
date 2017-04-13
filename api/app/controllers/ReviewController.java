@@ -27,7 +27,7 @@ public class ReviewController extends Controller {
     }
 
     /**
-     * Creates user via REST api
+     * Create review
      */
     public Result create() {
         Form signupForm = formFactory.form(Review.class);
@@ -42,6 +42,22 @@ public class ReviewController extends Controller {
         }
     }
 
+    /**
+     * Edit review
+     */
+    public Result update(Long id) {
+        Review review = Review.find.byId(id);
+
+        if (review == null) {
+            return notFound();
+        }
+
+        review.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        review.update();
+
+        return ok();
+    }
+
     public Result getById(Long id) {
         Review review = Review.getById(id);
         return ok(Json.toJson(review));
@@ -49,6 +65,10 @@ public class ReviewController extends Controller {
 
     public Result getByUser(long userId) {
         return ok(Json.toJson(Review.getByUser(userId)));
+    }
+
+    public Result getByUserAndConference(long userId, long confId) {
+        return ok(Json.toJson(Review.getByUserAndConference(userId, confId)));
     }
 }
             
