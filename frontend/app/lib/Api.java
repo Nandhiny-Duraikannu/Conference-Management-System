@@ -122,7 +122,20 @@ public class Api {
             return false;
         }
     }
+      public boolean InsertPaper(Map<String, String> data) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
+                    "application/x-www-form-urlencoded");
+            req.body(mapToQueryString(data));
 
+            HttpResponse<JsonNode> response = req.asJson();
+
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public Paper[] getByAuthorAndConference(Long user_id, int conf_id){
         try {
             HttpResponse<Paper[]> response = Unirest.get(getUrl("papers/" + user_id + "/conf/" + conf_id)).asObject(Paper[].class);
