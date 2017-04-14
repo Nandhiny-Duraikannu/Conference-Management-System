@@ -19,9 +19,13 @@ GET         /api/papers/:id                                    controllers.Paper
 # get authors for paper id
 GET         /api/papers/authors/:id                            controllers.PaperController.getAuthors(id: Long)
 # get all papers or papers for user_id
-GET         /api/papers                                        controllers.PaperController.getAllPapers()
-POST        /api/papers/upload                                 controllers.PaperController.uploadPaper(id: Long)
+GET         /api/papers                      controllers.PaperController.getAllPapers()
+# get all papers for user_id and conf_id
+GET         /api/papers/:uid/conf/:cid       controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
+POST        /api/papers/upload/:id            controllers.PaperController.uploadPaper(id: Long)
 GET         /api/papers/download                               controllers.PaperController.downloadPaper(id: Long)
+# paper submission
+POST        /api/paper                           controllers.PaperController.create()
 
 # Reviews
 # create
@@ -32,10 +36,11 @@ GET         /api/reviews/:id                                   controllers.Revie
 GET         /api/reviews/user/:userId                          controllers.ReviewController.getByUser(userId: Long)
 
 ## Conferences
-GET         /api/conferences/:id                               controllers.ConferenceController.getById(id: Long)
+GET /api/conferences/:id                     controllers.ConferenceController.getById(id: Long)
+# get all conferences
+GET /api/conferences                         controllers.ConferenceController.getAllConferences()
+# get conferences for user_id
+GET /api/conferences/users/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
 GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
 
-
-# PaperSubmission
-POST        /api/paper                           controllers.PaperController.create()
 

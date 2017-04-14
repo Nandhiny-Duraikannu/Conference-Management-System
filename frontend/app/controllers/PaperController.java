@@ -1,6 +1,8 @@
 package controllers;
 
 import lib.UserStorage;
+import lib.Api;
+
 import models.Paper;
 import models.User;
 import play.mvc.Http.MultipartFormData;
@@ -23,7 +25,8 @@ import play.data.*;
 import forms.PaperSubmission.*;
 import models.*;
 import forms.PaperSubmission;
-import views.html.paper.PaperForm;
+import play.mvc.WebSocket;
+//import views.html.paper.PaperForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ public class PaperController extends Controller {
      * PaperSubmission  page
      */
     public Result showPaperSubmissionForm() {
-        return ok(views.html.paper.PaperForm.render(formFactory.form(PaperSubmission.class), flash()));
+        return ok(views.html.paper.PaperForm.render(null, formFactory.form(PaperSubmission.class), flash()));
     }
 
     /**
@@ -76,6 +79,15 @@ public class PaperController extends Controller {
             return redirect("/postSubmission");
         }
 
+    }
+
+    /**
+     * Update paper
+     */
+    public Result update(Long id) {
+        // TODO save via API
+        // after create()
+        return redirect("/papers");
     }
 
     protected Form SavePaper() {
@@ -118,7 +130,7 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Retrieves Papers for My papers page - web
+     * Retrieves Papers for My papers page
      */
     public Result getPapers() {
         String param = request().getQueryString("conf_id");
@@ -131,25 +143,26 @@ public class PaperController extends Controller {
             System.out.println("User not authorized");
             return redirect(routes.HomeController.index());
         } else {
-            List<Paper> papers = Paper.getByAuthorAndConference(user.id, conf_id);
+            List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                            Api.getInstance().getByAuthorAndConference(user.id, conf_id)
+                        ));
             return ok(views.html.paper.myPapersPage.render(papers, conf_id, flash()));
         }
     }
 
     /**
-     * upload file to database - web
+     * upload file to database
      */
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
         MultipartFormData.FilePart<File> file = body.getFile("file");
-        Paper paper = Paper.getById(id);
+
+        Map<String, String> data = new HashMap<String, String>();
         if (file != null) {
             try {
-                byte[] array = Files.readAllBytes(file.getFile().toPath());
-                // TODO Upload via API
-                //paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                boolean uploaded = Api.getInstance().uploadPaper(id, file.getFile(), getFileExtension(file.getFilename()));
                 return redirect(routes.PaperController.getPapers());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -159,11 +172,10 @@ public class PaperController extends Controller {
     }
 
     /**
-     * download file from database - web
+     * download file from database
      */
     public Result downloadPaper(Long id) {
-        // TODO Call API
-        Paper paper = Paper.getById(id);
+        Paper paper =  Api.getInstance().getPaperById(id);
         Result r = ok(paper.fileContent);
         response().setHeader("Content-Disposition", "attachment; filename=paper" + paper.id + "." + paper.fileFormat);
         return r;
@@ -181,11 +193,13 @@ public class PaperController extends Controller {
     }
 
     /**
-     * redirect to paper edit (submission) page - web
-     * IMPLEMENT
+     * redirect to paper edit (submission) page
      */
     public Result editPaper(Long id) {
-        return ok("redirect to paper submission form");
+        Paper paper = Api.getInstance().getPaperById(id);
+        Form paperForm = formFactory.form(Paper.class);
+        paperForm = paperForm.fill(paper);
+        return ok(views.html.paper.PaperForm.render(id, paperForm, flash()));
     }
 }
             

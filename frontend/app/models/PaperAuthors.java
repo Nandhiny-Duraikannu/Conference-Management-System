@@ -2,10 +2,21 @@ package models;
 
 import java.util.*;
 
-/**
- * Paper-Authors relationship entity managed by Ebean
- */
 public class PaperAuthors {
+
+    public Long id;
+
+    public Paper paper;
+
+    public String type;
+
+    public String author_first_name;
+
+    public String author_last_name;
+
+    public String author_affiliation;
+
+    public String author_email;
 
     public static Map<String, String> getType() {
         Map<String, String> type = new HashMap<String, String>();

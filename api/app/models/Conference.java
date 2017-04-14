@@ -33,10 +33,6 @@ public class Conference extends Model {
 
     public String status;
 
-    @JsonManagedReference
-    @OneToMany
-    public List<Paper> papers;
-
     /**
      * Generic query helper for entity Conference with id Long
      */

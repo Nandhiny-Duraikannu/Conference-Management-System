@@ -29,10 +29,14 @@ public class ConferenceController extends Controller {
         return ok(Json.toJson(conf));
     }
 
-       
     public Result getAllConferences() {
-        List<Conference> conferences = new ArrayList<Conference>();
-        return ok(Json.toJson(conferences));
+        List<Conference> conf = Conference.getAllConferences();
+        return ok(Json.toJson(conf));
+    }
+
+    public Result getConferencesByUser(Long user_id) {
+        List<Conference> conf = Conference.getConferencesByUser(user_id);
+        return ok(Json.toJson(conf));
     }
 
     /**
