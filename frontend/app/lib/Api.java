@@ -7,6 +7,12 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.options.Option;
+import com.mashape.unirest.http.options.Options;
+import com.mashape.unirest.request.body.MultipartBody;
+import com.mashape.unirest.request.body.RawBody;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import json.UserConferenceReviews;
 import models.Review;
@@ -14,16 +20,17 @@ import models.Conference;
 import models.Paper;
 import models.PaperAuthors;
 import models.User;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 import javax.xml.ws.Response;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Conference system API calls
@@ -106,6 +113,7 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("users")).header("content-type",
                                                                            "application/x-www-form-urlencoded");
             req.body(mapToQueryString(data));
+
             HttpResponse<JsonNode> response = req.asJson();
 
             return response.getStatus() >= 200 && response.getStatus() < 400;
@@ -118,6 +126,16 @@ public class Api {
     public Paper[] getByAuthorAndConference(Long user_id, int conf_id){
         try {
             HttpResponse<Paper[]> response = Unirest.get(getUrl("papers/" + user_id + "/conf/" + conf_id)).asObject(Paper[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Paper getPaperById(Long id){
+        try {
+            HttpResponse<Paper> response = Unirest.get(getUrl("papers/" + id)).asObject(Paper.class);
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -158,15 +176,17 @@ public class Api {
         }
     }
 
-    public boolean uploadPaper(Map<String, String> data) {
+    public boolean uploadPaper(Long paper_id, File file, String format) {
         try {
-            HttpRequestWithBody req = Unirest.post(getUrl("/papers/upload")).header("content-type",
-                    "application/x-www-form-urlencoded");
-            req.body(mapToQueryString(data));
-            HttpResponse<JsonNode> response = req.asJson();
+            HttpResponse<JsonNode> response = Unirest.post(getUrl("papers/upload/"+paper_id))
+                    .field("format", format)
+                    .field("file", file)
+                    .asJson();
 
+            System.out.println(response.getBody());
             return response.getStatus() >= 200 && response.getStatus() < 400;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return false;
         }

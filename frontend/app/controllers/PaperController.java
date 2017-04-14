@@ -132,7 +132,7 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Retrieves Papers for My papers page - web
+     * Retrieves Papers for My papers page
      */
     public Result getPapers() {
         String param = request().getQueryString("conf_id");
@@ -153,19 +153,18 @@ public class PaperController extends Controller {
     }
 
     /**
-     * upload file to database - web
+     * upload file to database
      */
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
         MultipartFormData.FilePart<File> file = body.getFile("file");
-        Paper paper;// = Paper.getById(id); //!!!!!!!!!!
+
+        Map<String, String> data = new HashMap<String, String>();
         if (file != null) {
             try {
-                byte[] array = Files.readAllBytes(file.getFile().toPath());
-                // TODO Upload via API
-                //paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                boolean uploaded = Api.getInstance().uploadPaper(id, file.getFile(), getFileExtension(file.getFilename()));
                 return redirect(routes.PaperController.getPapers());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -175,11 +174,10 @@ public class PaperController extends Controller {
     }
 
     /**
-     * download file from database - web
+     * download file from database
      */
     public Result downloadPaper(Long id) {
-        // TODO Call API
-        Paper paper = null;//Paper.getById(id);
+        Paper paper =  Api.getInstance().getPaperById(id);
         Result r = ok(paper.fileContent);
         response().setHeader("Content-Disposition", "attachment; filename=paper" + paper.id + "." + paper.fileFormat);
         return r;

@@ -146,12 +146,15 @@ public class PaperController extends Controller {
      */
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
+
         MultipartFormData.FilePart<File> file = body.getFile("file");
+        String format = body.asFormUrlEncoded().get("format")[0];
+        System.out.println(format);
         Paper paper = Paper.getById(id);
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
-                paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                paper.upload(format, file.getFile().length(), array);
                 return ok();
             } catch (IOException e) {
                 e.printStackTrace();
