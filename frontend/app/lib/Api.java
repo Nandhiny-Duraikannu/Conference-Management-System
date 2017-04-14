@@ -156,7 +156,7 @@ public class Api {
     // TODO: Just returning all conferences right now.
     // Something was breaking here passing a null into this function.
     // Will create a duplicate for now, and refactor during the weekend. God bless!
-    public Conference[] getConferences(Long user_id){
+    public Conference[] getConferencesAll(Long user_id){
 //        if ( user_id != null || user_id != 0){
 //            //list of conferences for user id
 //            try {
@@ -169,6 +169,7 @@ public class Api {
 //        }
 //        else{
             //all conferences
+
             try {
                 HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
                 return response.getBody();
@@ -179,7 +180,7 @@ public class Api {
 //        }
     }
 
-    public Conference[] getConferencesByUser(Long user_id){
+    public Conference[] getConferences(Long user_id){
         if ( user_id != null || user_id != 0){
             //list of conferences for user id
             try {

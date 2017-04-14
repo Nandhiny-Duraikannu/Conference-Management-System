@@ -30,8 +30,8 @@ public class ConferenceController extends Controller {
       
     public Result showConferencePage() {
         User user = UserStorage.getCurrentUser();
-        Conference[] conferences = Api.getInstance().getConferences(user.getId());
-        Conference[] conferencesUser = Api.getInstance().getConferencesByUser(user.getId());
+        Conference[] conferences = Api.getInstance().getConferencesAll(user.getId());
+        Conference[] conferencesUser = Api.getInstance().getConferences(user.getId());
         ArrayList<String> conferenceUsertitle = new ArrayList<String>();
         
         for(Conference conf: conferencesUser) {
@@ -43,7 +43,7 @@ public class ConferenceController extends Controller {
     public Result showConferencePageFilter(String keyword, String conf_status) {
         User user = UserStorage.getCurrentUser();
         Conference[] conferences = Api.getInstance().getConferencesKeyword(user.getId(), keyword, conf_status);
-        Conference[] conferencesUser = Api.getInstance().getConferencesByUser(user.getId());
+        Conference[] conferencesUser = Api.getInstance().getConferences(user.getId());
         ArrayList<String> conferenceUsertitle = new ArrayList<String>();
         for(Conference conf: conferencesUser) {
             conferenceUsertitle.add(conf.title);
