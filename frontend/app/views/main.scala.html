@@ -36,7 +36,14 @@
 
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
+           @if(currentUser != null) {
+                      <ul class="nav navbar-nav">
+                       
+                          <li>
+                            <a href="@routes.ReviewController.myConferencesWithReviews()">Reviews</a>
+                          </li>
+                        </ul>
+                      }
           <ul class="nav navbar-nav navbar-right">
           @if(currentUser == null) {
             <li><a href="/login">Login</a></li>
