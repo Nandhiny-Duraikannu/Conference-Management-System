@@ -126,7 +126,9 @@ public class Paper extends com.avaje.ebean.Model {
             String authorInfo = items.get(i).author_first_name + " " + items.get(i).author_last_name;
             if (items.get(i).author_affiliation != "" && items.get(i).author_affiliation != null)
             {
-                authorInfo += " (" + items.get(i).author_affiliation +")";
+                if ( items.get(i).author_affiliation != null || items.get(i).author_affiliation != "" ) {
+                    authorInfo += " (" + items.get(i).author_affiliation + ")";
+                }
             }
             authors.add(authorInfo);
         }

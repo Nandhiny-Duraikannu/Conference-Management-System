@@ -39,10 +39,24 @@ public class ReviewController extends Controller {
 
     // Displays a page with papers for conference that were assigned for review to current user
     public Result myConferenceReviews(Long confId) {
-        ArrayList<Paper> conferences = new ArrayList<Paper>(Arrays.asList(
-                    Api.getInstance().getReviewPapersByConf(UserStorage.getCurrentUser().getId(), confId)
-                ));
-        return ok(views.html.review.myConferenceReviews.render(conferences, flash()));
+        ArrayList<Review> reviews = Api.getInstance().getReviewsByUserAndConference(
+                UserStorage.getCurrentUser().getId(), confId);
+        return ok(views.html.review.myConferenceReviews.render(reviews, flash()));
     }
+
+    // Displays a page with review in read-only mode
+    public Result viewReview(Long id, String mode) {
+        Review review = Api.getInstance().getReview(id);
+        Form reviewForm = formFactory.form(Review.class);
+        reviewForm.data().put("content", review.content);
+        return ok(views.html.review.reviewForm.render(review, mode, reviewForm, flash()));
+    }
+
+    // Submit review form
+    public Result edit(Long id) {
+        Api.getInstance().editReview(id,request().body().asFormUrlEncoded().get("content")[0]);
+        return redirect("/reviews");
+    }
+
 }
             

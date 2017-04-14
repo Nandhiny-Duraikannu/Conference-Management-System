@@ -206,9 +206,36 @@ public class Api {
         }
     }
 
-    public Paper[] getReviewPapersByConf(Long user_id, Long conf_id) {
+    public ArrayList<Review> getReviewsByUserAndConference(Long userId, Long confId) {
         try {
-            HttpResponse<Paper[]> response = Unirest.get(getUrl("reviews/user/" + user_id + "/conference/"+conf_id)).asObject(Paper[].class);
+                HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/user/" + userId + "/conference/" + confId)).asObject(
+                            Review[].class);
+                return new ArrayList<Review>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean editReview(Long review_id, String content) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("reviews/" + review_id)).header("content-type",
+                                "application/x-www-form-urlencoded");
+            HashMap<String, String> params = new HashMap<>();
+            params.put("content", content);
+            req.body(mapToQueryString(params));
+            HttpResponse<JsonNode> response = req.asJson();
+
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Review[] getReviewPapersByConf(Long user_id, Long conf_id) {
+        try {
+            HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/papers/" + user_id + "/conference/"+conf_id)).asObject(Review[].class);
             return response.getBody();
         } catch (Exception e) {
             System.out.println(e.getMessage());

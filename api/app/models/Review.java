@@ -65,7 +65,7 @@ public class Review extends Model {
      * @param conf_id
      * @return
      */
-    public static List<Paper> getByUserAndConf(Long user_id, Long conf_id) {
+    public static List<Paper> getPaperReviewsByUserAndConf(Long user_id, Long conf_id) {
         List<Review> items = find.where().eq("user.id", user_id).findList();
         List<Paper> papers = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
@@ -77,6 +77,10 @@ public class Review extends Model {
             }
         }
         return papers;
+    }
+
+    public static List<Review> getReviewsByUserAndConf(Long user_id, Long conf_id) {
+        return find.where().eq("user.id", user_id).eq("paper.conference.id", conf_id).findList();
     }
 
     public User getUser() {
@@ -107,6 +111,14 @@ public class Review extends Model {
 
     public String getPaperTitle() {
         return paper.title;
+    }
+
+    public Long getPaperSize() {
+        return paper.fileSize;
+    }
+
+    public String getPaperFormat() {
+        return paper.fileFormat;
     }
 
     public Long getPaperId() {

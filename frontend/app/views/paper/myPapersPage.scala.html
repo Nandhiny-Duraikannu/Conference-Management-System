@@ -61,7 +61,9 @@
                            <input type="file" name="file">
                            <input class="btn btn-default" type="submit">
                         }}else{
-                        <a href="@routes.PaperController.downloadPaper(paper.id)">@paper.fileFormat, @paper.fileSize b</a>
+                        <a href="@routes.PaperController.downloadPaper(paper.id)">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @paper.fileFormat, @paper.fileSize b
+                        </a>
                         }
                     </td>
                     <td>@if(paper.submissionDate != null){

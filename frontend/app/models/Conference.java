@@ -36,6 +36,7 @@ public class Conference {
      */
     public static List<Conference> getConferencesByUser() {
         User user = UserStorage.getCurrentUser();
+        System.out.println(user.id);
         List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
                 Api.getInstance().getConferences(user.id)
         ));
