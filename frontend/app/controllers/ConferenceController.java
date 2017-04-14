@@ -23,10 +23,7 @@ public class ConferenceController extends Controller {
         this.formFactory = formFactory;
     }
 
-       public Result getAllConferences() {
-        List<Conference> conferences = new ArrayList<Conference>();
-        return ok(Json.toJson(conferences));
-    }
+      
     public Result showConferencePage() {
         List<Conference> conferences = new ArrayList<Conference>();
         return ok(views.html.conference.conference.render(conferences,flash()));
