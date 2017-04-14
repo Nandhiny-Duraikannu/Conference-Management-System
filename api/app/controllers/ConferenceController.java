@@ -9,6 +9,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides web and api endpoints for conference actions
@@ -27,6 +29,12 @@ public class ConferenceController extends Controller {
         return ok(Json.toJson(conf));
     }
 
+       
+    public Result getAllConferences() {
+        List<Conference> conferences = new ArrayList<Conference>();
+        return ok(Json.toJson(conferences));
+
+
     /**
      * Returns conferences for which given user has papers to review
      *
@@ -35,6 +43,7 @@ public class ConferenceController extends Controller {
      */
     public Result getWithAssignedReviewer(Long userId) {
         return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
+
     }
 }
             

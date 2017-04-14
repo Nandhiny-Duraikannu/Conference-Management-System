@@ -34,3 +34,8 @@ GET         /api/reviews/user/:userId                          controllers.Revie
 ## Conferences
 GET         /api/conferences/:id                               controllers.ConferenceController.getById(id: Long)
 GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
+
+
+# PaperSubmission
+POST        /api/paper                           controllers.PaperController.create()
+

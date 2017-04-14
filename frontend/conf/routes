@@ -36,4 +36,8 @@ GET         /assets/*file                      controllers.Assets.at(path="/publ
 GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
 POST        /paper                             controllers.PaperController.create()
 
-GET         /postSubmission                    controllers.PaperController.postSubmission()
+
+GET         /postSubmission            controllers.PaperController.postSubmission()
+
+#Manage Conference
+GET   /conferences                      controllers.ConferenceController.showConferencePage()
