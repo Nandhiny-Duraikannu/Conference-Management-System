@@ -10,7 +10,7 @@ POST        /api/users                                         controllers.UserC
 GET         /api/users/:name                                   controllers.UserController.getByName(name)
 POST        /api/profile                                       controllers.HomeController.updateProfileAPI()
 # Reset password for a user
-GET         /api/resetpassword                                 controllers.UserController.resetPasswordAPI(name: java.lang.String ?= null)
+GET         /api/resetpassword                                 controllers.UserController.resetPassword(name: java.lang.String ?= null)
 POST        /api/resetpassword                                 controllers.UserController.resetPasswordVerifyAPI()
 
 ## Papers
