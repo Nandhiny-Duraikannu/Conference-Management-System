@@ -157,7 +157,6 @@ public class Paper extends com.avaje.ebean.Model {
         this.fileSize = size;
         this.fileFormat = format;
         this.status = "uploaded";
-        Date date = new Date();
         this.submissionDate = new Date();
         this.save();
     }
