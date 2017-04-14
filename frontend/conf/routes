@@ -42,3 +42,4 @@ GET         /postSubmission            controllers.PaperController.postSubmissio
 
 #Manage Conference
 GET   /conferences                      controllers.ConferenceController.showConferencePage()
+GET   /conferencessearch                      controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)

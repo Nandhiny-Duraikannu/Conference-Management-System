@@ -6,7 +6,7 @@
 @main {
 
 <h2>Conferences</h2>
-<form method="GET" action="/conferences">
+<form method="GET" action="/conferencessearch">
     Search Conferences:
     <br>
     <br>
@@ -15,14 +15,15 @@
         <option value="active">Active</option>
         <option value="archived">Archived</option>
     </select>
-    <input type="search" id="searchbox"  placeholder="Conference name">
-    <input type="submit" id="searchsubmit" value="Search" class="btn primary">
+    <input type="search" name="keyword" id="keyword"  placeholder="Conference name">
+    <input type="submit" id="submit" value="Search" class="btn primary">
 </form>
 <h2 id="homeTitle">Conferences found: @list.size()</h2>
 <table class="table-condensed zebra-striped">
     <thead>
     <tr>
-        <th>Conference acronym</th>
+        <th>Conference Acronym</th>
+        <th>Conference Title</th>
         <th>Location</th>
         <th>Date</th>
         <th>Status</th>
@@ -30,7 +31,15 @@
     </thead>
 
     <tbody>
-
+        @for(conference <- list) {
+        <tr>
+            <td>@conference.acronym</td>
+            <td>@conference.title</td>
+            <td>@conference.location</td>
+            <td>@conference.deadline</td>
+            <td>@conference.status</td>
+        </tr>
+        }
     </tbody>
 </table>
 }

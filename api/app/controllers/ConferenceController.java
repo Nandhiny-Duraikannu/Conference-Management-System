@@ -34,6 +34,12 @@ public class ConferenceController extends Controller {
         return ok(Json.toJson(conf));
     }
 
+    // TODO: Make this work with getAllConferences();
+    public Result getAllConferencesByKeyword(String keyword, String searchbox) {
+        List<Conference> conf = Conference.getAllConferencesByKeyword(keyword, searchbox);
+        return ok(Json.toJson(conf));
+    }
+
     public Result getConferencesByUser(Long user_id) {
         List<Conference> conf = Conference.getConferencesByUser(user_id);
         return ok(Json.toJson(conf));
