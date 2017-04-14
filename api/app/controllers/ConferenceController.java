@@ -33,7 +33,7 @@ public class ConferenceController extends Controller {
     public Result getAllConferences() {
         List<Conference> conferences = new ArrayList<Conference>();
         return ok(Json.toJson(conferences));
-
+    }
 
     /**
      * Returns conferences for which given user has papers to review
