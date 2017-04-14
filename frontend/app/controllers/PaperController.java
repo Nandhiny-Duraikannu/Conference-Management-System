@@ -193,11 +193,9 @@ public class PaperController extends Controller {
     }
 
     /**
-     * redirect to paper edit (submission) page - web
-     * IMPLEMENT
+     * redirect to paper edit (submission) page
      */
     public Result editPaper(Long id) {
-        //Form paperForm = formFactory.form(PaperSubmission.class);
         Paper paper = Api.getInstance().getPaperById(id);
         Form paperForm = formFactory.form(Paper.class);
         paperForm = paperForm.fill(paper);
