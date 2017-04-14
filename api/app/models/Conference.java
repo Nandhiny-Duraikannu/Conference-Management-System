@@ -50,6 +50,25 @@ public class Conference extends Model {
     }
 
     /**
+     * list of all conferences by keyword
+     * TODO: Make this work with getAllConferences()
+     */
+    public static List<Conference> getAllConferencesByKeyword(String keyword, String conf_status) {
+        if(conf_status.equals("all")) {
+            conf_status = "%%";
+        } else {
+            conf_status = "%" + conf_status + "%";
+        }
+        if(keyword.equals("")) {
+            keyword = "%%";
+        } else {
+            keyword = "%" + keyword + "%";
+        }
+        List<Conference> items = Conference.find.where().ilike("title", keyword).ilike("status", conf_status).findList();
+        return items;
+    }
+
+    /**
      * conferences for which user submitted papers
      */
     public static List<Conference> getConferencesByUser(Long userId) {

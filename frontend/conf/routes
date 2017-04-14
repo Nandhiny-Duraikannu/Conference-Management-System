@@ -12,8 +12,12 @@ GET         /signup                            controllers.UserController.showSi
 POST        /signup                            controllers.UserController.signup()
 GET         /logout                            controllers.UserController.logout()
 GET         /resetpassword/new                 controllers.UserController.resetPasswordNew()
-GET         /resetpassword                     controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
 POST        /resetpassword                     controllers.UserController.resetPasswordVerifyWeb()
+GET         /resetpassword                     controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
+
+# Dummy admin page
+GET         /admin                     controllers.UserController.showAdminPage()
+
 
 # User Profile
 GET         /profile                           controllers.HomeController.showProfile()
@@ -44,3 +48,4 @@ GET         /postSubmission            controllers.PaperController.postSubmissio
 
 #Manage Conference
 GET   /conferences                      controllers.ConferenceController.showConferencePage()
+GET   /conferencessearch                      controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)

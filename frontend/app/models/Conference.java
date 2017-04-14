@@ -23,6 +23,7 @@ public class Conference {
     /**
      * list of all conferences
      */
+    // Should move to backend if not already.
     public static List<Conference> getAllConferences() {
         User user = UserStorage.getCurrentUser();
         List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
@@ -34,6 +35,7 @@ public class Conference {
     /**
      * conferences for which user submitted papers
      */
+    // Should move to backend if not already.
     public static List<Conference> getConferencesByUser() {
         User user = UserStorage.getCurrentUser();
         System.out.println(user.id);

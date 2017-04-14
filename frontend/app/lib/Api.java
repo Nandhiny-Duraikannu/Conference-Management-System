@@ -153,7 +153,33 @@ public class Api {
         }
     }
 
+    // TODO: Just returning all conferences right now.
+    // Something was breaking here passing a null into this function.
+    // Will create a duplicate for now, and refactor during the weekend. God bless!
     public Conference[] getConferences(Long user_id){
+//        if ( user_id != null || user_id != 0){
+//            //list of conferences for user id
+//            try {
+//                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+//                return response.getBody();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//        else{
+            //all conferences
+            try {
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
+                return response.getBody();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+//        }
+    }
+
+    public Conference[] getConferencesByUser(Long user_id){
         if ( user_id != null || user_id != 0){
             //list of conferences for user id
             try {
@@ -164,16 +190,31 @@ public class Api {
                 return null;
             }
         }
-        else{
+        return null;
+    }
+
+    // TODO: Maybe combine this with getConferences()
+    public Conference[] getConferencesKeyword(Long user_id, String keyword, String conf_status){
+//        if ( user_id != null || user_id != 0){
+//            //list of conferences for user id
+//            try {
+//                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+//                return response.getBody();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//        else{
             //all conferences
             try {
-                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferencessearch?keyword=" + keyword + "&conf_status=" + conf_status)).asObject(Conference[].class);
                 return response.getBody();
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-        }
+//        }
     }
 
     public boolean uploadPaper(Long paper_id, File file, String format) {
@@ -269,5 +310,68 @@ public class Api {
         }
 
         return sb.toString();
+    }
+
+    /**
+     *  Get security question of a user
+     */
+    public String getSecurityQuestion(String username) {
+        try {
+            HttpResponse<String> response = Unirest.get(getUrl("resetpassword?name=" + username)).asObject(String.class);
+
+            if(response.getStatus() == 200 || response.getStatus() == 201) {
+                return response.getBody();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *  Set new password
+     */
+    public Boolean setNewPassword(String username, String securityAnswer) {
+        try {
+            User thisUser = this.getInstance().getUserByName(username);
+            String securityQuestion = thisUser.getSecurityQuestion();
+
+            HttpResponse<JsonNode> response = Unirest.post(getUrl("resetpassword"))
+                    .field("name", username)
+                    .field("securityQuestion", securityQuestion)
+                    .field("securityAnswer", securityAnswer)
+                    .asJson();
+
+            if(response.getStatus() == 201 || response.getStatus() == 200) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *  Update profile of a user
+     */
+    public Boolean updateProfile(Map<String, String> inputForm) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("profile")).header("content-type", "application/x-www-form-urlencoded");
+            req.body(mapToQueryString(inputForm));
+            HttpResponse<JsonNode> response = req.asJson();
+
+            if(response.getStatus() == 200 || response.getStatus() == 201) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
