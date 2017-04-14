@@ -1,7 +1,12 @@
 package models;
 
 import com.avaje.ebean.*;
+import lib.Api;
+import lib.UserStorage;
 import play.data.validation.*;
+import play.libs.Json;
+import play.mvc.Result;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.*;
@@ -13,104 +18,47 @@ import java.util.*;
 public class Paper {
     public Long id;
 
-    @NotNull
     public User user;
 
-    @NotNull
     public String title;
 
-    @NotNull
     public String topic;
 
-    @NotNull
     @Constraints.Email
     public String contactEmail;
 
     @Constraints.Email
     public String confirmEmail;
 
-    @NotNull
     public String awardCandidate;
 
-    @NotNull
     public String studentVolunteer;
 
     public String status;
 
-    @NotNull
     @Column(length = 5000)
     public String paperAbstract;
-
-    public Conference conference;
 
     public String fileFormat;
 
     public Long fileSize;
 
-    public String submissionDate;
+    public Date submissionDate;
 
-    @Lob
+    public List<Review> reviews;
+
     public byte[] fileContent;
 
-    /**
-     * Return a paged list of papers
-     *
-     * @param page     page to display
-     * @param pageSize number of papers per page
-     * @param sortBy   property used for sorting
-     * @param order    sort order (either or asc or desc)
-     * @param filter   filter applied on the name column
-     */
-    public static PagedList<Paper> page(int page, int pageSize, String sortBy, String order, String filter) {
-        // TODO Call API
-        return null;
-    }
+    public Conference conference;
 
     /**
      * papers list by user_id and conference_id
      */
-    public static List<Paper> getByAuthorAndConference(Long author_id, int conference_id){
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * papers list by user_id
-     */
-    public static List<Paper> getByAuthor(Long user_id){
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * papers list by user_id and conference_id
-     */
-    public static ArrayList<String> getAuthors(Long paper_id){
-        return null;
-    }
-
-    /**
-     * all papers
-     */
-    public static List<Paper> getAllPapers(){
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * get paper by title - not used
-     */
-    public static List<Paper> getByTitle(String title) {
-        // TODO Call API
-        return null;
-    }
-
-    /**
-     * get paper by paper_id
-     */
-    public static Paper getById(Long id) {
-        // TODO Call API
-        return null;
+    public static ArrayList<String> getAuthors(Long paper_id) {
+        ArrayList<String> authors = new ArrayList<String>(Arrays.asList(
+                Api.getInstance().getAuthors(paper_id)
+        ));
+        return authors;
     }
 
     /**

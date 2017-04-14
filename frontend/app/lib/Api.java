@@ -7,14 +7,30 @@ import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
+import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.options.Option;
+import com.mashape.unirest.http.options.Options;
+import com.mashape.unirest.request.body.MultipartBody;
+import com.mashape.unirest.request.body.RawBody;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import json.UserConferenceReviews;
+import models.Review;
+import models.Conference;
+import models.Paper;
+import models.PaperAuthors;
 import models.User;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 import javax.xml.ws.Response;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Conference system API calls
@@ -73,6 +89,23 @@ public class Api {
     }
 
     /**
+     * Returns conferences for which given user has papers to review
+     *
+     * @param userId
+     * @return
+     */
+    public ArrayList<UserConferenceReviews> getConferencesWithAssignedReviewer(Long userId) {
+        try {
+            HttpResponse<UserConferenceReviews[]> response = Unirest.get(getUrl("conferences/reviewers/assigned/" + userId)).asObject(
+                    UserConferenceReviews[].class);
+            return new ArrayList<UserConferenceReviews>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Creates new user in API
      */
     public boolean createUser(Map<String, String> data) {
@@ -80,12 +113,137 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("users")).header("content-type",
                                                                            "application/x-www-form-urlencoded");
             req.body(mapToQueryString(data));
+
             HttpResponse<JsonNode> response = req.asJson();
 
             return response.getStatus() >= 200 && response.getStatus() < 400;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public Paper[] getByAuthorAndConference(Long user_id, int conf_id){
+        try {
+            HttpResponse<Paper[]> response = Unirest.get(getUrl("papers/" + user_id + "/conf/" + conf_id)).asObject(Paper[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Paper getPaperById(Long id){
+        try {
+            HttpResponse<Paper> response = Unirest.get(getUrl("papers/" + id)).asObject(Paper.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String[] getAuthors(Long paper_id){
+        try {
+            HttpResponse<String[]> response = Unirest.get(getUrl("papers/authors/" + paper_id )).asObject(String[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // TODO: Just returning all conferences right now.
+    // Something was breaking here passing a null into this function.
+    // Will create a duplicate for now, and refactor during the weekend. God bless!
+    public Conference[] getConferences(Long user_id){
+//        if ( user_id != null || user_id != 0){
+//            //list of conferences for user id
+//            try {
+//                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+//                return response.getBody();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//        else{
+            //all conferences
+            try {
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
+                return response.getBody();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+//        }
+    }
+
+    public Conference[] getConferencesByUser(Long user_id){
+        if ( user_id != null || user_id != 0){
+            //list of conferences for user id
+            try {
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+                return response.getBody();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // TODO: Maybe combine this with getConferences()
+    public Conference[] getConferencesKeyword(Long user_id, String keyword, String conf_status){
+//        if ( user_id != null || user_id != 0){
+//            //list of conferences for user id
+//            try {
+//                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/users/" + user_id)).asObject(Conference[].class);
+//                return response.getBody();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//        else{
+            //all conferences
+            try {
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferencessearch?keyword=" + keyword + "&conf_status=" + conf_status)).asObject(Conference[].class);
+                return response.getBody();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+//        }
+    }
+
+    public boolean uploadPaper(Long paper_id, File file, String format) {
+        try {
+            HttpResponse<JsonNode> response = Unirest.post(getUrl("papers/upload/"+paper_id))
+                    .field("format", format)
+                    .field("file", file)
+                    .asJson();
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Returns review by id
+     *
+     * @param id
+     * @return
+     */
+    public Review getReview(Long id) {
+        try {
+            HttpResponse<Review> response = Unirest.get(getUrl("reviews/" + id)).asObject(Review.class);
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 

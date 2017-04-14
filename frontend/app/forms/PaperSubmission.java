@@ -82,4 +82,55 @@ public class PaperSubmission {
         return this.type;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public void setConfirmEmail(String confirmEmail) {
+        this.confirmEmail = confirmEmail;
+    }
+
+    public void setAwardCandidate(String awardCandidate) {
+        this.awardCandidate = awardCandidate;
+    }
+
+    public void setStudentVolunteer(String studentVolunteer) {
+        this.studentVolunteer = studentVolunteer;
+    }
+
+    public void setPaperAbstract(String paperAbstract) {
+        this.paperAbstract = paperAbstract;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setConferenceID(String conferenceID) {
+        this.conferenceID = conferenceID;
+    }
+
+    public void setAuthor_first_name(String author_first_name) {
+        this.author_first_name = author_first_name;
+    }
+
+    public void setAuthor_last_name(String author_last_name) {
+        this.author_last_name = author_last_name;
+    }
+
+    public void setAuthor_affiliation(String author_affiliation) {
+        this.author_affiliation = author_affiliation;
+    }
+
+    public void setAuthor_email(String author_email) {
+        this.author_email = author_email;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

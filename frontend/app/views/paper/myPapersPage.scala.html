@@ -1,7 +1,5 @@
-@import forms.PaperList
-@(list: List[Paper], conf_id:Int ,flash: play.mvc.Http.Flash)
+@(list: List[Paper], conf_id:Int, flash: play.mvc.Http.Flash)
 @import helper._
-
 
 @main {
 
@@ -15,13 +13,13 @@
                 }
             >
             </option>
-            @for(conf <- Conference.getConferencesByUser(lib.UserStorage.getCurrentUser().id)) {
+            @for(conf <- Conference.getConferencesByUser()) {
                 <option value=@conf.id
                     @if(conf_id == conf.id) {
                     selected
                 }
                 >
-                    @conf.title
+                    @conf.acronym
                 </option>
             }
         </select>
@@ -53,8 +51,11 @@
                     <td>@paper.contactEmail</td>
                     <td>@String.join("; ", Paper.getAuthors(paper.id))</td>
                     <td>@paper.status</td>
-                    <td>@paper.conference.title</td>
-                    <td>@paper.conference.deadline</td>
+                    <td>@paper.conference.acronym</td>
+                    <td>@if(paper.conference.deadline != null){
+                            @paper.conference.deadline.format("YYYY-MM-dd")
+                        }
+                    </td>
                     <td>@if(paper.fileFormat == null){
                         @helper.form(action = routes.PaperController.uploadPaper(paper.id), 'enctype -> "multipart/form-data") {
                            <input type="file" name="file">
@@ -63,7 +64,10 @@
                         <a href="@routes.PaperController.downloadPaper(paper.id)">@paper.fileFormat, @paper.fileSize b</a>
                         }
                     </td>
-                    <td>@paper.submissionDate</td>
+                    <td>@if(paper.submissionDate != null){
+                        @paper.submissionDate.format("YYYY-MM-dd")
+                    }
+                    </td>
                     <td>
                         <a id="editPaper" class="btn btn-default" href="@routes.PaperController.editPaper(paper.id)">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

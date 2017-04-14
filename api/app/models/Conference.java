@@ -1,9 +1,8 @@
 package models;
 
 import com.avaje.ebean.Model;
-import com.avaje.ebean.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import json.UserConferenceReviews;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -34,10 +33,6 @@ public class Conference extends Model {
 
     public String status;
 
-    @JsonManagedReference
-    @OneToMany
-    public List<Paper> papers;
-
     /**
      * Generic query helper for entity Conference with id Long
      */
@@ -55,6 +50,25 @@ public class Conference extends Model {
     }
 
     /**
+     * list of all conferences by keyword
+     * TODO: Make this work with getAllConferences()
+     */
+    public static List<Conference> getAllConferencesByKeyword(String keyword, String conf_status) {
+        if(conf_status.equals("all")) {
+            conf_status = "%%";
+        } else {
+            conf_status = "%" + conf_status + "%";
+        }
+        if(keyword.equals("")) {
+            keyword = "%%";
+        } else {
+            keyword = "%" + keyword + "%";
+        }
+        List<Conference> items = Conference.find.where().ilike("title", keyword).ilike("status", conf_status).findList();
+        return items;
+    }
+
+    /**
      * conferences for which user submitted papers
      */
     public static List<Conference> getConferencesByUser(Long userId) {
@@ -67,5 +81,43 @@ public class Conference extends Model {
             conf.add(items.get(i).conference);
         }
         return new ArrayList<>(conf);
+    }
+
+    /**
+     * conferences for which user submitted papers
+     */
+    public static List<UserConferenceReviews> getUserConferenceReviews(Long userId) {
+        HashMap<Long, UserConferenceReviews> result = new HashMap<>();
+
+        List<Review> userReviews = Review.
+                find.select("*")
+                    .where().eq("user_id", userId)
+                    .findList();
+
+        for (int i = 0; i < userReviews.size(); i++) {
+            Review review = userReviews.get(i);
+            Conference conf = review.paper.conference;
+            UserConferenceReviews item;
+
+            if (!result.containsKey(conf.id)) {
+                item = new UserConferenceReviews();
+                item.conferenceId = conf.id;
+                item.conferenceTitle = conf.title;
+                item.assignedPapersNumber = 0;
+                item.reviewedPapersNumber = 0;
+
+                result.put(conf.id, item);
+            } else {
+                item = result.get(conf.id);
+            }
+
+            if (review.isReviewed()) {
+                item.reviewedPapersNumber++;
+            }
+
+            item.assignedPapersNumber++;
+        }
+
+        return new ArrayList<>(result.values());
     }
 }

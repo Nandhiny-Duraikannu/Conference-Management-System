@@ -27,7 +27,7 @@ public class ReviewController extends Controller {
     }
 
     /**
-     * Creates user via REST api
+     * Create review
      */
     public Result create() {
         Form signupForm = formFactory.form(Review.class);
