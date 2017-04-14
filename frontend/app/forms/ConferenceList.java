@@ -28,8 +28,8 @@ public class ConferenceList {
         return conferences;
     }
     /* display conference list page*/
-    public Result showConferencePage() {
-        List<Conference> conferences = new ArrayList<Conference>();
-        return ok(views.html.conference.conference.render(conferences,flash()));
-    }
+//    public Result showConferencePage() {
+//        List<Conference> conferences = new ArrayList<Conference>();
+//        return ok(views.html.conference.conference.render(conferences,flash()));
+//    }
 }

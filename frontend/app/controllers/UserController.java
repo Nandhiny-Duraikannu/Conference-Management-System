@@ -158,6 +158,13 @@ public class UserController extends Controller {
     }
 
     /**
+     * Display dummy admin page
+     */
+    public Result showAdminPage() {
+        return ok(views.html.user.admin.render());
+    }
+
+    /**
      * logs user out
      */
     @Security.Authenticated(UserStorage.class)

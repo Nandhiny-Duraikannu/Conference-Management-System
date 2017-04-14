@@ -1,0 +1,28 @@
+@currentUser = @{
+lib.UserStorage.getCurrentUser()
+}
+
+@main {
+<div class="jumbotron alert-info">
+    <h2>Welcome to conference management system!</h2>
+    <p>
+        This is a place for you to share your publications, register for conferences, and hang out with your science mates.
+
+        You are on the admin page! 
+    </p>
+    <p>
+        @if(currentUser == null) {
+        But first, please <a href="/login" role="button">log in</a>
+        or <a href="/login" role="button">sign up</a>.
+        } else {
+        <a href="/conferences" class="btn btn-primary btn-lg">Discover conferences</a>
+        <br>
+        <br>
+        <a href="/papers" class="btn btn-primary btn-lg">Manage my papers</a>
+        <br>
+        <br>
+        <a href="/paper" class="btn btn-primary btn-lg">Submit Paper</a>
+        }
+    </p>
+</div>
+}

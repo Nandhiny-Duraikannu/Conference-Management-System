@@ -1,5 +1,5 @@
 @import forms.ConferenceList
-@(list: List[Conference],flash: play.mvc.Http.Flash)
+@(list: List[Conference], listUser: List[java.lang.String], flash: play.mvc.Http.Flash)
 @import helper._
 
 
@@ -27,6 +27,9 @@
         <th>Location</th>
         <th>Date</th>
         <th>Status</th>
+        <th>Paper</th>
+        <th>Review</th>
+        <th>Admin</th>
     </tr>
     </thead>
 
@@ -38,6 +41,18 @@
             <td>@conference.location</td>
             <td>@conference.deadline</td>
             <td>@conference.status</td>
+            <td>@if(listUser.contains(conference.title)){
+                <a href="/papers?=conf_id=@conference.id">Paper</a>
+                }
+            </td>
+            <td>@if(listUser.contains(conference.title)){
+                <a href="/reviews/conference/@conference.id">Review</a>
+                }
+            </td>
+            <td>@if(listUser.contains(conference.title)){
+                    <a href="/admin">Admin</a>
+                }
+            </td>
         </tr>
         }
     </tbody>

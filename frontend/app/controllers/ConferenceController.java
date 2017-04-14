@@ -31,13 +31,24 @@ public class ConferenceController extends Controller {
     public Result showConferencePage() {
         User user = UserStorage.getCurrentUser();
         Conference[] conferences = Api.getInstance().getConferences(user.getId());
-        return ok(views.html.conference.conference.render(Arrays.asList(conferences),flash()));
+        Conference[] conferencesUser = Api.getInstance().getConferencesByUser(user.getId());
+        ArrayList<String> conferenceUsertitle = new ArrayList<String>();
+        
+        for(Conference conf: conferencesUser) {
+            conferenceUsertitle.add(conf.title);
+        }
+        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle,flash()));
     }
 
     public Result showConferencePageFilter(String keyword, String conf_status) {
         User user = UserStorage.getCurrentUser();
         Conference[] conferences = Api.getInstance().getConferencesKeyword(user.getId(), keyword, conf_status);
-        return ok(views.html.conference.conference.render(Arrays.asList(conferences),flash()));
+        Conference[] conferencesUser = Api.getInstance().getConferencesByUser(user.getId());
+        ArrayList<String> conferenceUsertitle = new ArrayList<String>();
+        for(Conference conf: conferencesUser) {
+            conferenceUsertitle.add(conf.title);
+        }
+        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle,flash()));
     }
 }
 
