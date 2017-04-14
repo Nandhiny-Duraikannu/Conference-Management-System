@@ -220,10 +220,10 @@ public class Api {
 
     public boolean uploadPaper(Long paper_id, File file, String format) {
         try {
-            HttpResponse<JsonNode> response = Unirest.post(getUrl("papers/upload/"+paper_id))
+            HttpResponse<String> response = Unirest.post(getUrl("papers/upload/"+paper_id))
                     .field("format", format)
                     .field("file", file)
-                    .asJson();
+                    .asString();
             return response.getStatus() >= 200 && response.getStatus() < 400;
         }
         catch (Exception e) {
