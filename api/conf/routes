@@ -24,6 +24,8 @@ GET         /api/papers                      controllers.PaperController.getAllP
 GET         /api/papers/:uid/conf/:cid       controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
 POST        /api/papers/upload/:id            controllers.PaperController.uploadPaper(id: Long)
 GET         /api/papers/download                               controllers.PaperController.downloadPaper(id: Long)
+# paper submission
+POST        /api/paper                           controllers.PaperController.create()
 
 # Reviews
 # create
@@ -40,3 +42,5 @@ GET /api/conferences                         controllers.ConferenceController.ge
 # get conferences for user_id
 GET /api/conferences/users/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
 GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
+
+

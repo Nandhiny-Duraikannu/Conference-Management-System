@@ -9,6 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +47,7 @@ public class ConferenceController extends Controller {
      */
     public Result getWithAssignedReviewer(Long userId) {
         return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
+
     }
 }
             

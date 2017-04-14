@@ -39,7 +39,7 @@ public class PaperController extends Controller {
      * Creates paper via REST api
      */
     public Result create() {
-        Form formA = savePaper();
+        Form formA = SavePaper();
         Form formB = SaveAuthors();
         Logger.debug("in controller create");
         if (formA.hasErrors()) {
@@ -54,28 +54,18 @@ public class PaperController extends Controller {
         }
     }
 
-    protected Form savePaper() {
-        long user_id = UserStorage.getCurrentUser().id;
+     protected Form SavePaper() {
+        //  String user_id = String.valueOf(getCurrentUser());
+        //  long user_id = UserStorage.getCurrentUser().id;
 
         Form PaperForm = formFactory.form(Paper.class);
 
-        Form submittedForm = PaperForm.bindFromRequest(
-                "title", "contactEmail", "user_id", "confirmEmail", "awardCandidate",
-                "studentVolunteer", "paperAbstract", "topic", "conferenceID");
+        Form submittedForm = PaperForm.bindFromRequest();
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
             Paper paper = (Paper) submittedForm.get();
-
-            if (!paper.contactEmail.equals(paper.confirmEmail)) {
-                List errors = new ArrayList();
-                errors.add(new ValidationError("confirmEmail", "Contact email and Confirm email are different"));
-
-            } else {
-                Logger.debug("in save has no errors" + paper.user.id);
-                //  user_id = Paper.save(UserStorage.getCurrentUser());
-                paper.save();
-
-            }
+            // save in api
+             paper.save();
         }
 
         return submittedForm;
