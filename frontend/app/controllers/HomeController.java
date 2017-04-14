@@ -8,6 +8,8 @@ import play.libs.Json;
 import static play.data.Form.*;
 import static play.data.DynamicForm.*;
 import play.Logger;
+import java.util.*;
+import lib.Api;
 
 import models.*;
 
@@ -32,6 +34,7 @@ public class HomeController  extends Controller {
     public Result index() {
         return ok(views.html.index.render());
     }
+
     /**
      * Show the profile of the user
      */
@@ -44,7 +47,27 @@ public class HomeController  extends Controller {
      */
     public Result updateProfileWeb() {
         DynamicForm submittedForm = form().bindFromRequest();
-        //User thisUser = this.updateProfile(submittedForm);
+
+        // TODO: There should be a better way to do this.
+        // https://github.com/playframework/playframework/issues/1519
+        Map<String, String> profileData = new HashMap<String, String>();
+        profileData.put("name", submittedForm.get("name"));
+        profileData.put("email", submittedForm.get("email"));
+        profileData.put("researchAreas", submittedForm.get("researchAreas"));
+        profileData.put("firstName", submittedForm.get("firstName"));
+        profileData.put("lastName", submittedForm.get("lastName"));
+        profileData.put("title", submittedForm.get("title"));
+        profileData.put("position", submittedForm.get("position"));
+        profileData.put("affiliation", submittedForm.get("affiliation"));
+        profileData.put("fax", submittedForm.get("fax"));
+        profileData.put("phone", submittedForm.get("phone"));
+        profileData.put("address", submittedForm.get("address"));
+        profileData.put("city", submittedForm.get("city"));
+        profileData.put("country", submittedForm.get("country"));
+        profileData.put("zip", submittedForm.get("zip"));
+        profileData.put("comments", submittedForm.get("comments"));
+
+        Api.getInstance().updateProfile(profileData);
         return redirect("/");
     }
 }

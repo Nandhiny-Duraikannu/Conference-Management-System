@@ -14,18 +14,6 @@ public class ResetPassword {
     private String securityQuestion;
     private String securityAnswer;
 
-//    public List validate() {
-//        User user = User.getByNameAndPassword(getName(), getPassword());
-//
-//        if (user == null) {
-//            List errors = new ArrayList();
-//            errors.add(new ValidationError("name", "Login or password is incorrect"));
-//            return errors;
-//        }
-//
-//        return null;
-//    }
-
     public String getName() {
         return this.name;
     }

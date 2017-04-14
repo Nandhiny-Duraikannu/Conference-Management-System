@@ -116,4 +116,67 @@ public class Api {
 
         return sb.toString();
     }
+
+    /**
+     *  Get security question of a user
+     */
+    public String getSecurityQuestion(String username) {
+        try {
+            HttpResponse<String> response = Unirest.get(getUrl("resetpassword?name=" + username)).asObject(String.class);
+
+            if(response.getStatus() == 200 || response.getStatus() == 201) {
+                return response.getBody();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *  Set new password
+     */
+    public Boolean setNewPassword(String username, String securityAnswer) {
+        try {
+            User thisUser = this.getInstance().getUserByName(username);
+            String securityQuestion = thisUser.getSecurityQuestion();
+
+            HttpResponse<JsonNode> response = Unirest.post(getUrl("resetpassword"))
+                    .field("name", username)
+                    .field("securityQuestion", securityQuestion)
+                    .field("securityAnswer", securityAnswer)
+                    .asJson();
+
+            if(response.getStatus() == 201 || response.getStatus() == 200) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *  Update profile of a user
+     */
+    public Boolean updateProfile(Map<String, String> inputForm) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("profile")).header("content-type", "application/x-www-form-urlencoded");
+            req.body(mapToQueryString(inputForm));
+            HttpResponse<JsonNode> response = req.asJson();
+
+            if(response.getStatus() == 200 || response.getStatus() == 201) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

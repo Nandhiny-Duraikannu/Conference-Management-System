@@ -12,7 +12,7 @@ GET         /signup                  controllers.UserController.showSignupForm()
 POST        /signup                  controllers.UserController.signup()
 GET         /logout                  controllers.UserController.logout()
 GET         /resetpassword/new       controllers.UserController.resetPasswordNew()
-GET         /resetpassword           controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
+GET         /resetpassword           controllers.UserController.resetPassword(name: java.lang.String ?= null)
 POST        /resetpassword           controllers.UserController.resetPasswordVerifyWeb()
 
 # User Profile

@@ -76,78 +76,26 @@ public class UserController extends Controller {
     /**
      * Validate security question answer; if true, set password and send email
      */
-    public boolean resetPasswordVerify(ResetPassword resetPassword) {
-        String name = resetPassword.getName();
-
-        User thisUser = models.User.getByName(name);
-
-        String securityQuestion = resetPassword.getSecurityQuestion();
-        String securityAnswer = resetPassword.getSecurityAnswer();
-        String securityAnswerTruth = thisUser.securityAnswer;
-
-        boolean result;
-
-
-        if (!securityAnswer.equals(securityAnswerTruth) || name == null || securityQuestion == null || securityAnswer == null) {
-            result = false;
-        } else {
-            // Generate random password, set it and send an email
-            String newRandomPassword = Long.toHexString(Double.doubleToLongBits(Math.random()));
-            Logger.debug("New Password: " + newRandomPassword);
-            // TODO Call API
-            //thisUser.setPassword(newRandomPassword);
-            //thisUser.update();
-
-            result = true;
-        }
-
-        return result;
-    }
-
-    /**
-     * Validate security question answer; if true, set password and send email - Web
-     */
     public Result resetPasswordVerifyWeb() {
         Form resetForm = formFactory.form(ResetPassword.class);
         Form submittedForm = resetForm.bindFromRequest(request());
         ResetPassword resetPassword = (ResetPassword) submittedForm.get();
 
-        // TODO Call API
-        boolean result = this.resetPasswordVerify(resetPassword);
+        Boolean result = Api.getInstance().setNewPassword(resetPassword.getName(), resetPassword.getSecurityAnswer());
 
-        if (result) {
-            return redirect("/login");
+        if(result == true) {
+            return redirect("/");
         } else {
-            return redirect("/resetpassword/new");
+            return redirect("/login");
         }
     }
 
     /**
      * Display the security question and get answer
      */
-    public String resetPassword(String name) {
-        String securityQuestionNumber = models.User.getByName(name).securityQuestion;
-        String securityQuestionString = models.User.getSecurityQuestions().get(securityQuestionNumber);
-        return securityQuestionString;
-    }
-
-    /**
-     * Display the security question and get answer - Web
-     */
-    public Result resetPasswordWeb(String name) {
-        String securityQuestionString = this.resetPassword(name);
-        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class),
-                                                                   flash(),
-                                                                   name,
-                                                                   securityQuestionString));
-    }
-
-    /**
-     * Display the security question and get answer - API
-     */
-    public Result resetPasswordAPI(String name) {
-        String securityQuestionString = this.resetPassword(name);
-        return ok(Json.toJson(securityQuestionString));
+    public Result resetPassword(String name) {
+        String securityQuestion = Api.getInstance().getSecurityQuestion(name);
+        return ok(views.html.user.resetPasswordSecurityForm.render(formFactory.form(User.class), flash(), name, securityQuestion));
     }
 
     /**

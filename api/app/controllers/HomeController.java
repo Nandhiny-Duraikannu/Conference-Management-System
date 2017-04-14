@@ -25,6 +25,8 @@ public class HomeController  extends Controller {
      * Update the profile of the user
      */
     public User updateProfile(DynamicForm submittedForm) {
+        // TODO: There should be a better way to do this.
+        // https://github.com/playframework/playframework/issues/1519
         String name = submittedForm.get("name");
         String email = submittedForm.get("email");
         String researchAreas = submittedForm.get("researchAreas");
