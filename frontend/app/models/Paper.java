@@ -43,7 +43,7 @@ public class Paper {
 
     public Long fileSize;
 
-    public String submissionDate;
+    public Date submissionDate;
 
     public List<Review> reviews;
 

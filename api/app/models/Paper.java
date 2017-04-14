@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.*;
+import com.avaje.ebean.config.JsonConfig;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import play.data.validation.*;
@@ -55,7 +56,7 @@ public class Paper extends com.avaje.ebean.Model {
 
     public Long fileSize;
 
-    public String submissionDate;
+    public Date submissionDate;
 
     @Lob
     public byte[] fileContent;
@@ -161,6 +162,7 @@ public class Paper extends com.avaje.ebean.Model {
         this.fileSize = size;
         this.fileFormat = format;
         this.status = "uploaded";
+        this.submissionDate = new Date();
         this.save();
     }
 

@@ -26,7 +26,7 @@ import forms.PaperSubmission.*;
 import models.*;
 import forms.PaperSubmission;
 import play.mvc.WebSocket;
-import views.html.paper.PaperForm;
+//import views.html.paper.PaperForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class PaperController extends Controller {
      * PaperSubmission  page
      */
     public Result showPaperSubmissionForm() {
-        return ok(views.html.paper.PaperForm.render(formFactory.form(PaperSubmission.class), flash()));
+        return ok(views.html.paper.PaperForm.render(null, formFactory.form(PaperSubmission.class), flash()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class PaperController extends Controller {
     public Result create() {
         // TODO save via API
 
-        Form formA = savePaper();
+        Form formA = SavePaper();
         Form formB = SaveAuthors();
         Logger.debug("in controller create");
         if (formA.hasErrors()) {
@@ -81,29 +81,27 @@ public class PaperController extends Controller {
 
     }
 
-    protected Form savePaper() {
+    /**
+     * Update paper
+     */
+    public Result update(Long id) {
+        // TODO save via API
+        // after create()
+        return redirect("/papers");
+    }
+
+    protected Form SavePaper() {
         //  String user_id = String.valueOf(getCurrentUser());
-        long user_id = UserStorage.getCurrentUser().id;
+      //  long user_id = UserStorage.getCurrentUser().id;
 
         Form PaperForm = formFactory.form(Paper.class);
 
-        Form submittedForm = PaperForm.bindFromRequest(
-                "title", "contactEmail", "user_id", "confirmEmail", "awardCandidate",
-                "studentVolunteer", "paperAbstract", "topic", "conferenceID");
+        Form submittedForm = PaperForm.bindFromRequest();
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
             Paper paper = (Paper) submittedForm.get();
-
-            if (paper.contactEmail != paper.confirmEmail) {
-                List errors = new ArrayList();
-                errors.add(new ValidationError("confirmEmail", "Contact email and Confirm email are different"));
-
-            } else {
-                Logger.debug("in save has no errors" + paper.user.id);
-                //  user_id = Paper.save(UserStorage.getCurrentUser());
-                //paper.save();
-
-            }
+            // save in api
+           // paper.save();
         }
 
         return submittedForm;
@@ -132,7 +130,7 @@ public class PaperController extends Controller {
     }
 
     /**
-     * Retrieves Papers for My papers page - web
+     * Retrieves Papers for My papers page
      */
     public Result getPapers() {
         String param = request().getQueryString("conf_id");
@@ -153,19 +151,18 @@ public class PaperController extends Controller {
     }
 
     /**
-     * upload file to database - web
+     * upload file to database
      */
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
         MultipartFormData.FilePart<File> file = body.getFile("file");
-        Paper paper;// = Paper.getById(id); //!!!!!!!!!!
+
+        Map<String, String> data = new HashMap<String, String>();
         if (file != null) {
             try {
-                byte[] array = Files.readAllBytes(file.getFile().toPath());
-                // TODO Upload via API
-                //paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                boolean uploaded = Api.getInstance().uploadPaper(id, file.getFile(), getFileExtension(file.getFilename()));
                 return redirect(routes.PaperController.getPapers());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -175,11 +172,10 @@ public class PaperController extends Controller {
     }
 
     /**
-     * download file from database - web
+     * download file from database
      */
     public Result downloadPaper(Long id) {
-        // TODO Call API
-        Paper paper = null;//Paper.getById(id);
+        Paper paper =  Api.getInstance().getPaperById(id);
         Result r = ok(paper.fileContent);
         response().setHeader("Content-Disposition", "attachment; filename=paper" + paper.id + "." + paper.fileFormat);
         return r;
@@ -197,11 +193,13 @@ public class PaperController extends Controller {
     }
 
     /**
-     * redirect to paper edit (submission) page - web
-     * IMPLEMENT
+     * redirect to paper edit (submission) page
      */
     public Result editPaper(Long id) {
-        return ok("redirect to paper submission form");
+        Paper paper = Api.getInstance().getPaperById(id);
+        Form paperForm = formFactory.form(Paper.class);
+        paperForm = paperForm.fill(paper);
+        return ok(views.html.paper.PaperForm.render(id, paperForm, flash()));
     }
 }
             

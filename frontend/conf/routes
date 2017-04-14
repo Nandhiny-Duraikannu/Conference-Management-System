@@ -24,6 +24,7 @@ GET         /papers                            controllers.PaperController.getPa
 POST        /papers/upload                     controllers.PaperController.uploadPaper(id: Long)
 GET         /papers/download                   controllers.PaperController.downloadPaper(id: Long)
 GET         /papers/edit                       controllers.PaperController.editPaper(id: Long)
+POST        /papers/update                       controllers.PaperController.update(id: Long)
 
 # My reviews page
 GET         /reviews                           controllers.ReviewController.myConferencesWithReviews()
@@ -36,4 +37,8 @@ GET         /assets/*file                      controllers.Assets.at(path="/publ
 GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
 POST        /paper                             controllers.PaperController.create()
 
-GET         /postSubmission                    controllers.PaperController.postSubmission()
+
+GET         /postSubmission            controllers.PaperController.postSubmission()
+
+#Manage Conference
+GET   /conferences                      controllers.ConferenceController.showConferencePage()

@@ -1,5 +1,6 @@
 package controllers;
 
+import lib.EmailHelper;
 import lib.UserStorage;
 import models.Paper;
 import models.User;
@@ -39,7 +40,7 @@ public class PaperController extends Controller {
      * Creates paper via REST api
      */
     public Result create() {
-        Form formA = savePaper();
+        Form formA = SavePaper();
         Form formB = SaveAuthors();
         Logger.debug("in controller create");
         if (formA.hasErrors()) {
@@ -54,28 +55,18 @@ public class PaperController extends Controller {
         }
     }
 
-    protected Form savePaper() {
-        long user_id = UserStorage.getCurrentUser().id;
+     protected Form SavePaper() {
+        //  String user_id = String.valueOf(getCurrentUser());
+        //  long user_id = UserStorage.getCurrentUser().id;
 
         Form PaperForm = formFactory.form(Paper.class);
 
-        Form submittedForm = PaperForm.bindFromRequest(
-                "title", "contactEmail", "user_id", "confirmEmail", "awardCandidate",
-                "studentVolunteer", "paperAbstract", "topic", "conferenceID");
+        Form submittedForm = PaperForm.bindFromRequest();
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
             Paper paper = (Paper) submittedForm.get();
-
-            if (!paper.contactEmail.equals(paper.confirmEmail)) {
-                List errors = new ArrayList();
-                errors.add(new ValidationError("confirmEmail", "Contact email and Confirm email are different"));
-
-            } else {
-                Logger.debug("in save has no errors" + paper.user.id);
-                //  user_id = Paper.save(UserStorage.getCurrentUser());
-                paper.save();
-
-            }
+            // save in api
+             paper.save();
         }
 
         return submittedForm;
@@ -146,12 +137,21 @@ public class PaperController extends Controller {
      */
     public Result uploadPaper(Long id) {
         MultipartFormData<File> body = request().body().asMultipartFormData();
+
         MultipartFormData.FilePart<File> file = body.getFile("file");
+        String format = body.asFormUrlEncoded().get("format")[0];
         Paper paper = Paper.getById(id);
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
-                paper.upload(getFileExtension(file.getFilename()), file.getFile().length(), array);
+                paper.upload(format, file.getFile().length(), array);
+                User user = User.find.byId(paper.user.id);
+                EmailHelper.sendEmail(user.email,
+                        "Successfull paper upload",
+                        user.name + ", congratulations! Your paper was uploaded. " +
+                                "You can download it <a href='http://localhost:9001/papers/download?id="+
+                                paper.id+"'>here</a>");
+
                 return ok();
             } catch (IOException e) {
                 e.printStackTrace();

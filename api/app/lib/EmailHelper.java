@@ -38,8 +38,9 @@ public class EmailHelper {
 
             message.setSubject(subject);
 
-            message.setText(body);
+            //message.setText(body);
 
+            message.setContent(body,  "text/html");
             Transport.send(message);
         }catch (MessagingException mex) {
             mex.printStackTrace();
