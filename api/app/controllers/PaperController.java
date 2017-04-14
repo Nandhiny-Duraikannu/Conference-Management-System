@@ -1,5 +1,6 @@
 package controllers;
 
+import lib.EmailHelper;
 import lib.UserStorage;
 import models.Paper;
 import models.User;
@@ -139,12 +140,18 @@ public class PaperController extends Controller {
 
         MultipartFormData.FilePart<File> file = body.getFile("file");
         String format = body.asFormUrlEncoded().get("format")[0];
-        System.out.println(format);
         Paper paper = Paper.getById(id);
         if (file != null) {
             try {
                 byte[] array = Files.readAllBytes(file.getFile().toPath());
                 paper.upload(format, file.getFile().length(), array);
+                User user = User.find.byId(paper.user.id);
+                EmailHelper.sendEmail(user.email,
+                        "Successfull paper upload",
+                        user.name + ", congratulations! Your paper was uploaded. " +
+                                "You can download it <a href='http://localhost:9001/papers/download?id="+
+                                paper.id+"'>here</a>");
+
                 return ok();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,4 +1,4 @@
-@(PaperSubmission: play.data.Form[forms.PaperSubmission], flash: play.mvc.Http.Flash)
+@(id: Long, PaperSubmission: play.data.Form[forms.PaperSubmission], flash: play.mvc.Http.Flash)
 @currentUser = @{
   lib.UserStorage.getCurrentUser()
 }
@@ -11,12 +11,12 @@
 @main {
 
   <h1>Paper Submission</h1>
-  @b3.form(routes.PaperController.create()) {
+  @b3.form( if (id != null) routes.PaperController.update(id) else routes.PaperController.create() ){
     <p>Please submit your abstract using the form below. Note that all the fields are mandatory. After submission you will receive a password that will allow you to access your paper in the system, upload the file of your paper, and modify the metadata associated with this paper.</p>
 
 
     <fieldset>
-      @b3.text(PaperSubmission("title"), '_label -> "Title", '_help -> "")
+      @b3.text(PaperSubmission("title"), '_label -> "Title", '_help -> "" )
       <br>
       @b3.email(PaperSubmission("contactEmail"), '_label -> "Email of contact author", '_help -> "")
       <br>

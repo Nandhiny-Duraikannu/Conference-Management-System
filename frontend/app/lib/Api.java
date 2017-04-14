@@ -182,8 +182,6 @@ public class Api {
                     .field("format", format)
                     .field("file", file)
                     .asJson();
-
-            System.out.println(response.getBody());
             return response.getStatus() >= 200 && response.getStatus() < 400;
         }
         catch (Exception e) {

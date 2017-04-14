@@ -26,7 +26,7 @@ import forms.PaperSubmission.*;
 import models.*;
 import forms.PaperSubmission;
 import play.mvc.WebSocket;
-import views.html.paper.PaperForm;
+//import views.html.paper.PaperForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class PaperController extends Controller {
      * PaperSubmission  page
      */
     public Result showPaperSubmissionForm() {
-        return ok(views.html.paper.PaperForm.render(formFactory.form(PaperSubmission.class), flash()));
+        return ok(views.html.paper.PaperForm.render(null, formFactory.form(PaperSubmission.class), flash()));
     }
 
     /**
@@ -79,6 +79,15 @@ public class PaperController extends Controller {
             return redirect("/postSubmission");
         }
 
+    }
+
+    /**
+     * Update paper
+     */
+    public Result update(Long id) {
+        // TODO save via API
+        // after create()
+        return redirect("/papers");
     }
 
     protected Form SavePaper() {
@@ -188,7 +197,11 @@ public class PaperController extends Controller {
      * IMPLEMENT
      */
     public Result editPaper(Long id) {
-        return ok("redirect to paper submission form");
+        //Form paperForm = formFactory.form(PaperSubmission.class);
+        Paper paper = Api.getInstance().getPaperById(id);
+        Form paperForm = formFactory.form(Paper.class);
+        paperForm = paperForm.fill(paper);
+        return ok(views.html.paper.PaperForm.render(id, paperForm, flash()));
     }
 }
             
