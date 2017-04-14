@@ -18,6 +18,7 @@ GET         /resetpassword                     controllers.UserController.resetP
 # Dummy admin page
 GET         /admin                     controllers.UserController.showAdminPage()
 
+
 # User Profile
 GET         /profile                           controllers.HomeController.showProfile()
 POST        /profile                           controllers.HomeController.updateProfileWeb()
