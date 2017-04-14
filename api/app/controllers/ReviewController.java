@@ -42,6 +42,22 @@ public class ReviewController extends Controller {
         }
     }
 
+    /**
+     * Edit review
+     */
+    public Result update(Long id) {
+        Review review = Review.find.byId(id);
+
+        if (review == null) {
+            return notFound();
+        }
+
+        review.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        review.update();
+
+        return ok();
+    }
+
     public Result getById(Long id) {
         Review review = Review.getById(id);
         return ok(Json.toJson(review));
