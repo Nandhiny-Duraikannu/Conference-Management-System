@@ -3,34 +3,39 @@
 # ~~~~
 
 # Default path will just redirect to the user list
-GET         /                        controllers.HomeController.index()
+GET         /                                  controllers.HomeController.index()
 
 # User login and signup from web interface
-GET         /login                   controllers.UserController.showLoginForm()
-POST        /login                   controllers.UserController.login()
-GET         /signup                  controllers.UserController.showSignupForm()
-POST        /signup                  controllers.UserController.signup()
-GET         /logout                  controllers.UserController.logout()
-GET         /resetpassword/new       controllers.UserController.resetPasswordNew()
-GET         /resetpassword           controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
-POST        /resetpassword           controllers.UserController.resetPasswordVerifyWeb()
+GET         /login                             controllers.UserController.showLoginForm()
+POST        /login                             controllers.UserController.login()
+GET         /signup                            controllers.UserController.showSignupForm()
+POST        /signup                            controllers.UserController.signup()
+GET         /logout                            controllers.UserController.logout()
+GET         /resetpassword/new                 controllers.UserController.resetPasswordNew()
+GET         /resetpassword                     controllers.UserController.resetPasswordWeb(name: java.lang.String ?= null)
+POST        /resetpassword                     controllers.UserController.resetPasswordVerifyWeb()
 
 # User Profile
-GET         /profile                 controllers.HomeController.showProfile()
-POST        /profile                 controllers.HomeController.updateProfileWeb()
+GET         /profile                           controllers.HomeController.showProfile()
+POST        /profile                           controllers.HomeController.updateProfileWeb()
 
 #My Papers Page
-GET         /papers                  controllers.PaperController.getPapers()
-POST        /papers/upload           controllers.PaperController.uploadPaper(id: Long)
-GET         /papers/download         controllers.PaperController.downloadPaper(id: Long)
-GET         /papers/edit             controllers.PaperController.editPaper(id: Long)
+GET         /papers                            controllers.PaperController.getPapers()
+POST        /papers/upload                     controllers.PaperController.uploadPaper(id: Long)
+GET         /papers/download                   controllers.PaperController.downloadPaper(id: Long)
+GET         /papers/edit                       controllers.PaperController.editPaper(id: Long)
+
+# My reviews page
+GET         /reviews                           controllers.ReviewController.myConferencesWithReviews()
+GET         /reviews/conference/:confId        controllers.ReviewController.myConferenceReviews(confId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file            controllers.Assets.at(path="/public", file)
+GET         /assets/*file                      controllers.Assets.at(path="/public", file)
 
 # PaperSubmission - Show Form
-GET         /paper                   controllers.PaperController.showPaperSubmissionForm()
-POST        /paper                   controllers.PaperController.create()
+GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
+POST        /paper                             controllers.PaperController.create()
+
 
 GET         /postSubmission            controllers.PaperController.postSubmission()
 

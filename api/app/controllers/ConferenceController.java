@@ -28,10 +28,22 @@ public class ConferenceController extends Controller {
         Conference conf = Conference.find.byId(id);
         return ok(Json.toJson(conf));
     }
+
        
     public Result getAllConferences() {
         List<Conference> conferences = new ArrayList<Conference>();
         return ok(Json.toJson(conferences));
+
+
+    /**
+     * Returns conferences for which given user has papers to review
+     *
+     * @param userId
+     * @return
+     */
+    public Result getWithAssignedReviewer(Long userId) {
+        return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
+
     }
 }
             
