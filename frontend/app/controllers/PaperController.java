@@ -99,9 +99,15 @@ public class PaperController extends Controller {
         Form submittedForm = PaperForm.bindFromRequest();
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
-            Paper paper = (Paper) submittedForm.get();
+       //     Paper paper = (Paper) submittedForm.get();
             // save in api
            // paper.save();
+              boolean created = Api.getInstance().InsertPaper(submittedForm.data());
+        Logger.debug("created:"+created);
+            if (!created) {
+                submittedForm.globalErrors().add(0,
+                        new ValidationError("Paper", "Paper not submitted"));
+            }
         }
 
         return submittedForm;
