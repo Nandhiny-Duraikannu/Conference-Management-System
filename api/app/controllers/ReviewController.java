@@ -42,6 +42,22 @@ public class ReviewController extends Controller {
         }
     }
 
+    /**
+     * Edit review
+     */
+    public Result update(Long id) {
+        Review review = Review.find.byId(id);
+
+        if (review == null) {
+            return notFound();
+        }
+
+        review.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        review.update();
+
+        return ok();
+    }
+
     public Result getById(Long id) {
         Review review = Review.getById(id);
         return ok(Json.toJson(review));
@@ -50,5 +66,14 @@ public class ReviewController extends Controller {
     public Result getByUser(long userId) {
         return ok(Json.toJson(Review.getByUser(userId)));
     }
+
+    public Result getPaperReviewsByUserAndConf(long user_id, long conf_id) {
+        return ok(Json.toJson(Review.getPaperReviewsByUserAndConf(user_id, conf_id)));
+    }
+
+    public Result getReviewsByUserAndConf(long user_id, long conf_id) {
+        return ok(Json.toJson(Review.getReviewsByUserAndConf(user_id, conf_id)));
+    }
+
 }
             

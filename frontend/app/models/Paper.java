@@ -52,7 +52,7 @@ public class Paper {
     public Conference conference;
 
     /**
-     * papers list by user_id and conference_id
+     *  authors for specified paper id
      */
     public static ArrayList<String> getAuthors(Long paper_id) {
         ArrayList<String> authors = new ArrayList<String>(Arrays.asList(

@@ -1,4 +1,4 @@
-@(flash: play.mvc.Http.Flash)
+@(list: List[Review], flash: play.mvc.Http.Flash)
   @import helper._
 
   @main {
@@ -6,5 +6,48 @@
     <div class="alert alert-info">
       Use the download link to get the file, and the submit review link to enter or modify your review results
     </div>
-    @* TODO display papers *@
+
+  <table class="table-condensed zebra-striped">
+    <thead>
+      <tr>
+        <th>Paper ID</th>
+        <th>Title</th>
+        <th>Authors</th>
+        <th>Download paper</th>
+        <th>Review Info</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    @for(review <- list) {
+      <tr>
+        <td>@review.paperId</td>
+        <td>@review.paperTitle</td>
+        <td>@String.join("; ", Paper.getAuthors(review.paperId))</td>
+        <td>@if(review.paperFormat != null){
+          <a href="@routes.PaperController.downloadPaper(review.paperId)">
+            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @review.paperFormat, @review.paperSize
+          </a>
+        }
+        </td>
+        <td>
+          <a id="editPaper" class="btn btn-default" href="@routes.ReviewController.viewReview(review.id, "view")">
+            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+          </a>
+          <a id="editPaper" class="btn btn-default" href="@routes.ReviewController.viewReview(review.id, "edit")">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          </a>
+          <a id="editPaper" class="btn btn-default" href="@routes.ReviewController.viewReview(review.id, "print")">
+            <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+          </a>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+  <script>
+          $("#conf_list").on("change",function () {
+            $(this).closest("form").submit();
+          })
+  </script>
   }

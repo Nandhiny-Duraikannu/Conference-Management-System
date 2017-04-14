@@ -1,0 +1,33 @@
+@(review: models.Review, mode: String, reviewForm: play.data.Form[models.Review], flash: play.mvc.Http.Flash)
+@import b3.vertical.fieldConstructor
+
+@readonly = @{ if(mode == "edit") { false } else { true }}
+
+@main {
+    <h1>Review submission</h1>
+    @b3.form(routes.ReviewController.edit(review.id)) {
+        @b3.textarea(reviewForm("content"),  'readonly -> readonly, '_label -> "Review text", 'rows -> 10)
+
+        <div class="actions">
+            @if(!readonly){
+                <input type="submit" value="Submit" class="btn primary">
+            }
+
+            @if(readonly){
+                <button onclick="goBack()" class="btn primary">Go Back to the List of Reviews</button>
+            }
+        </div>
+    }
+    <script>
+        if( "@mode" == "print"){
+            window.onload = function () {
+                window.print();
+                window.history.back();
+            }
+        }
+        function goBack()
+        {
+            window.history.back();
+        }
+    </script>
+}

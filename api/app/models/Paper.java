@@ -123,7 +123,14 @@ public class Paper extends com.avaje.ebean.Model {
                     .findList();
         ArrayList<String> authors = new ArrayList<String>();
         for (int i = 0; i < items.size(); i++) {
-            authors.add(items.get(i).author_first_name + " " + items.get(i).author_last_name);
+            String authorInfo = items.get(i).author_first_name + " " + items.get(i).author_last_name;
+            if (items.get(i).author_affiliation != "" && items.get(i).author_affiliation != null)
+            {
+                if ( items.get(i).author_affiliation != null || items.get(i).author_affiliation != "" ) {
+                    authorInfo += " (" + items.get(i).author_affiliation + ")";
+                }
+            }
+            authors.add(authorInfo);
         }
         return authors;
     }

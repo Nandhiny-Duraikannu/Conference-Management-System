@@ -24,12 +24,14 @@ GET         /papers                            controllers.PaperController.getPa
 POST        /papers/upload                     controllers.PaperController.uploadPaper(id: Long)
 GET         /papers/download                   controllers.PaperController.downloadPaper(id: Long)
 GET         /papers/edit                       controllers.PaperController.editPaper(id: Long)
-POST        /papers/update                       controllers.PaperController.update(id: Long)
+POST        /papers/update                     controllers.PaperController.update(id: Long)
 
 # My reviews page
 GET         /reviews                           controllers.ReviewController.myConferencesWithReviews()
+GET         /reviews/view                      controllers.ReviewController.viewReview(id: Long, mode: String)
 GET         /reviews/conference/:confId        controllers.ReviewController.myConferenceReviews(confId: Long)
-
+GET         /reviews/:id                       controllers.ReviewController.viewReview(id: Long, mode: String)
+POST        /reviews/:id                       controllers.ReviewController.edit(id: Long)
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)
 
