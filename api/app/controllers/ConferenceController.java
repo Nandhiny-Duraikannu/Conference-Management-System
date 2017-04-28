@@ -36,8 +36,8 @@ public class ConferenceController extends Controller {
      * Create conference
      */
     public Result create() {
-        save(new Conference());
-        return created();
+        Conference conf = save(new Conference());
+        return created(Json.toJson(conf));
     }
 
     /**
@@ -50,46 +50,57 @@ public class ConferenceController extends Controller {
             return notFound();
         }
 
-        save(conf);
+        conf = save(conf);
 
-        return ok();
+        return ok(Json.toJson(conf));
     }
 
-    protected void save(Conference model) {
+    protected Conference save(Conference model) {
         Http.MultipartFormData data = request().body().asMultipartFormData();
-        Map<String, String[]> params = data.asFormUrlEncoded();
-        Http.MultipartFormData.FilePart<File> logo = data.getFile("logo");
+        Map<String, String[]> params = null;
+        Http.MultipartFormData.FilePart<File> logo = null;
+
+        if (data != null) {
+            logo = data.getFile("logo");
+            params = data.asFormUrlEncoded();
+        } else {
+            params = request().body().asFormUrlEncoded();
+        }
 
         if (logo != null) {
             String fileName = logo.getFilename();
             File file = logo.getFile();
 
-            try {
-                String dir = "public/uploads";
-                file.renameTo(new File(dir, fileName));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            if (file != null) {
+                try {
+                    String dir = "public/uploads";
+                    file.renameTo(new File(dir, fileName));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
-            model.logo = fileName;
-        } else {
-            model.logo = null;
+                model.logo = fileName;
+            }
         }
 
         SimpleDateFormat df = new SimpleDateFormat("YYYY-mm-dd");
 
-        try {
-            model.acronym = params.get("acronym")[0];
-            model.deadline = df.parse(params.get("deadline")[0]);
-            model.submissionDateStart = df.parse(params.get("submissionDateStart")[0]);
-            model.location = params.get("acronym")[0];
-            model.title = params.get("title")[0];
-            model.status = params.get("status")[0];
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (params != null && params.size() > 0) {
+            try {
+                model.acronym = params.get("acronym")[0];
+                model.deadline = df.parse(params.get("deadline")[0]);
+                model.submissionDateStart = df.parse(params.get("submissionDateStart")[0]);
+                model.location = params.get("acronym")[0];
+                model.title = params.get("title")[0];
+                model.status = params.get("status")[0];
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
         model.save();
+
+        return model;
     }
 
     public Result getById(Long id) {

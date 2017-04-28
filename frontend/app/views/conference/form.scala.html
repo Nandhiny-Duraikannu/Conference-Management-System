@@ -1,0 +1,31 @@
+@(id: Long, ConferenceForm: play.data.Form[models.Conference], flash: play.mvc.Http.Flash)
+@currentUser = @{
+  lib.UserStorage.getCurrentUser()
+}
+
+@import b3.vertical.fieldConstructor
+
+@main {
+
+  <h1>@if(id != null) { Edit conference } else {Create conference}</h1>
+  @b3.form(if(id != null) routes.ConferenceController.update(id) else routes.ConferenceController.create(), 'enctype -> "multipart/form-data") {
+    <fieldset>
+      @b3.text(ConferenceForm("title"), '_label -> "Title", '_help -> "", 'required -> "required")
+      <br>
+      @b3.text(ConferenceForm("acronym"), '_label -> "Acronym", '_help -> "", 'required -> "required")
+      <br>
+      @b3.date(ConferenceForm("submissionDateStart"), '_label -> "Submission date start", '_help -> "", 'required -> "required")
+      <br>
+      @b3.date(ConferenceForm("deadline"), '_label -> "Submission date end", '_help -> "", 'required -> "required")
+      <br>
+      @b3.text(ConferenceForm("location"), '_label -> "Location", '_help -> "")
+      <br>
+      @b3.file(ConferenceForm("logo"), '_label -> "Logo", '_help -> "", '_accept -> "image/*")
+    </fieldset>
+
+    <div class="actions">
+      <input type="submit" value="Submit" class="btn primary">
+    </div>
+
+  }
+}
