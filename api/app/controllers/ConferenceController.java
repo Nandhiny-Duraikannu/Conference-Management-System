@@ -2,15 +2,23 @@ package controllers;
 
 import models.Conference;
 import models.Review;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static play.data.Form.form;
 
 /**
  * Provides web and api endpoints for conference actions
@@ -22,6 +30,77 @@ public class ConferenceController extends Controller {
     @Inject
     public ConferenceController(FormFactory formFactory) {
         this.formFactory = formFactory;
+    }
+
+    /**
+     * Create conference
+     */
+    public Result create() {
+        Conference conf = save(new Conference());
+        return created(Json.toJson(conf));
+    }
+
+    /**
+     * Edit conference
+     */
+    public Result update(Long id) {
+        Conference conf = Conference.find.byId(id);
+
+        if (conf == null) {
+            return notFound();
+        }
+
+        conf = save(conf);
+
+        return ok(Json.toJson(conf));
+    }
+
+    protected Conference save(Conference model) {
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = null;
+        Http.MultipartFormData.FilePart<File> logo = null;
+
+        if (data != null) {
+            logo = data.getFile("logo");
+            params = data.asFormUrlEncoded();
+        } else {
+            params = request().body().asFormUrlEncoded();
+        }
+
+        if (logo != null) {
+            String fileName = logo.getFilename();
+            File file = logo.getFile();
+
+            if (file != null) {
+                try {
+                    String dir = "public/uploads";
+                    file.renameTo(new File(dir, fileName));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+                model.logo = fileName;
+            }
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("YYYY-mm-dd");
+
+        if (params != null && params.size() > 0) {
+            try {
+                model.acronym = params.get("acronym")[0];
+                model.deadline = df.parse(params.get("deadline")[0]);
+                model.submissionDateStart = df.parse(params.get("submissionDateStart")[0]);
+                model.location = params.get("acronym")[0];
+                model.title = params.get("title")[0];
+                model.status = params.get("status")[0];
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        model.save();
+
+        return model;
     }
 
     public Result getById(Long id) {

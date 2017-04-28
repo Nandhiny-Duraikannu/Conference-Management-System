@@ -19,6 +19,8 @@ public class Conference {
     public String location;
     public Date deadline;
     public String status;
+    public Date submissionDateStart;
+    public String logo;
 
     /**
      * list of all conferences
@@ -43,5 +45,73 @@ public class Conference {
                 Api.getInstance().getConferences(user.id)
         ));
         return conferences;
+    }
+
+    public String getLogoUrl() {
+        return "http://localhost:9000/uploads/" + logo;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAcronym() {
+        return acronym;
+    }
+
+    public void setAcronym(String acronym) {
+        this.acronym = acronym;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getSubmissionDateStart() {
+        return submissionDateStart;
+    }
+
+    public void setSubmissionDateStart(Date submissionDateStart) {
+        this.submissionDateStart = submissionDateStart;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

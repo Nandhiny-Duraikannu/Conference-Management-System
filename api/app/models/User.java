@@ -71,6 +71,8 @@ public class User extends com.avaje.ebean.Model {
     @Column(length = 5000)
     public String comments;
 
+    public String role;
+
     /**
      * Generic query helper for entity User with id Long
      */
