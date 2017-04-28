@@ -30,8 +30,23 @@ public class Conference {
         User user = UserStorage.getCurrentUser();
         List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
                 Api.getInstance().getConferences(null)
-        ));
+                                                                              ));
         return null;
+    }
+
+    // Returns map of <conf id, conf title> with only conferences that are now available for submission
+    public static Map<String, String> getIdTitleMapAvailableForSubmission() {
+        HashMap<String, String> map = new HashMap<>();
+        Date now = new Date();
+
+        for (Conference c : Api.getInstance().getConferencesAll(null)) {
+            if ((c.submissionDateStart == null || c.submissionDateStart.before(now)) &&
+                (c.deadline == null || c.deadline.after(now))) {
+                map.put(c.id.toString(), c.title);
+            }
+        }
+
+        return map;
     }
 
     /**
@@ -43,7 +58,7 @@ public class Conference {
         System.out.println(user.id);
         List<Conference> conferences = new ArrayList<Conference>(Arrays.asList(
                 Api.getInstance().getConferences(user.id)
-        ));
+                                                                              ));
         return conferences;
     }
 

@@ -1,87 +1,90 @@
-@(list: List[Paper], conf_id:Int, flash: play.mvc.Http.Flash)
+@(list: List[Paper], conf_id: Int, flash: play.mvc.Http.Flash)
 @import helper._
 
 @main {
 
   <h2>My Papers</h2>
-     <form method="GET" action="/papers">
-         Select conference:
-        <select id="conf_list" name="conf_id">
-            <option value=""
-                @if(conf_id == 0){
-                    selected
-                }
-            >
-            </option>
-            @for(conf <- Conference.getConferencesByUser()) {
-                <option value=@conf.id
-                    @if(conf_id == conf.id) {
-                    selected
-                }
-                >
-                    @conf.acronym
-                </option>
+  <form method="GET" action="/papers">
+    Select conference:
+    <select id="conf_list" name="conf_id">
+      <option value=""
+      @if(conf_id == 0) {
+        selected
+      }
+      >
+      </option>
+      @for(conf <- Conference.getConferencesByUser()) {
+        @if(conf != null) {
+          <option value=@conf.id
+            @if(conf_id == conf.id) {
+              selected
             }
-        </select>
-    </form>
-    <h2 id="homeTitle">Papers found: @list.size()</h2>
-    <table class="table-condensed zebra-striped">
-        <thead>
+          >
+          @conf.acronym
+          </option>
+        }
+      }
+    </select>
+  </form>
+  <h2 id="homeTitle">Papers found: @list.size()</h2>
+  <table class="table-condensed zebra-striped">
+    <thead>
       <tr>
-          <th>Paper ID</th>
-          <th>Title</th>
-          <th>Topic</th>
-          <th>Contact email</th>
-          <th>Authors</th>
-          <th>Status</th>
-          <th>Conference</th>
-          <th>Submission Deadline</th>
-          <th>File Info</th>
-          <th>Submission Date</th>
-          <th>Edit</th>
+        <th>Paper ID</th>
+        <th>Title</th>
+        <th>Topic</th>
+        <th>Contact email</th>
+        <th>Authors</th>
+        <th>Status</th>
+        <th>Conference</th>
+        <th>Submission Deadline</th>
+        <th>File Info</th>
+        <th>Submission Date</th>
+        <th>Edit</th>
       </tr>
-      </thead>
+    </thead>
 
-        <tbody>
-            @for(paper <- list) {
-                <tr>
-                    <td>@paper.id</td>
-                    <td>@paper.title</td>
-                    <td>@paper.topic</td>
-                    <td>@paper.contactEmail</td>
-                    <td>@String.join("; ", Paper.getAuthors(paper.id))</td>
-                    <td>@paper.status</td>
-                    <td>@paper.conference.acronym</td>
-                    <td>@if(paper.conference.deadline != null){
-                            @paper.conference.deadline.format("YYYY-MM-dd")
-                        }
-                    </td>
-                    <td>@if(paper.fileFormat == null){
-                        @helper.form(action = routes.PaperController.uploadPaper(paper.id), 'enctype -> "multipart/form-data") {
-                           <input type="file" name="file">
-                           <input class="btn btn-default" type="submit">
-                        }}else{
-                        <a href="@routes.PaperController.downloadPaper(paper.id)">
-                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @paper.fileFormat, @paper.fileSize b
-                        </a>
-                        }
-                    </td>
-                    <td>@if(paper.submissionDate != null){
-                        @paper.submissionDate.format("YYYY-MM-dd")
-                    }
-                    </td>
-                    <td>
-                        <a id="editPaper" class="btn btn-default" href="@routes.PaperController.editPaper(paper.id)">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                        </a>
-                    </td>
-                </tr>
-            }
-      </tbody>
-    </table>
-    <script>
-            $("#conf_list").on("change",function () {
-                $(this).closest("form").submit();
-            })
-    </script>
+    <tbody>
+    @for(paper <- list) {
+      <tr>
+        <td>@paper.id</td>
+        <td>@paper.title</td>
+        <td>@paper.topic</td>
+        <td>@paper.contactEmail</td>
+        <td>@String.join("; ", Paper.getAuthorNames(paper.id))</td>
+        <td>@paper.status</td>
+        <td>@paper.conference.acronym</td>
+        <td>@if(paper.conference.deadline != null) {
+          @paper.conference.deadline.format("YYYY-MM-dd")
+        }
+        </td>
+        <td>@if(paper.fileFormat == null) {
+          @helper.form(action = routes.PaperController.uploadPaper(paper.id), 'enctype -> "multipart/form-data") {
+            <input type="file" name="file">
+            <input class="btn btn-default" type="submit">
+          }
+        } else {
+          <a href="@routes.PaperController.downloadPaper(paper.id)">
+            <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @paper.fileFormat, @paper.fileSize b
+          </a>
+        }
+        </td>
+        <td>@if(paper.submissionDate != null) {
+          @paper.submissionDate.format("YYYY-MM-dd")
+        }
+        </td>
+        <td>
+          <a id="editPaper" class="btn btn-default" href="@routes.PaperController.editPaper(paper.id)">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+          </a>
+        </td>
+      </tr>
+    }
+    </tbody>
+  </table>
+  <script>
+          $("#conf_list").on("change", function () {
+            $(this).closest("form").submit();
+          })
+  </script>
 }

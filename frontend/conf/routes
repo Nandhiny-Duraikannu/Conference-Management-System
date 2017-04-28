@@ -29,6 +29,8 @@ POST        /papers/upload                     controllers.PaperController.uploa
 GET         /papers/download                   controllers.PaperController.downloadPaper(id: Long)
 GET         /papers/edit                       controllers.PaperController.editPaper(id: Long)
 POST        /papers/update                     controllers.PaperController.update(id: Long)
+GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
+POST        /paper                             controllers.PaperController.create()
 
 # My reviews page
 GET         /reviews                           controllers.ReviewController.myConferencesWithReviews()
@@ -38,10 +40,6 @@ GET         /reviews/:id                       controllers.ReviewController.view
 POST        /reviews/:id                       controllers.ReviewController.edit(id: Long)
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)
-
-# PaperSubmission - Show Form
-GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
-POST        /paper                             controllers.PaperController.create()
 
 
 GET         /postSubmission                    controllers.PaperController.postSubmission()

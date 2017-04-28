@@ -128,7 +128,26 @@ public class Api {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
                                                                            "application/x-www-form-urlencoded");
-            req.body(mapToQueryString(data));
+            String query = mapToQueryString(data);
+            System.out.println(query);
+            req.body(query);
+
+            HttpResponse<JsonNode> response = req.asJson();
+
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean UpdatePaper(Long id, Map<String, String> data) {
+        try {
+            HttpRequestWithBody req = Unirest.post(getUrl("paper/" + id)).header("content-type",
+                                                                                 "application/x-www-form-urlencoded");
+            String query = mapToQueryString(data);
+            System.out.println(query);
+            req.body(query);
 
             HttpResponse<JsonNode> response = req.asJson();
 
@@ -198,7 +217,7 @@ public class Api {
     }
 
     public Conference[] getConferences(Long user_id) {
-        if (user_id != null || user_id != 0) {
+        if (user_id != null) {
             //list of conferences for user id
             try {
                 HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/user/" + user_id)).asObject(
@@ -255,8 +274,8 @@ public class Api {
                 url += "/" + conf.id;
             }
             HttpRequestWithBody req = Unirest.post(getUrl(url)).header("content-type",
-                                                                                            "application/x-www-form-urlencoded");
-            SimpleDateFormat df = new SimpleDateFormat("YYYY-mm-dd");
+                                                                       "application/x-www-form-urlencoded");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             HashMap<String, String> params = new HashMap<>();
 
             params.put("title", conf.title);
