@@ -1,9 +1,6 @@
 package controllers;
 
-import models.Conference;
-import models.EmailTemplate;
-import models.PCMember;
-import models.Review;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
@@ -141,16 +138,21 @@ public class ConferenceController extends Controller {
         return ok(Json.toJson(PCMember.getByConfId(conf_id)));
     }
 
-    public Result addPCMember() {
-        Form signupForm = formFactory.form(PCMember.class);
-        Form submittedForm = signupForm.bindFromRequest();
-
-        if (!submittedForm.hasErrors()) {
-            PCMember pcMember = (PCMember) submittedForm.get();
-            pcMember.save();
+    public Result addPCMember(Long conf_id) {
+        PCMember member = new PCMember();
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        System.out.println(params);
+        member.conference = new Conference();
+        member.conference.id = conf_id;
+        member.user = new User();
+        member.user.id =  Long.parseLong(params.get("id")[0]);
+        member.role = params.get("role")[0];
+        if(member.conference.id!=null && member.user.id !=null && member.role!= null){
+            member.save();
             return created();
         } else {
-            return badRequest(submittedForm.errorsAsJson());
+            return badRequest();
         }
     }
 
@@ -183,7 +185,7 @@ public class ConferenceController extends Controller {
         }
     }
 
-    public Result updateEmailTemplate(Long id) {
+    public Result updateEmailTemplate(Long conf_id,Long id) {
 
         EmailTemplate template = EmailTemplate.find.byId(id);
 

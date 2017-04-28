@@ -56,5 +56,12 @@ public class PCMember {
         this.role = role;
     }
 
+    public static List<String> listRoles() {
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add("user");
+        roles.add("reviewer");
+        roles.add("chair");
+        return roles;
+    }
 }
 

@@ -30,7 +30,7 @@ public class PCMember extends com.avaje.ebean.Model {
     public Conference conference;
 
     @NotNull
-    @ManyToMany
+    @ManyToOne
     public User user;
 
     public String role;

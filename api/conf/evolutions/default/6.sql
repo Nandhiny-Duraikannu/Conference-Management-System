@@ -15,12 +15,15 @@ create table email_template (
   constraint pk_email_template primary key (id)
 );
 
-alter table pcmember add constraint fk_pc_member_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_pc_member_user_id on pcmember (user_id);
+alter table pcmember add constraint fk_pcmember_conference_id foreign key (conference_id) references conference (id) on delete restrict on update restrict;
+create index ix_pcmember_conference_id on pcmember (conference_id);
 
-alter table pcmember add constraint fk_pc_member_conference_id foreign key (conference_id) references conference (id) on delete restrict on update restrict;
-create index ix_pc_member_conference_id on pcmember (conference_id);
+alter table pcmember add constraint fk_pcmember_user_id foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_pcmember_user_id on pcmember (user_id);
 
 alter table email_template add constraint fk_email_template_conference_id foreign key (conference_id) references conference (id) on delete restrict on update restrict;
 create index ix_email_template_conference_id on email_template (conference_id);
+
+ALTER TABLE pcmember ADD CONSTRAINT pcmember__user_conference UNIQUE (user_id, conference_id);
+
 # --- !Down

@@ -3,54 +3,56 @@
 # ~~~~
 
 # Default path will just redirect to the user list
-GET         /                                  controllers.HomeController.index()
+GET         /                                        controllers.HomeController.index()
 
 # User login and signup from web interface
-GET         /login                             controllers.UserController.showLoginForm()
-POST        /login                             controllers.UserController.login()
-GET         /signup                            controllers.UserController.showSignupForm()
-POST        /signup                            controllers.UserController.signup()
-GET         /logout                            controllers.UserController.logout()
-GET         /resetpassword/new                 controllers.UserController.resetPasswordNew()
-POST        /resetpassword                     controllers.UserController.resetPasswordVerifyWeb()
-GET         /resetpassword                     controllers.UserController.resetPassword(name: java.lang.String ?= null)
+GET         /login                                   controllers.UserController.showLoginForm()
+POST        /login                                   controllers.UserController.login()
+GET         /signup                                  controllers.UserController.showSignupForm()
+POST        /signup                                  controllers.UserController.signup()
+GET         /logout                                  controllers.UserController.logout()
+GET         /resetpassword/new                       controllers.UserController.resetPasswordNew()
+POST        /resetpassword                           controllers.UserController.resetPasswordVerifyWeb()
+GET         /resetpassword                           controllers.UserController.resetPassword(name: java.lang.String ?= null)
 
 # Admin page
-GET         /conferences/admin                 controllers.ConferenceController.showAdminPage(conf_id: Long)
-GET         /conferences/pcmembers             controllers.ConferenceController.showPCMembers(conf_id: Long)
-GET         /conferences/pcmembers/id          controllers.ConferenceController.showPCMembers(conf_id: Long)
-GET         /conferences/templates        controllers.ConferenceController.showEmailTemplates(conf_id: Long)
-GET         /conferences/templates/id     controllers.ConferenceController.showEmailTemplates(conf_id: Long)
+GET         /conferences/admin                       controllers.ConferenceController.showAdminPage(conf_id: Long)
+GET         /conferences/pcmembers                   controllers.ConferenceController.showPCMembers(conf_id: Long)
+POST        /conferences/pcmembers/:confId           controllers.ConferenceController.addPCMember(confId: Long)
+GET         /conferences/pcmembers/delete/:id        controllers.ConferenceController.deletePCMember(id: Long)
+GET         /conferences/templates                   controllers.ConferenceController.showEmailTemplates(conf_id: Long)
+GET         /conferences/templates/:id               controllers.ConferenceController.showEmailTemplates(id: Long)
+POST        /conferences/templates/:conf_id          controllers.ConferenceController.saveTemplate(conf_id: Long)
 
 # User Profile
-GET         /profile                           controllers.HomeController.showProfile()
-POST        /profile                           controllers.HomeController.updateProfileWeb()
+GET         /profile                                 controllers.HomeController.showProfile()
+POST        /profile                                 controllers.HomeController.updateProfileWeb()
 
 #My Papers Page
-GET         /papers                            controllers.PaperController.getPapers()
-POST        /papers/upload                     controllers.PaperController.uploadPaper(id: Long)
-GET         /papers/download                   controllers.PaperController.downloadPaper(id: Long)
-GET         /papers/edit                       controllers.PaperController.editPaper(id: Long)
-POST        /papers/update                     controllers.PaperController.update(id: Long)
-GET         /paper                             controllers.PaperController.showPaperSubmissionForm()
-POST        /paper                             controllers.PaperController.create()
+GET         /papers                                  controllers.PaperController.getPapers()
+POST        /papers/upload                           controllers.PaperController.uploadPaper(id: Long)
+GET         /papers/download                         controllers.PaperController.downloadPaper(id: Long)
+GET         /papers/edit                             controllers.PaperController.editPaper(id: Long)
+POST        /papers/update                           controllers.PaperController.update(id: Long)
+GET         /paper                                   controllers.PaperController.showPaperSubmissionForm()
+POST        /paper                                   controllers.PaperController.create()
 
 # My reviews page
-GET         /reviews                           controllers.ReviewController.myConferencesWithReviews()
-GET         /reviews/view                      controllers.ReviewController.viewReview(id: Long, mode: String)
-GET         /reviews/conference/:confId        controllers.ReviewController.myConferenceReviews(confId: Long)
-GET         /reviews/:id                       controllers.ReviewController.viewReview(id: Long, mode: String)
-POST        /reviews/:id                       controllers.ReviewController.edit(id: Long)
+GET         /reviews                                 controllers.ReviewController.myConferencesWithReviews()
+GET         /reviews/view                            controllers.ReviewController.viewReview(id: Long, mode: String)
+GET         /reviews/conference/:confId              controllers.ReviewController.myConferenceReviews(confId: Long)
+GET         /reviews/:id                             controllers.ReviewController.viewReview(id: Long, mode: String)
+POST        /reviews/:id                             controllers.ReviewController.edit(id: Long)
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                      controllers.Assets.at(path="/public", file)
+GET         /assets/*file                            controllers.Assets.at(path="/public", file)
 
 
-GET         /postSubmission                    controllers.PaperController.postSubmission()
+GET         /postSubmission                          controllers.PaperController.postSubmission()
 
 #Manage Conference
-GET         /conferences                       controllers.ConferenceController.showConferencePage()
-POST        /conferences/update/:id            controllers.ConferenceController.update(id: Long)
-GET         /conferences/update/:id            controllers.ConferenceController.showEditForm(id: Long)
-POST        /conferences/create                controllers.ConferenceController.create()
-GET         /conferences/create                controllers.ConferenceController.showCreateForm()
-GET         /conferencessearch                 controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)
+GET         /conferences                             controllers.ConferenceController.showConferencePage()
+POST        /conferences/update/:id                  controllers.ConferenceController.update(id: Long)
+GET         /conferences/update/:id                  controllers.ConferenceController.showEditForm(id: Long)
+POST        /conferences/create                      controllers.ConferenceController.create()
+GET         /conferences/create                      controllers.ConferenceController.showCreateForm()
+GET         /conferencessearch                       controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)

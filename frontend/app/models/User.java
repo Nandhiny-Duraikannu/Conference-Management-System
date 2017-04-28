@@ -70,6 +70,10 @@ public class User {
         return Api.getInstance().getUserByName(name);
     }
 
+    public static List<User> getAllUsers() {
+        return Api.getInstance().getAllUsers();
+    }
+
     public static User getByNameAndPassword(String name, String password) {
         User user = Api.getInstance().getUserByName(name);
 

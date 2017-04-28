@@ -100,6 +100,10 @@ public class User extends com.avaje.ebean.Model {
         return find.where().eq("name", name).findUnique();
     }
 
+    public static List<User> getAll() {
+        return find.findList();
+    }
+
     public static User getByEmail(String email) {
         return find.where().eq("email", email).findUnique();
     }

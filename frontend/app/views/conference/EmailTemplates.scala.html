@@ -1,10 +1,50 @@
-@(conf_id:Long, flash: play.mvc.Http.Flash)
-  @import helper._
+@(conf_id: Long, templates: List[EmailTemplate], flash: play.mvc.Http.Flash)
+@import helper._
 
-  @import b3.vertical.fieldConstructor
+@import b3.vertical.fieldConstructor
 
-  @main {
+@main {
 
-    <h1>Add PC member</h1>
+    <h1>Manage Templates</h1>
+    <form action="/conferences/templates/@conf_id" method="POST">
+        Select template
+        <select id="list" name="template_id">
+            <option value="0" selected>
+                Select template
+            </option>
+            @for(template <- templates) {
+                @if(template != null) {
+                    <option value=@template.id data-content=@template.content>
+                    @template.title
+                    </option>
+                }
+            }
+        </select>
 
-  }
+        <br><br>
+        <table class="table-condensed zebra-striped">
+            <thead>
+                <tr>
+                    <th>Content</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <textarea name="content" id="" rows="10" style="width: 100%;"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="submit" id="editTemplate" class="btn btn-default">
+            <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+        </button>
+    </form>
+    <script>
+            $('[name="template_id"]').on('change', function () {
+                $('textarea').val($(this).find('option:selected').data('content'));
+            });
+    </script>
+}

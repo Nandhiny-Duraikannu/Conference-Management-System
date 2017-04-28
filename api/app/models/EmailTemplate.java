@@ -50,6 +50,10 @@ public class EmailTemplate extends com.avaje.ebean.Model {
         return find.where().eq("name", name).findUnique();
     }
 
+    public static EmailTemplate getByNameAndConf(String name, Long conf_id) {
+        return find.where().eq("name", name).findUnique();
+    }
+
     public Long getId() {
         return id;
     }

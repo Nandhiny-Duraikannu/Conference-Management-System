@@ -8,7 +8,9 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,15 +49,15 @@ public class EmailTemplate {
         this.title = title;
     }
 
-    public static Map<String, String> getTopics() {
-        Map<String, String> topics = new HashMap<String, String>();
-        topics.put("Template for Accepted Papers", "Template for Accepted Papers");
-        topics.put("Template for Rejected Papers", "Template for Rejected Papers");
-        topics.put("Template for Moved Papers", "Template for Moved Papers");
-        topics.put("Template for Instructions", "Template for Instructions");
-        topics.put("Template for Invitations", "Template for Invitations");
-        topics.put("Reviewer Reminder Template", "Reviewer Reminder Template");
-        return topics;
+    public static List<String> templatesList() {
+        ArrayList<String> templates = new ArrayList<>();
+        templates.add("Template for Accepted Papers");
+        templates.add("Template for Rejected Papers");
+        templates.add("Template for Moved Papers");
+        templates.add("Template for Instructions");
+        templates.add("Template for Invitations");
+        templates.add("Reviewer Reminder Template");
+        return templates;
     }
 }
 
