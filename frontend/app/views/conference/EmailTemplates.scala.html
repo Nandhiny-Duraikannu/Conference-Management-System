@@ -14,7 +14,7 @@
             </option>
             @for(template <- templates) {
                 @if(template != null) {
-                    <option value=@template.id data-content=@template.content>
+                    <option value=@template.id data-content="@template.content">
                     @template.title
                     </option>
                 }
