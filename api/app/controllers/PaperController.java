@@ -40,56 +40,65 @@ public class PaperController extends Controller {
      * Creates paper via REST api
      */
     public Result create() {
-        Form formA = SavePaper();
-        Form formB = SaveAuthors();
-        Logger.debug("in controller create");
-        if (formA.hasErrors()) {
-            Logger.debug("formA has errors");
-            return badRequest(formA.errorsAsJson());
-        } else if (formB.hasErrors()) {
-            Logger.debug("formB has errors");
-            return badRequest(formB.errorsAsJson());
+        Form<Paper> form = SavePaper(new Paper());
+
+        if (form.hasErrors()) {
+
+            return badRequest(form.errorsAsJson());
         } else {
-            Logger.debug("form has no errors");
-            return created(Json.toJson((Paper) formA.get()));
+            return created(Json.toJson((Paper) form.get()));
         }
     }
 
-     protected Form SavePaper() {
-        //  String user_id = String.valueOf(getCurrentUser());
-        //  long user_id = UserStorage.getCurrentUser().id;
+    /**
+     * Creates paper via REST api
+     */
+    public Result update(Long id) {
+        Paper paper = Paper.find.byId(id);
+        Form<Paper> form = SavePaper(paper);
+        System.out.println("update");
+        if (form.hasErrors()) {
+            return badRequest(form.errorsAsJson());
+        } else {
+            return created(Json.toJson((Paper) form.get()));
+        }
+    }
 
-        Form PaperForm = formFactory.form(Paper.class);
-
+    protected Form<Paper> SavePaper(Paper p) {
+        Form<Paper> PaperForm = formFactory.form(Paper.class);
         Form submittedForm = PaperForm.bindFromRequest();
-        Logger.debug("in controller save");
+
         if (!submittedForm.hasErrors()) {
             Paper paper = (Paper) submittedForm.get();
-            // save in api
-             paper.save();
+
+            if (p != null) {
+                paper.id = p.id;
+            }
+
+            if (paper.conference.id != null) {
+                System.out.println("paper save");
+                if (paper.id != null) {
+                    paper.update();
+
+                    // TODO remove all authors from paper before saving new authors
+                    //PaperAuthors.find.where().eq("paper.id", paper.id).delete();
+
+                } else {
+                    paper.save();
+                }
+
+
+                for (PaperAuthors a : paper.authors) {
+                    a.paper = paper;
+                    a.save();
+                }
+            }
+        } else {
+            System.out.println("errors at paper save");
+            System.out.println(submittedForm.errorsAsJson().toString());
         }
 
         return submittedForm;
-    }
-
-    protected Form SaveAuthors() {
-        Form AuthorForm = formFactory.form(PaperAuthors.class);
-
-        Form submittedForm = AuthorForm.bindFromRequest("author_first_name",
-                                                        "user_id",
-                                                        "author_last_name",
-                                                        "author_affiliation",
-                                                        "author_email",
-                                                        "type");
-        Logger.debug("in controller save author");
-        if (!submittedForm.hasErrors()) {
-            PaperAuthors authors = (PaperAuthors) submittedForm.get();
-            Logger.debug("in save has no errors");
-            authors.save();
-        }
-
-        return submittedForm;
-
     }
 
     /**
@@ -147,10 +156,10 @@ public class PaperController extends Controller {
                 paper.upload(format, file.getFile().length(), array);
                 User user = User.find.byId(paper.user.id);
                 EmailHelper.sendEmail(user.email,
-                        "Successfull paper upload",
-                        user.name + ", congratulations! Your paper was uploaded. " +
-                                "You can download it <a href='http://localhost:9001/papers/download?id="+
-                                paper.id+"'>here</a>");
+                                      "Successfull paper upload",
+                                      user.name + ", congratulations! Your paper was uploaded. " +
+                                      "You can download it <a href='http://localhost:9001/papers/download?id=" +
+                                      paper.id + "'>here</a>");
 
                 return ok();
             } catch (IOException e) {

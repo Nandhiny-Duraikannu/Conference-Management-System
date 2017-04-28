@@ -58,6 +58,10 @@ public class Paper extends com.avaje.ebean.Model {
 
     public Date submissionDate;
 
+    @JsonManagedReference
+    @OneToMany
+    public List<PaperAuthors> authors;
+
     @Lob
     public byte[] fileContent;
 
@@ -123,11 +127,16 @@ public class Paper extends com.avaje.ebean.Model {
                     .findList();
         ArrayList<String> authors = new ArrayList<String>();
         for (int i = 0; i < items.size(); i++) {
-            String authorInfo = items.get(i).author_first_name + " " + items.get(i).author_last_name;
-            if (items.get(i).author_affiliation != "" && items.get(i).author_affiliation != null)
-            {
-                if ( items.get(i).author_affiliation != null || items.get(i).author_affiliation != "" ) {
-                    authorInfo += " (" + items.get(i).author_affiliation + ")";
+            PaperAuthors a = items.get(i);
+
+            if (a.author_first_name.length() == 0 && a.author_last_name.length() == 0) {
+                continue;
+            }
+
+            String authorInfo = a.author_first_name + " " + a.author_last_name;
+            if (a.author_affiliation != null && a.author_affiliation.length() > 0) {
+                if (a.author_affiliation != null || a.author_affiliation != "") {
+                    authorInfo += " (" + a.author_affiliation + ")";
                 }
             }
             authors.add(authorInfo);
