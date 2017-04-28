@@ -1,3 +1,4 @@
+@(conf_id:Int, flash: play.mvc.Http.Flash)
 @currentUser = @{
 lib.UserStorage.getCurrentUser()
 }
@@ -6,15 +7,31 @@ lib.UserStorage.getCurrentUser()
 <div class="jumbotron alert-info">
     <h2>Welcome to conference management system!</h2>
     <p>
-        This is a place for you to share your publications, register for conferences, and hang out with your science mates.
-
-        You are on the admin page!
+        Administrator page!
     </p>
     <p>
         @if(currentUser == null) {
         But first, please <a href="/login" role="button">log in</a>
         or <a href="/login" role="button">sign up</a>.
         } else {
+            Select conference:
+            <select id="conf_list" name="conf_id">
+                <option value=""
+                @if(conf_id == 0){
+                    selected
+                }
+                >
+                </option>
+                @for(conf <- Conference.getConferencesByUser()) {
+                    <option value=@conf.id
+                        @if(conf_id == conf.id) {
+                            selected
+                        }
+                    >
+                    @conf.acronym
+                    </option>
+                }
+            </select>
         <a href="/conferences" class="btn btn-primary btn-lg">Discover conferences</a>
         <br>
         <br>
