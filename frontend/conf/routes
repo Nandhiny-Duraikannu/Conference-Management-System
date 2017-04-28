@@ -16,7 +16,7 @@ POST        /resetpassword                     controllers.UserController.resetP
 GET         /resetpassword                     controllers.UserController.resetPassword(name: java.lang.String ?= null)
 
 # Dummy admin page
-GET         /admin                     controllers.UserController.showAdminPage()
+GET         /admin                             controllers.UserController.showAdminPage()
 
 
 # User Profile
@@ -44,8 +44,12 @@ GET         /paper                             controllers.PaperController.showP
 POST        /paper                             controllers.PaperController.create()
 
 
-GET         /postSubmission            controllers.PaperController.postSubmission()
+GET         /postSubmission                    controllers.PaperController.postSubmission()
 
 #Manage Conference
-GET   /conferences                      controllers.ConferenceController.showConferencePage()
-GET   /conferencessearch                      controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)
+GET         /conferences                       controllers.ConferenceController.showConferencePage()
+POST        /conferences/update/:id            controllers.ConferenceController.update(id: Long)
+GET         /conferences/update/:id            controllers.ConferenceController.showEditForm(id: Long)
+POST        /conferences/create                controllers.ConferenceController.create()
+GET         /conferences/create                controllers.ConferenceController.showCreateForm()
+GET         /conferencessearch                 controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)

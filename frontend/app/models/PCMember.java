@@ -1,12 +1,11 @@
 package models;
 
-import javax.persistence.*;
+import lib.Api;
+import play.data.validation.Constraints;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-
-import com.avaje.ebean.PagedList;
-import play.Logger;
-import play.data.validation.*;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -14,34 +13,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lib.Api;
-
 /**
  * User entity
  */
-public class User {
+public class Member {
     @Id
     public Long id;
 
     @Constraints.Required
     public String name;
 
-    @Constraints.Required
     public String password;
 
-    @Constraints.Required
-    public String securityQuestion;
-
-    @Constraints.Required
-    public String securityAnswer;
 
     @Constraints.Required
     @Constraints.Email
     public String email;
-
-    public String title;
-
-    public String researchAreas;
 
     public String firstName;
 
@@ -63,46 +50,8 @@ public class User {
 
     public String zip;
 
-    public String role;
+    public String role; //user, admin, chair, reviewer
 
-    @Column(length = 5000)
-    public String comments;
-
-    public static User getByName(String name) {
-        return Api.getInstance().getUserByName(name);
-    }
-
-    public static User getByNameAndPassword(String name, String password) {
-        User user = Api.getInstance().getUserByName(name);
-
-        if (user == null) {
-            System.out.println("User " + name + " not found");
-            return null;
-        }
-
-        if (!hashPassword(password).equals(user.password)) {
-            System.out.println("password invalid " + hashPassword(password) + " " + user.password);
-            return null;
-        }
-
-        return user;
-    }
-
-    public static Map<String, String> getSecurityQuestions() {
-        Map<String, String> questions = new HashMap<String, String>();
-        questions.put("1", "My favorite computer science paper");
-        questions.put("2", "How I fell in love with web services");
-        questions.put("3", "My favorite Jia class");
-        return questions;
-    }
-
-    public static List<String> getTitles() {
-        List<String> titles = new ArrayList<String>();
-        titles.add("Mr");
-        titles.add("Ms");
-        titles.add("Dr");
-        return titles;
-    }
 
     public static String hashPassword(String password) {
         try {
@@ -137,44 +86,12 @@ public class User {
         this.password = password;
     }
 
-    public String getSecurityQuestion() {
-        return securityQuestion;
-    }
-
-    public void setSecurityQuestion(String securityQuestion) {
-        this.securityQuestion = securityQuestion;
-    }
-
-    public String getSecurityAnswer() {
-        return securityAnswer;
-    }
-
-    public void setSecurityAnswer(String securityAnswer) {
-        this.securityAnswer = securityAnswer;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getResearchAreas() {
-        return researchAreas;
-    }
-
-    public void setResearchAreas(String researchAreas) {
-        this.researchAreas = researchAreas;
     }
 
     public String getFirstName() {
@@ -257,16 +174,5 @@ public class User {
         this.zip = zip;
     }
 
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public boolean isAdmin() {
-        return role.equals("admin");
-    }
 }
 

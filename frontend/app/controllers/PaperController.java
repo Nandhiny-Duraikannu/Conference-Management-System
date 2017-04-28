@@ -99,9 +99,15 @@ public class PaperController extends Controller {
         Form submittedForm = PaperForm.bindFromRequest();
         Logger.debug("in controller save");
         if (!submittedForm.hasErrors()) {
-            Paper paper = (Paper) submittedForm.get();
+       //     Paper paper = (Paper) submittedForm.get();
             // save in api
            // paper.save();
+              boolean created = Api.getInstance().InsertPaper(submittedForm.data());
+        Logger.debug("created:"+created);
+            if (!created) {
+                submittedForm.globalErrors().add(0,
+                        new ValidationError("Paper", "Paper not submitted"));
+            }
         }
 
         return submittedForm;
@@ -111,12 +117,7 @@ public class PaperController extends Controller {
 
         Form AuthorForm = formFactory.form(PaperAuthors.class);
 
-        Form submittedForm = AuthorForm.bindFromRequest("author_first_name",
-                                                        "user_id",
-                                                        "author_last_name",
-                                                        "author_affiliation",
-                                                        "author_email",
-                                                        "type");
+        Form submittedForm = AuthorForm.bindFromRequest();
         Logger.debug("in controller save author");
         if (!submittedForm.hasErrors()) {
             PaperAuthors authors = (PaperAuthors) submittedForm.get();

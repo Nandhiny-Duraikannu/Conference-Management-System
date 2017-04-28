@@ -24,6 +24,7 @@ import models.User;
 import javax.xml.ws.Response;
 import java.io.*;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -123,9 +124,25 @@ public class Api {
         }
     }
 
-    public Paper[] getByAuthorAndConference(Long user_id, int conf_id){
+    public boolean InsertPaper(Map<String, String> data) {
         try {
-            HttpResponse<Paper[]> response = Unirest.get(getUrl("papers/" + user_id + "/conf/" + conf_id)).asObject(Paper[].class);
+            HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
+                                                                           "application/x-www-form-urlencoded");
+            req.body(mapToQueryString(data));
+
+            HttpResponse<JsonNode> response = req.asJson();
+
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Paper[] getByAuthorAndConference(Long user_id, int conf_id) {
+        try {
+            HttpResponse<Paper[]> response = Unirest.get(getUrl("papers/" + user_id + "/conf/" + conf_id)).asObject(
+                    Paper[].class);
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +150,7 @@ public class Api {
         }
     }
 
-    public Paper getPaperById(Long id){
+    public Paper getPaperById(Long id) {
         try {
             HttpResponse<Paper> response = Unirest.get(getUrl("papers/" + id)).asObject(Paper.class);
             return response.getBody();
@@ -143,9 +160,9 @@ public class Api {
         }
     }
 
-    public String[] getAuthors(Long paper_id){
+    public String[] getAuthors(Long paper_id) {
         try {
-            HttpResponse<String[]> response = Unirest.get(getUrl("papers/authors/" + paper_id )).asObject(String[].class);
+            HttpResponse<String[]> response = Unirest.get(getUrl("papers/authors/" + paper_id)).asObject(String[].class);
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,7 +173,7 @@ public class Api {
     // TODO: Just returning all conferences right now.
     // Something was breaking here passing a null into this function.
     // Will create a duplicate for now, and refactor during the weekend. God bless!
-    public Conference[] getConferencesAll(Long user_id){
+    public Conference[] getConferencesAll(Long user_id) {
 //        if ( user_id != null || user_id != 0){
 //            //list of conferences for user id
 //            try {
@@ -168,23 +185,24 @@ public class Api {
 //            }
 //        }
 //        else{
-            //all conferences
+        //all conferences
 
-            try {
-                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
-                return response.getBody();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+        try {
+            HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences")).asObject(Conference[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 //        }
     }
 
-    public Conference[] getConferences(Long user_id){
-        if ( user_id != null || user_id != 0){
+    public Conference[] getConferences(Long user_id) {
+        if (user_id != null || user_id != 0) {
             //list of conferences for user id
             try {
-                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/user/" + user_id)).asObject(Conference[].class);
+                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferences/user/" + user_id)).asObject(
+                        Conference[].class);
                 return response.getBody();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -194,8 +212,18 @@ public class Api {
         return null;
     }
 
+    public Conference getConferenceById(Long id) {
+        try {
+            HttpResponse<Conference> response = Unirest.get(getUrl("conferences/" + id)).asObject(Conference.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // TODO: Maybe combine this with getConferences()
-    public Conference[] getConferencesKeyword(Long user_id, String keyword, String conf_status){
+    public Conference[] getConferencesKeyword(Long user_id, String keyword, String conf_status) {
 //        if ( user_id != null || user_id != 0){
 //            //list of conferences for user id
 //            try {
@@ -207,26 +235,67 @@ public class Api {
 //            }
 //        }
 //        else{
-            //all conferences
-            try {
-                HttpResponse<Conference[]> response = Unirest.get(getUrl("conferencessearch?keyword=" + keyword + "&conf_status=" + conf_status)).asObject(Conference[].class);
-                return response.getBody();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+        //all conferences
+        try {
+            HttpResponse<Conference[]> response = Unirest.get(getUrl("conferencessearch?keyword=" + keyword + "&conf_status=" + conf_status)).asObject(
+                    Conference[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 //        }
+    }
+
+    public Conference editOrCreateConference(Conference conf) {
+        try {
+            String url = "conferences";
+
+            if (conf.id != null && conf.id > 0) {
+                url += "/" + conf.id;
+            }
+            HttpRequestWithBody req = Unirest.post(getUrl(url)).header("content-type",
+                                                                                            "application/x-www-form-urlencoded");
+            SimpleDateFormat df = new SimpleDateFormat("YYYY-mm-dd");
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("title", conf.title);
+            params.put("acronym", conf.acronym);
+            params.put("location", conf.location);
+            params.put("status", conf.status != null ? conf.status : "active");
+            params.put("deadline", df.format(conf.deadline));
+            params.put("submissionDateStart", df.format(conf.submissionDateStart));
+
+            req.body(mapToQueryString(params));
+
+            HttpResponse<Conference> response = req.asObject(Conference.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean setConferenceLogo(Long id, File file) {
+        try {
+            HttpResponse<String> response = Unirest.post(getUrl("conferences/" + id))
+                                                   .field("logo", file)
+                                                   .asString();
+            return response.getStatus() >= 200 && response.getStatus() < 400;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean uploadPaper(Long paper_id, File file, String format) {
         try {
-            HttpResponse<JsonNode> response = Unirest.post(getUrl("papers/upload/"+paper_id))
-                    .field("format", format)
-                    .field("file", file)
-                    .asJson();
+            HttpResponse<String> response = Unirest.post(getUrl("papers/upload/" + paper_id))
+                                                   .field("format", format)
+                                                   .field("file", file)
+                                                   .asString();
             return response.getStatus() >= 200 && response.getStatus() < 400;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -250,9 +319,9 @@ public class Api {
 
     public ArrayList<Review> getReviewsByUserAndConference(Long userId, Long confId) {
         try {
-                HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/user/" + userId + "/conference/" + confId)).asObject(
-                            Review[].class);
-                return new ArrayList<Review>(Arrays.asList(response.getBody()));
+            HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/user/" + userId + "/conference/" + confId)).asObject(
+                    Review[].class);
+            return new ArrayList<Review>(Arrays.asList(response.getBody()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -262,7 +331,7 @@ public class Api {
     public boolean editReview(Long review_id, String content) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("reviews/" + review_id)).header("content-type",
-                                "application/x-www-form-urlencoded");
+                                                                                          "application/x-www-form-urlencoded");
             HashMap<String, String> params = new HashMap<>();
             params.put("content", content);
             req.body(mapToQueryString(params));
@@ -277,7 +346,8 @@ public class Api {
 
     public Review[] getReviewPapersByConf(Long user_id, Long conf_id) {
         try {
-            HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/papers/" + user_id + "/conference/"+conf_id)).asObject(Review[].class);
+            HttpResponse<Review[]> response = Unirest.get(getUrl("reviews/papers/" + user_id + "/conference/" + conf_id)).asObject(
+                    Review[].class);
             return response.getBody();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -314,13 +384,13 @@ public class Api {
     }
 
     /**
-     *  Get security question of a user
+     * Get security question of a user
      */
     public String getSecurityQuestion(String username) {
         try {
             HttpResponse<String> response = Unirest.get(getUrl("resetpassword?name=" + username)).asObject(String.class);
 
-            if(response.getStatus() == 200 || response.getStatus() == 201) {
+            if (response.getStatus() == 200 || response.getStatus() == 201) {
                 return response.getBody();
             } else {
                 return null;
@@ -332,7 +402,7 @@ public class Api {
     }
 
     /**
-     *  Set new password
+     * Set new password
      */
     public Boolean setNewPassword(String username, String securityAnswer) {
         try {
@@ -340,12 +410,12 @@ public class Api {
             String securityQuestion = thisUser.getSecurityQuestion();
 
             HttpResponse<JsonNode> response = Unirest.post(getUrl("resetpassword"))
-                    .field("name", username)
-                    .field("securityQuestion", securityQuestion)
-                    .field("securityAnswer", securityAnswer)
-                    .asJson();
+                                                     .field("name", username)
+                                                     .field("securityQuestion", securityQuestion)
+                                                     .field("securityAnswer", securityAnswer)
+                                                     .asJson();
 
-            if(response.getStatus() == 201 || response.getStatus() == 200) {
+            if (response.getStatus() == 201 || response.getStatus() == 200) {
                 return true;
             } else {
                 return false;
@@ -357,15 +427,16 @@ public class Api {
     }
 
     /**
-     *  Update profile of a user
+     * Update profile of a user
      */
     public Boolean updateProfile(Map<String, String> inputForm) {
         try {
-            HttpRequestWithBody req = Unirest.post(getUrl("profile")).header("content-type", "application/x-www-form-urlencoded");
+            HttpRequestWithBody req = Unirest.post(getUrl("profile")).header("content-type",
+                                                                             "application/x-www-form-urlencoded");
             req.body(mapToQueryString(inputForm));
             HttpResponse<JsonNode> response = req.asJson();
 
-            if(response.getStatus() == 200 || response.getStatus() == 201) {
+            if (response.getStatus() == 200 || response.getStatus() == 201) {
                 return true;
             } else {
                 return false;
