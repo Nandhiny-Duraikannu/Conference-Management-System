@@ -23,7 +23,7 @@
       <tr>
         <td>@review.paperId</td>
         <td>@review.paperTitle</td>
-        <td>@String.join("; ", Paper.getAuthors(review.paperId))</td>
+        <td>@String.join("; ", Paper.getAuthorNames(review.paperId))</td>
         <td>@if(review.paperFormat != null){
           <a href="@routes.PaperController.downloadPaper(review.paperId)">
             <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @review.paperFormat, @review.paperSize

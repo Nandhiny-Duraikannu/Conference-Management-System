@@ -85,7 +85,7 @@ public class ConferenceController extends Controller {
             }
         }
 
-        SimpleDateFormat df = new SimpleDateFormat("YYYY-mm-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
         if (params != null && params.size() > 0) {
             try {

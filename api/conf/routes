@@ -2,7 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 GET         /                                                    controllers.HomeController.helloWorld()
-GET  /uploads/*file        controllers.Assets.at(path = "/public/uploads", file)
+GET         /uploads/*file                                       controllers.Assets.at(path = "/public/uploads", file)
 
 ## Users
 # Create user
@@ -27,6 +27,7 @@ POST        /api/papers/upload/:id                               controllers.Pap
 GET         /api/papers/download                                 controllers.PaperController.downloadPaper(id: Long)
 # paper submission
 POST        /api/paper                                           controllers.PaperController.create()
+POST        /api/paper/:id                                       controllers.PaperController.update(id: Long)
 
 # Reviews
 # create

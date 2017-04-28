@@ -5,6 +5,8 @@ import java.util.*;
 import javax.persistence.*;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import play.data.format.*;
 import play.data.validation.*;
 
@@ -33,6 +35,7 @@ public class PaperAuthors extends com.avaje.ebean.Model {
     public Long id;
 
     @ManyToOne
+    @JsonBackReference
     public Paper paper;
 
     @NotNull

@@ -6,6 +6,7 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import lib.Api;
 
@@ -86,12 +87,17 @@ public class ConferenceController extends Controller {
         File file = null;
 
         if (request().body().asMultipartFormData().getFile("logo") != null) {
-            file = (File) request().body().asMultipartFormData().getFile("logo").getFile();
+            Http.MultipartFormData.FilePart<Object> fp = request().body().asMultipartFormData().getFile("logo");
+
+            if (fp.getContentType().contains("image")) {
+                file = (File) fp.getFile();
+            }
         };
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
         if (file != null) {
+            System.out.println("uploading file");
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
 
