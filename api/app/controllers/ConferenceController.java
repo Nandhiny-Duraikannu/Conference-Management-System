@@ -1,7 +1,6 @@
 package controllers;
 
-import models.Conference;
-import models.Review;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
@@ -133,6 +132,71 @@ public class ConferenceController extends Controller {
     public Result getWithAssignedReviewer(Long userId) {
         return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
 
+    }
+
+    public Result getPCMembers(Long conf_id) {
+        return ok(Json.toJson(PCMember.getByConfId(conf_id)));
+    }
+
+    public Result addPCMember(Long conf_id) {
+        PCMember member = new PCMember();
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        System.out.println(params);
+        member.conference = new Conference();
+        member.conference.id = conf_id;
+        member.user = new User();
+        member.user.id =  Long.parseLong(params.get("id")[0]);
+        member.role = params.get("role")[0];
+        if(member.conference.id!=null && member.user.id !=null && member.role!= null){
+            member.save();
+            return created();
+        } else {
+            return badRequest();
+        }
+    }
+
+    public Result deletePCMember(Long id) {
+        PCMember member = PCMember.find.byId(id);
+
+        if (member == null) {
+            return notFound();
+        }
+
+        member.delete();
+
+        return ok();
+    }
+
+    public Result getEmailTemplates(Long conf_id) {
+        return ok(Json.toJson(EmailTemplate.getByConfId(conf_id)));
+    }
+
+    public Result addEmailTemplate() {
+        Form signupForm = formFactory.form(Review.class);
+        Form submittedForm = signupForm.bindFromRequest();
+
+        if (!submittedForm.hasErrors()) {
+            EmailTemplate template = (EmailTemplate) submittedForm.get();
+            template.save();
+            return created();
+        } else {
+            return badRequest(submittedForm.errorsAsJson());
+        }
+    }
+
+    public Result updateEmailTemplate(Long conf_id,Long id) {
+
+        EmailTemplate template = EmailTemplate.find.byId(id);
+
+        if (template == null) {
+            return notFound();
+        }
+
+        template.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        template.update();
+
+        return ok();
     }
 }
             

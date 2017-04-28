@@ -1,0 +1,78 @@
+@(conf: Conference, list: List[PCMember], flash: play.mvc.Http.Flash)
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+    <h2 id="homeTitle">List of PC members for conference @conf.acronym</h2>
+    Add new PC member
+    <form action="/conferences/pcmembers/@conf.id" method="POST">
+        <select id="conf_list" name="user_id">
+            <option value="" selected>
+            </option>
+            @for(user <- User.getAllUsers()) {
+                @if(user != null) {
+                    <option value=@user.id>
+                        @user.name @user.lastName
+                    </option>
+                }
+            }
+        </select>
+        &nbsp
+        <select id="role_list" name="role">
+            <option value="" selected>
+            </option>
+            @for(role <- PCMember.listRoles()) {
+                @if(role != null) {
+                    <option value=@role>
+                    @role
+                    </option>
+                }
+            }
+        </select>
+        <button type="submit" id="add" class="btn btn-default">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        </button>
+    </form>
+    <br>
+    <br>
+    <table class="table-condensed zebra-striped">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Last name</th>
+                <th>Contact email</th>
+                <th>Affiliation</th>
+                <th>Role</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @for(member <- list) {
+            <tr>
+                <td>@member.id</td>
+                <td>@member.user.name</td>
+                <td>@member.user.lastName</td>
+                <td>@member.user.email</td>
+                <td>@member.user.affiliation</td>
+                <td>@member.role</td>
+                <td>
+                    <a id="deleteMember" class="btn btn-default" href="/conferences/pcmembers/delete/@member.id?conf_id=@conf.id">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <script>
+            $("#role_list").on("change", function () {
+                $(this).role = $("#role_list").val;
+            })
+            $("#user_list").on("change", function () {
+                $(this).user = $("#user_list").val;
+            })
+    </script>
+}
