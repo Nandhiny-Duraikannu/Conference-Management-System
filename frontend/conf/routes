@@ -15,9 +15,12 @@ GET         /resetpassword/new                 controllers.UserController.resetP
 POST        /resetpassword                     controllers.UserController.resetPasswordVerifyWeb()
 GET         /resetpassword                     controllers.UserController.resetPassword(name: java.lang.String ?= null)
 
-# Dummy admin page
-GET         /admin                             controllers.UserController.showAdminPage()
-
+# Admin page
+GET         /conferences/admin                 controllers.ConferenceController.showAdminPage(conf_id: Long)
+GET         /conferences/pcmembers             controllers.ConferenceController.showPCMembers(conf_id: Long)
+GET         /conferences/pcmembers/id          controllers.ConferenceController.showPCMembers(conf_id: Long)
+GET         /conferences/templates        controllers.ConferenceController.showEmailTemplates(conf_id: Long)
+GET         /conferences/templates/id     controllers.ConferenceController.showEmailTemplates(conf_id: Long)
 
 # User Profile
 GET         /profile                           controllers.HomeController.showProfile()

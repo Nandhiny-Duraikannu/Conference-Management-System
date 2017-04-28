@@ -1,6 +1,8 @@
 package controllers;
 
 import models.Conference;
+import models.EmailTemplate;
+import models.PCMember;
 import models.Review;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -133,6 +135,66 @@ public class ConferenceController extends Controller {
     public Result getWithAssignedReviewer(Long userId) {
         return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
 
+    }
+
+    public Result getPCMembers(Long conf_id) {
+        return ok(Json.toJson(PCMember.getByConfId(conf_id)));
+    }
+
+    public Result addPCMember() {
+        Form signupForm = formFactory.form(PCMember.class);
+        Form submittedForm = signupForm.bindFromRequest();
+
+        if (!submittedForm.hasErrors()) {
+            PCMember pcMember = (PCMember) submittedForm.get();
+            pcMember.save();
+            return created();
+        } else {
+            return badRequest(submittedForm.errorsAsJson());
+        }
+    }
+
+    public Result deletePCMember(Long id) {
+        PCMember member = PCMember.find.byId(id);
+
+        if (member == null) {
+            return notFound();
+        }
+
+        member.delete();
+
+        return ok();
+    }
+
+    public Result getEmailTemplates(Long conf_id) {
+        return ok(Json.toJson(EmailTemplate.getByConfId(conf_id)));
+    }
+
+    public Result addEmailTemplate() {
+        Form signupForm = formFactory.form(Review.class);
+        Form submittedForm = signupForm.bindFromRequest();
+
+        if (!submittedForm.hasErrors()) {
+            EmailTemplate template = (EmailTemplate) submittedForm.get();
+            template.save();
+            return created();
+        } else {
+            return badRequest(submittedForm.errorsAsJson());
+        }
+    }
+
+    public Result updateEmailTemplate(Long id) {
+
+        EmailTemplate template = EmailTemplate.find.byId(id);
+
+        if (template == null) {
+            return notFound();
+        }
+
+        template.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        template.update();
+
+        return ok();
     }
 }
             

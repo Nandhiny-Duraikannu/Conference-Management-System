@@ -95,7 +95,7 @@ public class ConferenceController extends Controller {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
 
-        return redirect("/conferences");
+        return redirect("/conferences/admin?conf_id="+conf.id);
     }
 
 
@@ -120,6 +120,28 @@ public class ConferenceController extends Controller {
             conferenceUsertitle.add(conf.title);
         }
         return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, flash()));
+    }
+
+    /**
+     * Display admin page
+     */
+    public Result showAdminPage(Long conf_id) {
+        System.out.println(conf_id);
+        return ok(views.html.conference.adminPage.render(conf_id, flash()));
+    }
+
+    /**
+     * Display admin page
+     */
+    public Result showPCMembers(Long conf_id) {
+        return ok(views.html.conference.Members.render(conf_id, flash()));
+    }
+
+    /**
+     * Display admin page
+     */
+    public Result showEmailTemplates(Long conf_id) {
+        return ok(views.html.conference.EmailTemplates.render(conf_id, flash()));
     }
 }
 

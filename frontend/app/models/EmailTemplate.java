@@ -1,66 +1,27 @@
 package models;
 
-import lib.Api;
 import play.data.validation.Constraints;
 
-import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * User entity
  */
-public class Member {
-    @Id
+public class EmailTemplate {
     public Long id;
 
-    @Constraints.Required
-    public String name;
+    public Conference conference;
 
-    public String password;
+    public String title;
 
-
-    @Constraints.Required
-    @Constraints.Email
-    public String email;
-
-    public String firstName;
-
-    public String lastName;
-
-    public String position;
-
-    public String affiliation;
-
-    public String phone;
-
-    public String fax;
-
-    public String address;
-
-    public String city;
-
-    public String country;
-
-    public String zip;
-
-    public String role; //user, admin, chair, reviewer
-
-
-    public static String hashPassword(String password) {
-        try {
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            return (new HexBinaryAdapter()).marshal(md5.digest(password.getBytes()));
-        } catch (NoSuchAlgorithmException e) {
-            return password;
-        }
-    }
+    public String content;
 
     public Long getId() {
         return id;
@@ -70,109 +31,31 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getPassword() {
-        return password;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getEmail() {
-        return email;
+    public static Map<String, String> getTopics() {
+        Map<String, String> topics = new HashMap<String, String>();
+        topics.put("Template for Accepted Papers", "Template for Accepted Papers");
+        topics.put("Template for Rejected Papers", "Template for Rejected Papers");
+        topics.put("Template for Moved Papers", "Template for Moved Papers");
+        topics.put("Template for Instructions", "Template for Instructions");
+        topics.put("Template for Invitations", "Template for Invitations");
+        topics.put("Reviewer Reminder Template", "Reviewer Reminder Template");
+        return topics;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getAffiliation() {
-        return affiliation;
-    }
-
-    public void setAffiliation(String affiliation) {
-        this.affiliation = affiliation;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
 }
 
