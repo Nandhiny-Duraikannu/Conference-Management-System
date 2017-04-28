@@ -6,6 +6,7 @@ import json.UserConferenceReviews;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -30,6 +31,10 @@ public class Conference extends Model {
     public String location;
 
     public Date deadline;
+
+    public Date submissionDateStart;
+
+    public String logo;
 
     public String status;
 

@@ -19,6 +19,8 @@ public class Conference {
     public String location;
     public Date deadline;
     public String status;
+    public Date submissionDateStart;
+    public String logo;
 
     /**
      * list of all conferences
@@ -43,5 +45,9 @@ public class Conference {
                 Api.getInstance().getConferences(user.id)
         ));
         return conferences;
+    }
+
+    public String getLogoUrl() {
+        return "http://localhost:9000/uploads/" + logo;
     }
 }

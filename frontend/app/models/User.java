@@ -63,6 +63,8 @@ public class User {
 
     public String zip;
 
+    public String role;
+
     @Column(length = 5000)
     public String comments;
 
@@ -261,6 +263,10 @@ public class User {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public boolean isAdmin() {
+        return role.equals("admin");
     }
 }
 

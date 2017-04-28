@@ -1,52 +1,59 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET         /                                                  controllers.HomeController.helloWorld()
+GET         /                                                    controllers.HomeController.helloWorld()
+GET  /uploads/*file        controllers.Assets.at(path = "/public/uploads", file)
 
 ## Users
 # Create user
-POST        /api/users                                         controllers.UserController.create()
+POST        /api/users                                           controllers.UserController.create()
 # Returns user by name
-GET         /api/users/:name                                   controllers.UserController.getByName(name)
-POST        /api/profile                                       controllers.HomeController.updateProfileAPI()
+GET         /api/users/:name                                     controllers.UserController.getByName(name)
+POST        /api/profile                                         controllers.HomeController.updateProfileAPI()
 # Reset password for a user
-GET         /api/resetpassword                                 controllers.UserController.resetPassword(name: java.lang.String ?= null)
-POST        /api/resetpassword                                 controllers.UserController.resetPasswordVerifyAPI()
+GET         /api/resetpassword                                   controllers.UserController.resetPassword(name: java.lang.String ?= null)
+POST        /api/resetpassword                                   controllers.UserController.resetPasswordVerifyAPI()
 
 ## Papers
 # get paper info by paper id
-GET         /api/papers/:id                                    controllers.PaperController.getPaper(id: Long)
+GET         /api/papers/:id                                      controllers.PaperController.getPaper(id: Long)
 # get authors for paper id
-GET         /api/papers/authors/:id                            controllers.PaperController.getAuthors(id: Long)
+GET         /api/papers/authors/:id                              controllers.PaperController.getAuthors(id: Long)
 # get all papers or papers for user_id
-GET         /api/papers                      controllers.PaperController.getAllPapers()
+GET         /api/papers                                          controllers.PaperController.getAllPapers()
 # get all papers for user_id and conf_id
-GET         /api/papers/:uid/conf/:cid       controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
-POST        /api/papers/upload/:id            controllers.PaperController.uploadPaper(id: Long)
-GET         /api/papers/download                               controllers.PaperController.downloadPaper(id: Long)
+GET         /api/papers/:uid/conf/:cid                           controllers.PaperController.getPapersByConf(uid:Long, cid: Int)
+POST        /api/papers/upload/:id                               controllers.PaperController.uploadPaper(id: Long)
+GET         /api/papers/download                                 controllers.PaperController.downloadPaper(id: Long)
 # paper submission
-POST        /api/paper                           controllers.PaperController.create()
+POST        /api/paper                                           controllers.PaperController.create()
 
 # Reviews
 # create
-POST        /api/reviews                                       controllers.ReviewController.create()
+POST        /api/reviews                                         controllers.ReviewController.create()
 # get by id
-GET         /api/reviews/:id                                   controllers.ReviewController.getById(id: Long)
+GET         /api/reviews/:id                                     controllers.ReviewController.getById(id: Long)
 # get reviews by user id
-GET         /api/reviews/user/:userId                          controllers.ReviewController.getByUser(userId: Long)
+GET         /api/reviews/user/:userId                            controllers.ReviewController.getByUser(userId: Long)
 # get papers for reviews by user id and cond id
-GET         /api/reviews/papers/user/:uid/conference/:cid      controllers.ReviewController.getPaperReviewsByUserAndConf(uid:Long, cid: Long)
+GET         /api/reviews/papers/user/:uid/conference/:cid        controllers.ReviewController.getPaperReviewsByUserAndConf(uid:Long, cid: Long)
 # get reviews by user id and cond id
-GET         /api/reviews/user/:uid/conference/:cid             controllers.ReviewController.getReviewsByUserAndConf(uid:Long, cid: Long)
+GET         /api/reviews/user/:uid/conference/:cid               controllers.ReviewController.getReviewsByUserAndConf(uid:Long, cid: Long)
 # update review
-POST        /api/reviews/:id                                   controllers.ReviewController.update(id: Long)
+POST        /api/reviews/:id                                     controllers.ReviewController.update(id: Long)
+
 ## Conferences
-GET /api/conferences/:id                     controllers.ConferenceController.getById(id: Long)
+# create
+POST        /api/conferences                                     controllers.ConferenceController.create()
+# update
+POST        /api/conferences/:id                                 controllers.ConferenceController.update(id: Long)
+# get one
+GET         /api/conferences/:id                                 controllers.ConferenceController.getById(id: Long)
 # get all conferences
-GET /api/conferences                         controllers.ConferenceController.getAllConferences()
+GET         /api/conferences                                     controllers.ConferenceController.getAllConferences()
 # get all conferences by keyword
-GET /api/conferencessearch                         controllers.ConferenceController.getAllConferencesByKeyword(keyword: java.lang.String, conf_status: java.lang.String)
+GET         /api/conferencessearch                               controllers.ConferenceController.getAllConferencesByKeyword(keyword: java.lang.String, conf_status: java.lang.String)
 # get conferences for user_id
-GET /api/conferences/user/:id                                controllers.ConferenceController.getConferencesByUser(id: Long)
+GET         /api/conferences/user/:id                            controllers.ConferenceController.getConferencesByUser(id: Long)
 #
-GET         /api/conferences/reviewers/assigned/:userId        controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
+GET         /api/conferences/reviewers/assigned/:userId          controllers.ConferenceController.getWithAssignedReviewer(userId: Long)

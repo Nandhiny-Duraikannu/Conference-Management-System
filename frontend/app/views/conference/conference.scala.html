@@ -1,60 +1,68 @@
 @import forms.ConferenceList
+@import lib.UserStorage
 @(list: List[Conference], listUser: List[java.lang.String], flash: play.mvc.Http.Flash)
-@import helper._
+  @import helper._
 
 
-@main {
+  @main {
 
-<h2>Conferences</h2>
-<form method="GET" action="/conferencessearch">
-    Search Conferences:
-    <br>
-    <br>
-    <select id="conf_status", name="conf_status">
+    <h2>Conferences</h2>
+    <form method="GET" action="/conferencessearch">
+      Search Conferences:
+      <br>
+      <br>
+      <select id="conf_status", name="conf_status">
         <option value="all">All Status</option>
         <option value="active">Active</option>
         <option value="archived">Archived</option>
-    </select>
-    <input type="search" name="keyword" id="keyword"  placeholder="Conference name">
-    <input type="submit" id="submit" value="Search" class="btn primary">
-</form>
-<h2 id="homeTitle">Conferences found: @list.size()</h2>
-<table class="table-condensed zebra-striped">
-    <thead>
-    <tr>
-        <th>Conference Acronym</th>
-        <th>Conference Title</th>
-        <th>Location</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Paper</th>
-        <th>Review</th>
-        <th>Admin</th>
-    </tr>
-    </thead>
-
-    <tbody>
-        @for(conference <- list) {
+      </select>
+      <input type="search" name="keyword" id="keyword" placeholder="Conference name">
+      <input type="submit" id="submit" value="Search" class="btn primary">
+    </form>
+    <h2 id="homeTitle">Conferences found: @list.size()</h2>
+    <table class="table-condensed zebra-striped">
+      <thead>
         <tr>
-            <td>@conference.acronym</td>
-            <td>@conference.title</td>
-            <td>@conference.location</td>
-            <td>@conference.deadline</td>
-            <td>@conference.status</td>
-            <td>@if(listUser.contains(conference.title)){
-                <a href="/papers?=conf_id=@conference.id">Paper</a>
-                }
-            </td>
-            <td>@if(listUser.contains(conference.title)){
-                <a href="/reviews/conference/@conference.id">Review</a>
-                }
-            </td>
-            <td>@if(listUser.contains(conference.title)){
-                    <a href="/admin">Admin</a>
-                }
-            </td>
+          <th>Conference Acronym</th>
+          <th>Conference Title</th>
+          <th>Location</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Paper</th>
+          <th>Review</th>
+          <th>Admin</th>
         </tr>
-        }
-    </tbody>
-</table>
-}
+      </thead>
+
+      <tbody>
+      @for(conference <- list) {
+        <tr>
+          <td>
+            @if(conference.logo != null) {
+              <img src="@conference.getLogoUrl()" alt="" style="max-width: 200px;
+                max-height: 200px;
+                margin-right: 10px;">
+              }
+            @conference.acronym
+          </td>
+          <td>@conference.title</td>
+          <td>@conference.location</td>
+          <td>@conference.deadline</td>
+          <td>@conference.status</td>
+          <td>@if(listUser.contains(conference.title)) {
+            <a href="/papers?=conf_id=@conference.id">Paper</a>
+          }
+          </td>
+          <td>@if(listUser.contains(conference.title)) {
+            <a href="/reviews/conference/@conference.id">Review</a>
+          }
+          </td>
+          <td>@if(UserStorage.getCurrentUser().isAdmin()) {
+            <a href="/conferences/edit/@conference.id">Admin</a>
+          }
+          </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  }
