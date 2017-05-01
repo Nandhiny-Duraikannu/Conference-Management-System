@@ -56,3 +56,7 @@ GET         /conferences/update/:id                  controllers.ConferenceContr
 POST        /conferences/create                      controllers.ConferenceController.create()
 GET         /conferences/create                      controllers.ConferenceController.showCreateForm()
 GET         /conferencessearch                       controllers.ConferenceController.showConferencePageFilter(keyword: java.lang.String, conf_status: java.lang.String)
+
+#Research Topic
+GET     /researchtopics             controllers.AdminController.showResearchTopics()
+POST    /saveresearchtopic              controllers.AdminController.saveResearchTopics()
