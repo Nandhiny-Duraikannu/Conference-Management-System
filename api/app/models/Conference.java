@@ -156,7 +156,7 @@ public class Conference extends Model {
 
                 result.put(reviewer.id, item);
             } else {
-                item = result.get(conf.id);
+                item = result.get(review.id);
             }
 
             if (review.isReviewed()) {
