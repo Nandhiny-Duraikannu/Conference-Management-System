@@ -140,6 +140,7 @@ public class ConferenceController extends Controller {
     public Result showPCMembers(Long conf_id) {
         ArrayList<PCMember> members = new ArrayList<PCMember>(Arrays.asList(
                 Api.getInstance().getPCMembersByConfId(conf_id)
+        ));
         System.out.println(members);
         Conference conf = Api.getInstance().getConferenceById(conf_id);
         System.out.println(conf);
@@ -224,4 +225,3 @@ public class ConferenceController extends Controller {
         return redirect("/conferences");
     }
 }
-
