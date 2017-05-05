@@ -3,6 +3,13 @@
 
 @main {
 
+  <script>
+    function downloadPaper() {
+      $('a#downloadPaper').each(function() {
+          window.open($(this).attr('href'));
+      });
+    }
+  </script>
   <h2>My Papers</h2>
   <form method="GET" action="/papers">
     Select conference:
@@ -25,6 +32,7 @@
         }
       }
     </select>
+    <button class="btn btn-primary" onclick="downloadPaper()">Download All Papers</button>
   </form>
   <h2 id="homeTitle">Papers found: @list.size()</h2>
   <table class="table-condensed zebra-striped">
@@ -64,7 +72,7 @@
             <input class="btn btn-default" type="submit">
           }
         } else {
-          <a href="@routes.PaperController.downloadPaper(paper.id)">
+          <a href="@routes.PaperController.downloadPaper(paper.id)" id="downloadPaper">
             <span class="glyphicon glyphicon-download" aria-hidden="true"></span> @paper.fileFormat, @paper.fileSize b
           </a>
         }
