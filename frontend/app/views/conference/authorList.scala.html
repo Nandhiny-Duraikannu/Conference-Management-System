@@ -1,0 +1,32 @@
+@(papers: List[Paper], flash: play.mvc.Http.Flash)
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+    <h2 id="homeTitle">List of Authors</h2>
+    <br>
+    <br>
+    <table class="table-condensed zebra-striped">
+        <thead>
+            <tr>
+                <th>Author's First Name</th>
+                <th>Author's Last Name</th>
+                <th>Affiliation</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(paper <- papers) {
+            @for(author <- paper.authors) {
+                <tr>
+                    <td>@author.author_first_name</td>
+                    <td>@author.author_last_name</td>
+                    <td>@author.author_affiliation</td>
+                </tr>
+            }
+        }
+        </tbody>
+
+    </table>
+
+}

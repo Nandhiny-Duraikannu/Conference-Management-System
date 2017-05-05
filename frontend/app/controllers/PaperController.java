@@ -30,6 +30,14 @@ import play.mvc.WebSocket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.util.zip.ZipOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
+import java.util.zip.ZipEntry;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.lang.Object;
 
 /**
  * Provides web and api endpoints for Submitted Paper Management
@@ -89,7 +97,9 @@ public class PaperController extends Controller {
 
         if (!form.hasErrors()) {
             Map<String, String> data = form.data();
-            data.put("user.id", UserStorage.getCurrentUser().getId().toString());
+            if(!data.containsKey("user.id")) {
+                data.put("user.id", UserStorage.getCurrentUser().getId().toString());
+            }
             boolean success = false;
 
             if (id == null) {
@@ -152,6 +162,7 @@ public class PaperController extends Controller {
     }
 
     /**
+     *
      * download file from database
      */
     public Result downloadPaper(Long id) {
@@ -180,6 +191,21 @@ public class PaperController extends Controller {
         Form paperForm = formFactory.form(PaperSubmission.class);
         paperForm = paperForm.fill(paper);
         return ok(views.html.paper.PaperForm.render(id, paperForm, flash()));
+    }
+
+    public Result authorList() {
+        List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                Api.getInstance().getPapers()
+        ));
+
+        return ok(views.html.conference.authorList.render(papers, flash()));
+    }
+
+    public Result paperList() {
+        List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                Api.getInstance().getPapers()
+        ));
+        return ok(views.html.conference.paperList.render(papers, flash()));
     }
 }
             

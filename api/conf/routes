@@ -78,5 +78,14 @@ POST         /api/conferences/templates/:conf_id/:id             controllers.Con
 POST        /api/researchTopic                                   controllers.AdminController.saveResearchTopic()
 GET         /api/getalltopics                                    controllers.AdminController.getResearchTopic()
 
+POST         /api/conferences/templates/:conf_id/:id             controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
+# Add review question
+POST         /api/conferences/reviewquestion/:conf_id            controllers.ConferenceController.addReviewQuestion(conf_id: Long)
+# Edit review question
+POST         /api/conferences/reviewquestion/update/:id          controllers.ConferenceController.updateReviewQuestion(id: Long)
+# Delete review question
+POST         /api/conferences/reviewquestion/delete/:id          controllers.ConferenceController.deleteReviewQuestion(id: Long)
+# Get review questions
+GET          /api/conferences/reviewquestion/:conf_id            controllers.ConferenceController.getReviewQuestion(conf_id: Long)
 POST        /api/conferences/templates/:conf_id/:id              controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
 
