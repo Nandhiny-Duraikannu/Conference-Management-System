@@ -40,6 +40,12 @@ create table paper_authors (
   constraint pk_paper_authors primary key (id)
 );
 
+create table research_paper (
+  id                            bigint auto_increment not null,
+  research_topic                 varchar(255) not null,
+  constraint pk_research_paper primary key (id)
+);
+
 create table review (
   id                            bigint auto_increment not null,
   user_id                       bigint not null,
@@ -115,3 +121,5 @@ drop table if exists paper_authors;
 drop table if exists review;
 
 drop table if exists user;
+
+drop table if exists research_paper;

@@ -30,6 +30,7 @@ import java.util.Map;
 
 import java.io.ByteArrayOutputStream;
 
+import play.Logger;
 /**
  * Conference system API calls
  */
@@ -573,6 +574,35 @@ public class Api {
             return false;
         }
     }
+    
+     public ResearchPaper[] getResearchTopic() {
+        try {
+            HttpResponse<ResearchPaper[]> response = Unirest.get(getUrl("getalltopics")).asObject(ResearchPaper[].class);
+            Logger.debug("in api get all topics"+response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Logger.debug("in api get all topicserror");
+            return null;
+
+        }
+    }
+    
+    
+    public boolean saveResearchTopic(String research_topic) {
+        try {
+            Logger.debug("in api researchtopic1"+research_topic);
+            HttpResponse<String> response = Unirest.post(getUrl("researchTopic"))
+                    .field("research_topic",research_topic)
+                    .asString();
+            return true;
+        } catch (Exception e) {
+            Logger.debug("in api researchtopic2"+research_topic);
+            System.out.println(e.getMessage());
+        return false;
+        }
+    }
+
 
     public boolean deletePCMembers(Long id) {
         try {
