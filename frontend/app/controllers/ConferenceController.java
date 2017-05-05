@@ -65,8 +65,6 @@ public class ConferenceController extends Controller {
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
-        System.out.println(conf.id);
-        System.out.println(conf.title);
         if (file != null && conf.id != null) {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
@@ -130,7 +128,6 @@ public class ConferenceController extends Controller {
      * Display admin page
      */
     public Result showAdminPage(Long conf_id) {
-        System.out.println(conf_id);
         return ok(views.html.conference.adminPage.render(conf_id, flash()));
     }
 
@@ -141,9 +138,7 @@ public class ConferenceController extends Controller {
         ArrayList<PCMember> members = new ArrayList<PCMember>(Arrays.asList(
                 Api.getInstance().getPCMembersByConfId(conf_id)
         ));
-        System.out.println(members);
         Conference conf = Api.getInstance().getConferenceById(conf_id);
-        System.out.println(conf);
                 return ok(views.html.conference.Members.render(conf, members, flash()));
                 }
 
@@ -185,7 +180,7 @@ public class ConferenceController extends Controller {
 
     public Result showReviewQuestion(Long conf_id) {
         List<ReviewQuestion> reviewQuestionList = Arrays.asList(Api.getInstance().getReviewQuestion(conf_id));
-        return ok(views.html.conference.reviewQuestion.render(reviewQuestionList, conf_id,s flash()));
+        return ok(views.html.conference.reviewQuestion.render(reviewQuestionList, conf_id, flash()));
     }
 
     public Result deleteReviewQuestion(Long id) {
