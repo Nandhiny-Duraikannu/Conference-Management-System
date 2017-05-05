@@ -353,12 +353,13 @@ public class Api {
         }
     }
 
-    public boolean editReview(Long review_id, String content) {
+    public boolean editReview(Long review_id, String content, String status) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("reviews/" + review_id)).header("content-type",
                     "application/x-www-form-urlencoded");
             HashMap<String, String> params = new HashMap<>();
             params.put("content", content);
+            params.put("status", status);
             req.body(mapToQueryString(params));
             HttpResponse<JsonNode> response = req.asJson();
 

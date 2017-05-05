@@ -53,6 +53,7 @@ public class ReviewController extends Controller {
         }
 
         review.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        review.setStatus(request().body().asFormUrlEncoded().get("status")[0]);
         review.update();
 
         return ok();

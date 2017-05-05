@@ -18,6 +18,8 @@ public class Review {
 
     public String content;
 
+    public String status;
+
     public Long paperId;
 
     public String paperTitle;
