@@ -18,6 +18,8 @@ GET         /resetpassword                           controllers.UserController.
 # Admin page
 GET         /conferences/admin                       controllers.ConferenceController.showAdminPage(conf_id: Long)
 GET         /conferences/pcmembers                   controllers.ConferenceController.showPCMembers(conf_id: Long)
+GET         /conferences/reviewers                   controllers.ConferenceController.reviewState(conf_id: Long)
+POST        /conferences/sendNotifications           controllers.ConferenceController.sendNotifications(conf_id: Long)
 POST        /conferences/pcmembers/:confId           controllers.ConferenceController.addPCMember(confId: Long)
 GET         /conferences/pcmembers/delete/:id        controllers.ConferenceController.deletePCMember(id: Long)
 GET         /conferences/templates                   controllers.ConferenceController.showEmailTemplates(conf_id: Long)
