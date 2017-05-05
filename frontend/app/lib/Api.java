@@ -14,6 +14,7 @@ import com.mashape.unirest.request.body.MultipartBody;
 import com.mashape.unirest.request.body.RawBody;
 import com.mashape.unirest.request.body.RequestBodyEntity;
 import com.mashape.unirest.request.HttpRequestWithBody;
+import json.ConferenceReviewer;
 import json.UserConferenceReviews;
 import models.*;
 
@@ -113,12 +114,48 @@ public class Api {
     }
 
     /**
+     * Returns reviewers and papers they need to review for a conference
+     *
+     * @param confId
+     * @return
+     */
+    public ArrayList<ConferenceReviewer> getConferenceReviewers(Long confId) {
+        try {
+            HttpResponse<ConferenceReviewer[]> response = Unirest.get(getUrl("conferences/" + confId + "/reviewers")).asObject(
+                    ConferenceReviewer[].class);
+            return new ArrayList<ConferenceReviewer>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Send notifications to those reviewers who have papers to review
+     * Return emails where notifications were sent
+     *
+     * @param confId
+     * @return
+     */
+    public ArrayList<String> notifyReviewers(Long confId) {
+        try {
+            HttpResponse<String[]> response = Unirest.post(getUrl("conferences/" + confId + "/notifications")).asObject(
+                    String[].class);
+            return new ArrayList<String>(Arrays.asList(response.getBody()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
      * Creates new user in API
      */
     public boolean createUser(Map<String, String> data) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("users")).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                           "application/x-www-form-urlencoded");
             req.body(mapToQueryString(data));
 
             HttpResponse<JsonNode> response = req.asJson();
@@ -133,7 +170,7 @@ public class Api {
     public boolean InsertPaper(Map<String, String> data) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                           "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
             req.body(query);
 
@@ -149,7 +186,7 @@ public class Api {
     public boolean UpdatePaper(Long id, Map<String, String> data) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("paper/" + id)).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                                 "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
             req.body(query);
 
@@ -288,7 +325,7 @@ public class Api {
                 url += "/" + conf.id;
             }
             HttpRequestWithBody req = Unirest.post(getUrl(url)).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                       "application/x-www-form-urlencoded");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             HashMap<String, String> params = new HashMap<>();
 
@@ -312,8 +349,8 @@ public class Api {
     public boolean setConferenceLogo(Long id, File file) {
         try {
             HttpResponse<String> response = Unirest.post(getUrl("conferences/" + id))
-                    .field("logo", file)
-                    .asString();
+                                                   .field("logo", file)
+                                                   .asString();
             return response.getStatus() >= 200 && response.getStatus() < 400;
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,9 +361,9 @@ public class Api {
     public boolean uploadPaper(Long paper_id, File file, String format) {
         try {
             HttpResponse<String> response = Unirest.post(getUrl("papers/upload/" + paper_id))
-                    .field("format", format)
-                    .field("file", file)
-                    .asString();
+                                                   .field("format", format)
+                                                   .field("file", file)
+                                                   .asString();
             return response.getStatus() >= 200 && response.getStatus() < 400;
         } catch (Exception e) {
             e.printStackTrace();
@@ -364,7 +401,7 @@ public class Api {
     public boolean editReview(Long review_id, String content) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("reviews/" + review_id)).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                                          "application/x-www-form-urlencoded");
             HashMap<String, String> params = new HashMap<>();
             params.put("content", content);
             req.body(mapToQueryString(params));
@@ -418,7 +455,7 @@ public class Api {
                     sb.append('&');
                 }
                 sb.append(URLEncoder.encode(e.getKey(), "UTF-8")).append('=').append(URLEncoder.encode(e.getValue(),
-                        "UTF-8"));
+                                                                                                       "UTF-8"));
             }
         } catch (Exception e) {
 
@@ -454,10 +491,10 @@ public class Api {
             String securityQuestion = thisUser.getSecurityQuestion();
 
             HttpResponse<JsonNode> response = Unirest.post(getUrl("resetpassword"))
-                    .field("name", username)
-                    .field("securityQuestion", securityQuestion)
-                    .field("securityAnswer", securityAnswer)
-                    .asJson();
+                                                     .field("name", username)
+                                                     .field("securityQuestion", securityQuestion)
+                                                     .field("securityAnswer", securityAnswer)
+                                                     .asJson();
 
             if (response.getStatus() == 201 || response.getStatus() == 200) {
                 return true;
@@ -476,7 +513,7 @@ public class Api {
     public Boolean updateProfile(Map<String, String> inputForm) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("profile")).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                             "application/x-www-form-urlencoded");
             req.body(mapToQueryString(inputForm));
             HttpResponse<JsonNode> response = req.asJson();
 
@@ -506,7 +543,7 @@ public class Api {
     public boolean addPCMember(Long conf_id, Long id, String role) {
         try {
             HttpRequestWithBody req = Unirest.post(getUrl("conferences/pcmembers/" + conf_id)).header("content-type",
-                    "application/x-www-form-urlencoded");
+                                                                                                      "application/x-www-form-urlencoded");
             HashMap<String, String> params = new HashMap<>();
             params.put("id", id.toString());
             params.put("role", role);
@@ -522,7 +559,8 @@ public class Api {
 
     public boolean saveTemplate(Long conf_id, Long id, String content) {
         try {
-            HttpRequestWithBody req = Unirest.post(getUrl("conferences/templates/" + conf_id + "/" + id)).header("content-type",
+            HttpRequestWithBody req = Unirest.post(getUrl("conferences/templates/" + conf_id + "/" + id)).header(
+                    "content-type",
                     "application/x-www-form-urlencoded");
             HashMap<String, String> params = new HashMap<>();
             params.put("content", content);

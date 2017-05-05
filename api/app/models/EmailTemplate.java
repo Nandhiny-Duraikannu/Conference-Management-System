@@ -22,7 +22,7 @@ public class EmailTemplate extends com.avaje.ebean.Model {
     public Long id;
 
     @NotNull
-    @ManyToMany
+    @ManyToOne
     public Conference conference;
 
     @NotNull
@@ -51,7 +51,7 @@ public class EmailTemplate extends com.avaje.ebean.Model {
     }
 
     public static EmailTemplate getByNameAndConf(String name, Long conf_id) {
-        return find.where().eq("name", name).findUnique();
+        return find.where().eq("title", name).eq("conference_id", conf_id).findUnique();
     }
 
     public Long getId() {
@@ -87,6 +87,25 @@ public class EmailTemplate extends com.avaje.ebean.Model {
         topics.put("Template for Invitations", "Template for Invitations");
         topics.put("Reviewer Reminder Template", "Reviewer Reminder Template");
         return topics;
+    }
+
+    // Adds default templates to a conference
+    public static void addDefaultToConference(Conference conf) {
+        for (Map.Entry<String, String> topic : getTopics().entrySet()) {
+            String title = topic.getKey();
+
+            EmailTemplate template = getByNameAndConf(title, conf.id);
+
+            if (template != null) {
+                continue;
+            }
+
+            template = new EmailTemplate();
+            template.conference = conf;
+            template.title = title;
+            template.content = topic.getValue();
+            template.save();
+        }
     }
 }
 

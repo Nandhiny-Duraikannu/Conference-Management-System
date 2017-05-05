@@ -1,5 +1,6 @@
 package controllers;
 
+import json.ConferenceReviewer;
 import models.*;
 import play.data.Form;
 import play.data.FormFactory;
@@ -61,7 +62,8 @@ public class ConferenceController extends Controller {
 
         if (request().body().asMultipartFormData().getFile("logo") != null) {
             file = (File) request().body().asMultipartFormData().getFile("logo").getFile();
-        };
+        }
+        ;
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
@@ -88,7 +90,8 @@ public class ConferenceController extends Controller {
             if (fp.getContentType().contains("image")) {
                 file = (File) fp.getFile();
             }
-        };
+        }
+        ;
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
@@ -97,7 +100,7 @@ public class ConferenceController extends Controller {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
 
-        return redirect("/conferences/admin?conf_id="+conf.id);
+        return redirect("/conferences/admin?conf_id=" + conf.id);
     }
 
 
@@ -137,45 +140,60 @@ public class ConferenceController extends Controller {
     public Result showPCMembers(Long conf_id) {
         ArrayList<PCMember> members = new ArrayList<PCMember>(Arrays.asList(
                 Api.getInstance().getPCMembersByConfId(conf_id)
-        ));
+        System.out.println(members);
         Conference conf = Api.getInstance().getConferenceById(conf_id);
-                return ok(views.html.conference.Members.render(conf, members, flash()));
-                }
+        System.out.println(conf);
+        return ok(views.html.conference.Members.render(conf, members, flash()));
+    }
+
+    /**
+     * Display conference review state
+     */
+    public Result reviewState(Long conf_id) {
+        ArrayList<ConferenceReviewer> reviewers = Api.getInstance().getConferenceReviewers(conf_id);
+        return ok(views.html.conference.reviewState.render(conf_id, reviewers, flash()));
+    }
+
+    public Result sendNotifications(Long conf_id) {
+        ArrayList<String> emails = Api.getInstance().notifyReviewers(conf_id);
+
+        return ok(Json.toJson(emails));
+    }
 
     /**
      * Delete PC member
      */
     public Result addPCMember(Long conf_id) {
         Api.getInstance().addPCMember(conf_id,
-                Long.parseLong(request().body().asFormUrlEncoded().get("user_id")[0]),
-                request().body().asFormUrlEncoded().get("role")[0]
-        );
-        return redirect("/conferences/pcmembers?conf_id="+conf_id);
+                                      Long.parseLong(request().body().asFormUrlEncoded().get("user_id")[0]),
+                                      request().body().asFormUrlEncoded().get("role")[0]
+                                     );
+        return redirect("/conferences/pcmembers?conf_id=" + conf_id);
     }
 
     /**
      * Delete PC member
      */
     public Result deletePCMember(Long user_id) {
-            Boolean deleted = Api.getInstance().deletePCMembers(user_id);
-            return redirect("/conferences/pcmembers?conf_id="+request().queryString().get("conf_id")[0]);
-            }
+        Boolean deleted = Api.getInstance().deletePCMembers(user_id);
+        return redirect("/conferences/pcmembers?conf_id=" + request().queryString().get("conf_id")[0]);
+    }
 
     /**
      * Display admin page
      */
     public Result showEmailTemplates(Long conf_id) {
-            List<EmailTemplate> templates = Arrays.asList(Api.getInstance().getConferenceTemplates(conf_id));
+        List<EmailTemplate> templates = Arrays.asList(Api.getInstance().getConferenceTemplates(conf_id));
 
-            return ok(views.html.conference.EmailTemplates.render(conf_id, templates, flash()));
-            }
+        return ok(views.html.conference.EmailTemplates.render(conf_id, templates, flash()));
+    }
 
     public Result saveTemplate(Long conf_id) {
         Api.getInstance().saveTemplate(conf_id,
-                Long.parseLong(request().body().asFormUrlEncoded().get("template_id")[0]),
-                request().body().asFormUrlEncoded().get("content")[0]
-        );
-        return redirect("/conferences/templates?conf_id="+conf_id);
+                                       Long.parseLong(request().body().asFormUrlEncoded().get("template_id")[0]),
+                                       request().body().asFormUrlEncoded().get("content")[0]
+                                      );
+        return redirect("/conferences/templates?conf_id=" + conf_id);
     }
 
     public Result showReviewQuestion(Long conf_id) {

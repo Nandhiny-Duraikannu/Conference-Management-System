@@ -1,5 +1,7 @@
 package controllers;
 
+import json.ConferenceReviewer;
+import lib.EmailHelper;
 import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -99,6 +101,8 @@ public class ConferenceController extends Controller {
 
         model.save();
 
+        EmailTemplate.addDefaultToConference(model);
+
         return model;
     }
 
@@ -121,6 +125,33 @@ public class ConferenceController extends Controller {
     public Result getConferencesByUser(Long user_id) {
         List<Conference> conf = Conference.getConferencesByUser(user_id);
         return ok(Json.toJson(conf));
+    }
+
+    // Returns reviewers and papers they need to review for a conference
+    public Result getConferenceReviewers(Long confId) {
+        Conference conf = Conference.find.byId(confId);
+        return ok(Json.toJson(conf.getReviewers()));
+    }
+
+    // Send notifications to those reviewers who have papers to review
+    public Result notifyReviewers(Long confId) {
+        Conference conf = Conference.find.byId(confId);
+        List<ConferenceReviewer> reviewers = conf.getReviewers();
+        ArrayList<String> emails = new ArrayList<>();
+
+        for (ConferenceReviewer r: reviewers) {
+            if (r.notReviewedPapers.size() > 0) {
+                emails.add(r.reviewerEmail);
+            }
+        }
+
+        EmailTemplate template = EmailTemplate.getByNameAndConf("Reviewer Reminder Template", confId);
+
+        if (emails.size() > 0) {
+            EmailHelper.sendTemplateToEmails(emails, template);
+        }
+
+        return ok(Json.toJson(emails));
     }
 
     /**
