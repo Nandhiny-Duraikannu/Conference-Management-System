@@ -31,6 +31,7 @@ import java.util.Map;
 
 import java.io.ByteArrayOutputStream;
 
+import play.Logger;
 /**
  * Conference system API calls
  */
@@ -194,7 +195,6 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
                                                                            "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
-            System.out.println(query);
             req.body(query);
 
             HttpResponse<JsonNode> response = req.asJson();
@@ -211,7 +211,6 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("paper/" + id)).header("content-type",
                                                                                  "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
-            System.out.println(query);
             req.body(query);
 
             HttpResponse<JsonNode> response = req.asJson();
@@ -237,6 +236,16 @@ public class Api {
     public Paper getPaperById(Long id) {
         try {
             HttpResponse<Paper> response = Unirest.get(getUrl("papers/" + id)).asObject(Paper.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Paper[] getPapers() {
+        try {
+            HttpResponse<Paper[]> response = Unirest.get(getUrl("papers")).asObject(Paper[].class);
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -587,7 +596,6 @@ public class Api {
             req.body(mapToQueryString(params));
 
             HttpResponse<String> response = req.asString();
-            System.out.println(response.getBody());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -605,7 +613,46 @@ public class Api {
             req.body(mapToQueryString(params));
 
             HttpResponse<String> response = req.asString();
-            System.out.println(response.getBody());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+     public ResearchPaper[] getResearchTopic() {
+        try {
+            HttpResponse<ResearchPaper[]> response = Unirest.get(getUrl("getalltopics")).asObject(ResearchPaper[].class);
+            Logger.debug("in api get all topics"+response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Logger.debug("in api get all topicserror");
+            return null;
+
+        }
+    }
+    
+    
+    public boolean saveResearchTopic(String research_topic) {
+        try {
+            Logger.debug("in api researchtopic1"+research_topic);
+            HttpResponse<String> response = Unirest.post(getUrl("researchTopic"))
+                    .field("research_topic",research_topic)
+                    .asString();
+            return true;
+        } catch (Exception e) {
+            Logger.debug("in api researchtopic2"+research_topic);
+            System.out.println(e.getMessage());
+        return false;
+        }
+    }
+
+
+    public boolean deletePCMembers(Long id) {
+        try {
+            HttpResponse<PCMember> response = Unirest.post(getUrl("conferences/pcmembers/delete/" + id)).asObject(
+                    PCMember.class);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -613,10 +660,50 @@ public class Api {
         }
     }
 
-    public boolean deletePCMembers(Long id) {
+    public ReviewQuestion[] getReviewQuestion(Long conf_id) {
         try {
-            HttpResponse<PCMember> response = Unirest.post(getUrl("conferences/pcmembers/delete/" + id)).asObject(
-                    PCMember.class);
+            HttpResponse<ReviewQuestion[]> response = Unirest.get(getUrl("conferences/reviewquestion/" + conf_id)).asObject(
+                    ReviewQuestion[].class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean createReviewQuestion(Long conf_id, ReviewQuestion reviewQuestion) {
+        try {
+            String url = "conferences/reviewquestion/" + conf_id;
+
+            HttpRequestWithBody req = Unirest.post(getUrl(url)).header("content-type",
+                    "application/x-www-form-urlencoded");
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put("question", reviewQuestion.question);
+            params.put("is_public", reviewQuestion.is_public);
+            params.put("choice1", reviewQuestion.choice1);
+            params.put("position1", reviewQuestion.position1);
+            params.put("choice2", reviewQuestion.choice2);
+            params.put("position2", reviewQuestion.position2);
+            params.put("choice3", reviewQuestion.choice3);
+            params.put("position3", reviewQuestion.position3);
+            params.put("choice4", reviewQuestion.choice4);
+            params.put("position4", reviewQuestion.position4);
+
+            req.body(mapToQueryString(params));
+
+            HttpResponse<ReviewQuestion> response = req.asObject(ReviewQuestion.class);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteReviewQuestion(Long id) {
+        try {
+            HttpResponse<ReviewQuestion> response = Unirest.post(getUrl("conferences/reviewquestion/delete/" + id)).asObject(
+                    ReviewQuestion.class);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

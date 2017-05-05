@@ -19,8 +19,6 @@ import java.util.*;
 
 import lib.UserStorage;
 
-import java.io.FileOutputStream;
-
 /**
  * Provides web and api endpoints for conference actions
  */
@@ -70,8 +68,6 @@ public class ConferenceController extends Controller {
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
-        System.out.println(conf.id);
-        System.out.println(conf.title);
         if (file != null && conf.id != null) {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
@@ -124,7 +120,6 @@ public class ConferenceController extends Controller {
         ArrayList<PCMember> members = Api.getInstance().getUserRoles(user.getId());
         if (members != null) {
             for (PCMember member : members) {
-                System.out.println(member.role);
                 if(member.role.equals("reviewer")){
                     conferenceReview.add(member.conference.title);
                 }else if(member.role.equals("chair")){
@@ -140,7 +135,6 @@ public class ConferenceController extends Controller {
         User user = UserStorage.getCurrentUser();
         Conference[] conferences = Api.getInstance().getConferencesKeyword(user.getId(), keyword, conf_status);
         Conference[] conferencesUser = Api.getInstance().getConferences(user.getId());
-
         ArrayList<String> conferenceUsertitle = new ArrayList<String>();
         for (Conference conf : conferencesUser) {
             conferenceUsertitle.add(conf.title);
@@ -181,7 +175,9 @@ public class ConferenceController extends Controller {
      * Display PC chair page
      */
     public Result getPapersReviewInfo(Long conf_id, String statusFilter) {
+        System.out.println(statusFilter);
         ArrayList<PaperConferenceReviews> papers = Api.getInstance().getConferencesPapersStatus(conf_id, statusFilter);
+        System.out.println(papers.size());
         return ok(views.html.conference.papersStatus.render(statusFilter, papers, conf_id, flash()));
     }
 
@@ -197,10 +193,9 @@ public class ConferenceController extends Controller {
      * Display PC members
      */
     public Result showPCMembers(Long conf_id) {
-        System.out.println(conf_id);
         ArrayList<PCMember> members = new ArrayList<PCMember>(Arrays.asList(
                 Api.getInstance().getPCMembersByConfId(conf_id)
-                                                                           ));
+        ));
         System.out.println(members);
         Conference conf = Api.getInstance().getConferenceById(conf_id);
         System.out.println(conf);
@@ -257,5 +252,31 @@ public class ConferenceController extends Controller {
         return redirect("/conferences/templates?conf_id=" + conf_id);
     }
 
-}
+    public Result showReviewQuestion(Long conf_id) {
+        List<ReviewQuestion> reviewQuestionList = Arrays.asList(Api.getInstance().getReviewQuestion(conf_id));
+        return ok(views.html.conference.reviewQuestion.render(reviewQuestionList, conf_id, flash()));
+    }
 
+    public Result deleteReviewQuestion(Long id) {
+        Boolean deleted = Api.getInstance().deleteReviewQuestion(id);
+        return redirect("/conferences");
+    }
+
+    /**
+     * Displays conference create page
+     */
+    public Result showReviewQuestionForm(Long conf_id) {
+        Form reviewForm = formFactory.form(ReviewQuestion.class);
+        return ok(views.html.conference.reviewQuestionForm.render(conf_id, reviewForm, flash()));
+    }
+
+    public Result createReviewQuestion(Long conf_id) {
+        ReviewQuestion reviewQuestion = new ReviewQuestion();
+        Form form = formFactory.form(ReviewQuestion.class);
+        form = form.bindFromRequest(request());
+        reviewQuestion = (ReviewQuestion) form.get();
+
+        Api.getInstance().createReviewQuestion(conf_id, reviewQuestion);
+        return redirect("/conferences");
+    }
+}

@@ -77,7 +77,6 @@
                 $.post(
                         "/conferences/papers/status/" + paperId + "/" + $(this).val(),
                         function (data) {
-                            alert('Status was changed');
                             console.log(data);
                         }
                 )

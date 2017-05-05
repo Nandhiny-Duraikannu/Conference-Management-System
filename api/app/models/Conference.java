@@ -173,9 +173,7 @@ public class Conference extends Model {
     public static List<PaperConferenceReviews> getPapersConferenceReviews(Long confId, String status) {
         HashMap<Long, PaperConferenceReviews> result = new HashMap<>();
         List<Review> reviews;
-        System.out.println(status);
         if (status.equals("all")){
-            System.out.println("1");
             reviews = Review.
             find.select("*")
             .where().eq("paper.conference.id", confId)
@@ -194,13 +192,14 @@ public class Conference extends Model {
             Conference conf = review.paper.conference;
             PaperConferenceReviews item;
 
-            if (!result.containsKey(conf.id)) {
+            if (!result.containsKey(review.paper.id)) {
                 item = new PaperConferenceReviews();
                 item.conferenceId = conf.id;
                 item.paperId = review.paper.id;
                 item.paperTitle = review.paper.title;
                 item.authors = new ArrayList<String>();
                 item.reviewers = new ArrayList<String>();
+
                 ArrayList<String> authors = Paper.getAuthors(review.paper.id);
                 for(int n=0; n<authors.size(); n++){
                     item.authors.add(authors.get(n));
@@ -209,14 +208,13 @@ public class Conference extends Model {
                 for(int n=0; n<reviewers.size(); n++){
                     item.reviewers.add(reviewers.get(n));
                 }
-                item.status = review.paper.status;
-
-                result.put(conf.id, item);
+                result.put(review.paper.id, item);
             } else {
-                item = result.get(conf.id);
+                item = result.get(review.paper.id);
             }
-        }
 
+            item.status = review.paper.status;
+        }
         return new ArrayList<>(result.values());
     }
 }
