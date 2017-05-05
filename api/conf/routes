@@ -37,9 +37,9 @@ POST        /api/reviews                                         controllers.Rev
 GET         /api/reviews/:id                                     controllers.ReviewController.getById(id: Long)
 # get reviews by user id
 GET         /api/reviews/user/:userId                            controllers.ReviewController.getByUser(userId: Long)
-# get papers for reviews by user id and cond id
+# get papers for reviews by user id and conf id
 GET         /api/reviews/papers/user/:uid/conference/:cid        controllers.ReviewController.getPaperReviewsByUserAndConf(uid:Long, cid: Long)
-# get reviews by user id and cond id
+# get reviews by user id and conf id
 GET         /api/reviews/user/:uid/conference/:cid               controllers.ReviewController.getReviewsByUserAndConf(uid:Long, cid: Long)
 # update review
 POST        /api/reviews/:id                                     controllers.ReviewController.update(id: Long)
@@ -61,11 +61,14 @@ GET         /api/conferences/user/:id                            controllers.Con
 GET         /api/conferences/reviewers/assigned/:userId          controllers.ConferenceController.getWithAssignedReviewer(userId: Long)
 # get pc members for conference id
 GET         /api/conferences/pcmembers/:conf_id                  controllers.ConferenceController.getPCMembers(conf_id: Long)
+# get reviewers for given conference
+GET         /api/conferences/:conf_id/reviewers                  controllers.ConferenceController.getConferenceReviewers(conf_id: Long)
+POST        /api/conferences/:conf_id/notifications              controllers.ConferenceController.notifyReviewers(conf_id: Long)
 # add a pc member to conference id
-POST         /api/conferences/pcmembers/:conf_id                         controllers.ConferenceController.addPCMember(conf_id: Long)
+POST        /api/conferences/pcmembers/:conf_id                  controllers.ConferenceController.addPCMember(conf_id: Long)
 # delete a pc member by id
-POST         /api/conferences/pcmembers/delete/:id               controllers.ConferenceController.deletePCMember(id: Long)
+POST        /api/conferences/pcmembers/delete/:id                controllers.ConferenceController.deletePCMember(id: Long)
 #get email templates by conference id
 GET         /api/conferences/templates/:conf_id                  controllers.ConferenceController.getEmailTemplates(conf_id: Long)
 # edit email template by id
-POST         /api/conferences/templates/:conf_id/:id             controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
+POST        /api/conferences/templates/:conf_id/:id              controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)

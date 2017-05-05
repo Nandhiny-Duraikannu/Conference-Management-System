@@ -1,5 +1,7 @@
 package lib;
 
+import models.EmailTemplate;
+
 import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -23,11 +25,11 @@ public class EmailHelper {
         props.put("mail.smtp.startssl.enable", "true");
 
         Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(from, fromPassword);
-                    }
-                });
+                                              new javax.mail.Authenticator() {
+                                                  protected PasswordAuthentication getPasswordAuthentication() {
+                                                      return new PasswordAuthentication(from, fromPassword);
+                                                  }
+                                              });
 
         try {
             MimeMessage message = new MimeMessage(session);
@@ -40,10 +42,16 @@ public class EmailHelper {
 
             //message.setText(body);
 
-            message.setContent(body,  "text/html");
+            message.setContent(body, "text/html");
             Transport.send(message);
-        }catch (MessagingException mex) {
+        } catch (MessagingException mex) {
             mex.printStackTrace();
+        }
+    }
+
+    public static void sendTemplateToEmails(ArrayList<String> emails, EmailTemplate template) {
+        for (String email: emails) {
+            EmailHelper.sendEmail(email, template.getTitle(), template.content);
         }
     }
 }

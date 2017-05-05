@@ -1,7 +1,9 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import json.ConferenceReviewer;
 import json.UserConferenceReviews;
 
 import javax.persistence.Entity;
@@ -59,17 +61,18 @@ public class Conference extends Model {
      * TODO: Make this work with getAllConferences()
      */
     public static List<Conference> getAllConferencesByKeyword(String keyword, String conf_status) {
-        if(conf_status.equals("all")) {
+        if (conf_status.equals("all")) {
             conf_status = "%%";
         } else {
             conf_status = "%" + conf_status + "%";
         }
-        if(keyword.equals("")) {
+        if (keyword.equals("")) {
             keyword = "%%";
         } else {
             keyword = "%" + keyword + "%";
         }
-        List<Conference> items = Conference.find.where().ilike("title", keyword).ilike("status", conf_status).findList();
+        List<Conference> items = Conference.find.where().ilike("title", keyword).ilike("status",
+                                                                                       conf_status).findList();
         return items;
     }
 
@@ -121,6 +124,46 @@ public class Conference extends Model {
             }
 
             item.assignedPapersNumber++;
+        }
+
+        return new ArrayList<>(result.values());
+    }
+
+    /**
+     * Returns reviewers and papers they need to review for a conference
+     */
+    @JsonIgnore
+    public List<ConferenceReviewer> getReviewers() {
+        HashMap<Long, ConferenceReviewer> result = new HashMap<>();
+
+        List<Review> reviews = Review.
+                find.select("*")
+                    .where().eq("paper.conference.id", this.id)
+                    .findList();
+
+        for (int i = 0; i < reviews.size(); i++) {
+            Review review = reviews.get(i);
+            Conference conf = review.paper.conference;
+            User reviewer = User.find.byId(review.user.id);
+            ConferenceReviewer item;
+
+            if (!result.containsKey(reviewer.id)) {
+                item = new ConferenceReviewer();
+
+                item.reviewerId = reviewer.id;
+                item.reviewerEmail = reviewer.email;
+                item.reviewerName = reviewer.name;
+
+                result.put(reviewer.id, item);
+            } else {
+                item = result.get(conf.id);
+            }
+
+            if (review.isReviewed()) {
+                item.addReviewedPaper(review.paper.id, review.paper.title);
+            } else {
+                item.addNotReviewedPaper(review.paper.id, review.paper.title);
+            }
         }
 
         return new ArrayList<>(result.values());

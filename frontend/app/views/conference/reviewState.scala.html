@@ -1,0 +1,79 @@
+@import json.ConferenceReviewer
+@(confId: Long, reviewers: List[ConferenceReviewer], flash: play.mvc.Http.Flash)
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+    <style>
+        ul {
+            margin: 0;
+            list-style-position: outside;
+            padding-left: 30px;
+        }
+    </style>
+    <h2 id="homeTitle">Review state</h2>
+    <table class="table-condensed zebra-striped">
+        <thead>
+            <tr>
+                <th>Reviewer</th>
+                <th>Email</th>
+                <th>Papers to review</th>
+                <th>Reviewed papers</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @for(reviewer <- reviewers) {
+            <tr>
+                <td>@reviewer.reviewerName</td>
+                <td>@reviewer.reviewerEmail</td>
+                <td>
+                @if(reviewer.notReviewedPapers.size() > 0) {
+                    <ul>
+                    @for(paper <- reviewer.notReviewedPapers) {
+                        <li>
+                        @paper.title
+                        </li>
+                    }
+                    </ul>
+                } else {
+                    None
+                }
+                </td>
+                <td>
+                @if(reviewer.reviewedPapers.size() > 0) {
+                    <ul>
+                    @for(paper <- reviewer.reviewedPapers) {
+                        <li>
+                        @paper.title
+                        </li>
+                    }
+                    </ul>
+                } else {
+                    None
+                }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <br>
+    <div class="alert alert-info">
+        Some reviewers may forget reviewing papers assigned to them.
+        You can send reminders to them, asking them to comment on and score papers concerned.
+    </div>
+    <a href="#" class="btn btn-primary notify-btn">Notify reviewers</a>
+
+    <script>
+        $(function () {
+          $('.notify-btn').click(function (e) {
+            e.preventDefault();
+            $.post('/conferences/sendNotifications?conf_id=@confId').success(function (data) {
+                alert('Notifications were sent to the following emails: ' + data.join(', '));
+            });
+          });
+        });
+    </script>
+
+}
