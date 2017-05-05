@@ -12,6 +12,7 @@ import play.libs.Json;
 import play.mvc.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Provides web and api endpoints for user actions
@@ -67,6 +68,15 @@ public class UserController extends Controller {
             /*Logger.debug("Logged in as " + formObj.getName());
             session().put("username", formObj.getName());*/
             return ok(Json.toJson(user));
+        } else {
+            return notFound();
+        }
+    }
+
+    public Result getAllUsers() {
+        List<User> users = User.getAll();
+        if (users != null) {
+            return ok(Json.toJson(users));
         } else {
             return notFound();
         }

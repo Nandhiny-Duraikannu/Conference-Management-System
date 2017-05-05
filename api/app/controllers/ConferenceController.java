@@ -1,7 +1,6 @@
 package controllers;
 
-import models.Conference;
-import models.Review;
+import models.*;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
@@ -133,6 +132,126 @@ public class ConferenceController extends Controller {
     public Result getWithAssignedReviewer(Long userId) {
         return ok(Json.toJson(Conference.getUserConferenceReviews(userId)));
 
+    }
+
+    public Result getPCMembers(Long conf_id) {
+        return ok(Json.toJson(PCMember.getByConfId(conf_id)));
+    }
+
+    public Result addPCMember(Long conf_id) {
+        PCMember member = new PCMember();
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        System.out.println(params);
+        member.conference = new Conference();
+        member.conference.id = conf_id;
+        member.user = new User();
+        member.user.id =  Long.parseLong(params.get("id")[0]);
+        member.role = params.get("role")[0];
+        if(member.conference.id!=null && member.user.id !=null && member.role!= null){
+            member.save();
+            return created();
+        } else {
+            return badRequest();
+        }
+    }
+
+    public Result deletePCMember(Long id) {
+        PCMember member = PCMember.find.byId(id);
+
+        if (member == null) {
+            return notFound();
+        }
+
+        member.delete();
+
+        return ok();
+    }
+
+    public Result getEmailTemplates(Long conf_id) {
+        return ok(Json.toJson(EmailTemplate.getByConfId(conf_id)));
+    }
+
+    public Result addEmailTemplate() {
+        Form signupForm = formFactory.form(Review.class);
+        Form submittedForm = signupForm.bindFromRequest();
+
+        if (!submittedForm.hasErrors()) {
+            EmailTemplate template = (EmailTemplate) submittedForm.get();
+            template.save();
+            return created();
+        } else {
+            return badRequest(submittedForm.errorsAsJson());
+        }
+    }
+
+    public Result updateEmailTemplate(Long conf_id,Long id) {
+
+        EmailTemplate template = EmailTemplate.find.byId(id);
+
+        if (template == null) {
+            return notFound();
+        }
+
+        template.setContent(request().body().asFormUrlEncoded().get("content")[0]);
+        template.update();
+
+        return ok();
+    }
+
+    public Result addReviewQuestion(Long conf_id) {
+        ReviewQuestion reviewQuestion = new ReviewQuestion();
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        reviewQuestion.conference = new Conference();
+        reviewQuestion.conference.id = conf_id;
+        reviewQuestion.question = params.get("question")[0];
+        reviewQuestion.is_public = params.get("is_public")[0];
+        reviewQuestion.choice1 = params.get("choice1")[0];
+        reviewQuestion.position1 = params.get("position1")[0];
+        reviewQuestion.choice2 = params.get("choice2")[0];
+        reviewQuestion.position2 = params.get("position2")[0];
+        reviewQuestion.choice3 = params.get("choice3")[0];
+        reviewQuestion.position3 = params.get("position3")[0];
+        reviewQuestion.choice4 = params.get("choice4")[0];
+        reviewQuestion.position4 = params.get("position4")[0];
+
+        reviewQuestion.save();
+        return created();
+    }
+
+    public Result updateReviewQuestion(Long id) {
+
+        ReviewQuestion reviewQuestion = ReviewQuestion.find.byId(id);
+        Http.MultipartFormData data = request().body().asMultipartFormData();
+        Map<String, String[]> params = request().body().asFormUrlEncoded();
+        reviewQuestion.setQuestion(params.get("question")[0]);
+        reviewQuestion.setIs_public(params.get("is_public")[0]);
+        reviewQuestion.setPosition1(params.get("position1")[0]);
+        reviewQuestion.setChoice1(params.get("choice1")[0]);
+        reviewQuestion.setPosition2(params.get("position2")[0]);
+        reviewQuestion.setChoice2(params.get("choice2")[0]);
+        reviewQuestion.setPosition3(params.get("position3")[0]);
+        reviewQuestion.setChoice3(params.get("choice3")[0]);
+        reviewQuestion.setPosition4(params.get("position4")[0]);
+        reviewQuestion.setChoice4(params.get("choice4")[0]);
+
+
+        reviewQuestion.update();
+
+        return ok();
+    }
+
+    public Result deleteReviewQuestion(Long id) {
+        ReviewQuestion reviewQuestion = ReviewQuestion.find.byId(id);
+
+        reviewQuestion.delete();
+
+        return ok();
+    }
+
+    public Result getReviewQuestion(Long conf_id) {
+        return ok(Json.toJson(ReviewQuestion.getByConfId(conf_id)));
     }
 }
             

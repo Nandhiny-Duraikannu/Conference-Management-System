@@ -1,0 +1,34 @@
+@(conf_id:Long, flash: play.mvc.Http.Flash)
+
+@currentUser = @{
+lib.UserStorage.getCurrentUser()
+}
+
+@main {
+<div class="jumbotron alert-info">
+    <h2>Administrator functions</h2>
+    <p>
+        @if(currentUser == null) {
+        Please <a href="/login" role="button">log in</a>
+        or <a href="/login" role="button">sign up</a>.
+        } else {
+        <a href="/conferences/update/@conf_id" class="btn btn-primary btn-lg">Edit conference settings</a>
+        <br>
+        <br>
+        <a href="/conferences/pcmembers?conf_id=@conf_id" class="btn btn-primary btn-lg">PC members</a>
+        <br>
+        <br>
+        <a href="/conferences/templates?conf_id=@conf_id" class="btn btn-primary btn-lg">Email templates</a>
+        <br>
+        <br>
+        <a href="/conferences/reviewquestion?conf_id=@conf_id" class="btn btn-primary btn-lg">Review Question</a>
+        <br>
+        <br>
+        <a href="/conferences/authorlist" class="btn btn-primary btn-lg">List of Authors</a>
+        <br>
+        <br>
+        <a href="/conferences/paperlist" class="btn btn-primary btn-lg">List of Papers</a>
+        }
+    </p>
+</div>
+}

@@ -29,10 +29,8 @@ public class User {
     @Constraints.Required
     public String password;
 
-    @Constraints.Required
     public String securityQuestion;
 
-    @Constraints.Required
     public String securityAnswer;
 
     @Constraints.Required
@@ -63,13 +61,17 @@ public class User {
 
     public String zip;
 
-    public String role;
+    public String role;//user, admin, chair, reviewer
 
     @Column(length = 5000)
     public String comments;
 
     public static User getByName(String name) {
         return Api.getInstance().getUserByName(name);
+    }
+
+    public static List<User> getAllUsers() {
+        return Api.getInstance().getAllUsers();
     }
 
     public static User getByNameAndPassword(String name, String password) {

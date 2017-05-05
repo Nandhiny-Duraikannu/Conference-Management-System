@@ -1,7 +1,6 @@
 package controllers;
 
-import models.Conference;
-import models.Paper;
+import models.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.Json;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.*;
 
 import lib.UserStorage;
-import models.User;
 
 /**
  * Provides web and api endpoints for conference actions
@@ -67,8 +65,6 @@ public class ConferenceController extends Controller {
 
         conf = Api.getInstance().editOrCreateConference(conf);
 
-        System.out.println(conf.id);
-        System.out.println(conf.title);
         if (file != null && conf.id != null) {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
@@ -101,7 +97,7 @@ public class ConferenceController extends Controller {
             Api.getInstance().setConferenceLogo(conf.id, file);
         }
 
-        return redirect("/conferences");
+        return redirect("/conferences/admin?conf_id="+conf.id);
     }
 
 
@@ -126,6 +122,88 @@ public class ConferenceController extends Controller {
             conferenceUsertitle.add(conf.title);
         }
         return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, flash()));
+    }
+
+    /**
+     * Display admin page
+     */
+    public Result showAdminPage(Long conf_id) {
+        return ok(views.html.conference.adminPage.render(conf_id, flash()));
+    }
+
+    /**
+     * Display PC members
+     */
+    public Result showPCMembers(Long conf_id) {
+        ArrayList<PCMember> members = new ArrayList<PCMember>(Arrays.asList(
+                Api.getInstance().getPCMembersByConfId(conf_id)
+        ));
+        Conference conf = Api.getInstance().getConferenceById(conf_id);
+                return ok(views.html.conference.Members.render(conf, members, flash()));
+                }
+
+    /**
+     * Delete PC member
+     */
+    public Result addPCMember(Long conf_id) {
+        Api.getInstance().addPCMember(conf_id,
+                Long.parseLong(request().body().asFormUrlEncoded().get("user_id")[0]),
+                request().body().asFormUrlEncoded().get("role")[0]
+        );
+        return redirect("/conferences/pcmembers?conf_id="+conf_id);
+    }
+
+    /**
+     * Delete PC member
+     */
+    public Result deletePCMember(Long user_id) {
+            Boolean deleted = Api.getInstance().deletePCMembers(user_id);
+            return redirect("/conferences/pcmembers?conf_id="+request().queryString().get("conf_id")[0]);
+            }
+
+    /**
+     * Display admin page
+     */
+    public Result showEmailTemplates(Long conf_id) {
+            List<EmailTemplate> templates = Arrays.asList(Api.getInstance().getConferenceTemplates(conf_id));
+
+            return ok(views.html.conference.EmailTemplates.render(conf_id, templates, flash()));
+            }
+
+    public Result saveTemplate(Long conf_id) {
+        Api.getInstance().saveTemplate(conf_id,
+                Long.parseLong(request().body().asFormUrlEncoded().get("template_id")[0]),
+                request().body().asFormUrlEncoded().get("content")[0]
+        );
+        return redirect("/conferences/templates?conf_id="+conf_id);
+    }
+
+    public Result showReviewQuestion(Long conf_id) {
+        List<ReviewQuestion> reviewQuestionList = Arrays.asList(Api.getInstance().getReviewQuestion(conf_id));
+        return ok(views.html.conference.reviewQuestion.render(reviewQuestionList, conf_id, flash()));
+    }
+
+    public Result deleteReviewQuestion(Long id) {
+        Boolean deleted = Api.getInstance().deleteReviewQuestion(id);
+        return redirect("/conferences");
+    }
+
+    /**
+     * Displays conference create page
+     */
+    public Result showReviewQuestionForm(Long conf_id) {
+        Form reviewForm = formFactory.form(ReviewQuestion.class);
+        return ok(views.html.conference.reviewQuestionForm.render(conf_id, reviewForm, flash()));
+    }
+
+    public Result createReviewQuestion(Long conf_id) {
+        ReviewQuestion reviewQuestion = new ReviewQuestion();
+        Form form = formFactory.form(ReviewQuestion.class);
+        form = form.bindFromRequest(request());
+        reviewQuestion = (ReviewQuestion) form.get();
+
+        Api.getInstance().createReviewQuestion(conf_id, reviewQuestion);
+        return redirect("/conferences");
     }
 }
 
