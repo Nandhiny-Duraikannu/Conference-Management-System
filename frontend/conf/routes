@@ -25,6 +25,12 @@ GET         /conferences/pcmembers/delete/:id        controllers.ConferenceContr
 GET         /conferences/templates                   controllers.ConferenceController.showEmailTemplates(conf_id: Long)
 GET         /conferences/templates/:id               controllers.ConferenceController.showEmailTemplates(id: Long)
 POST        /conferences/templates/:conf_id          controllers.ConferenceController.saveTemplate(conf_id: Long)
+GET         /conferences/reviewquestion              controllers.ConferenceController.showReviewQuestion(conf_id: Long)
+GET         /conferences/reviewquestion/delete/:id   controllers.ConferenceController.deleteReviewQuestion(id: Long)
+GET         /conferences/reviewquestion/new          controllers.ConferenceController.showReviewQuestionForm(conf_id: Long)
+POST        /conferences/reviewquestion              controllers.ConferenceController.createReviewQuestion(conf_id: Long)
+GET         /conferences/authorlist                  controllers.PaperController.authorList()
+GET         /conferences/paperlist                   controllers.PaperController.paperList()
 
 # User Profile
 GET         /profile                                 controllers.HomeController.showProfile()

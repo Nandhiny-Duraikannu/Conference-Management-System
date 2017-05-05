@@ -1,3 +1,4 @@
+@import lib.UserStorage
 @(id: Long, PaperSubmission: play.data.Form[forms.PaperSubmission], flash: play.mvc.Http.Flash)
 @currentUser = @{
   lib.UserStorage.getCurrentUser()
@@ -17,6 +18,10 @@
 
 
     <fieldset>
+      @if(UserStorage.getCurrentUser().isAdmin()) {
+        @b3.text(PaperSubmission("user.id"), '_label -> "User ID", '_help -> "")
+        <br>
+      }
       @b3.text(PaperSubmission("title"), '_label -> "Title", '_help -> "")
       <br>
       @b3.email(PaperSubmission("contactEmail"), '_label -> "Email of contact author", '_help -> "")

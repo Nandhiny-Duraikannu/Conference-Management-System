@@ -1,0 +1,54 @@
+@(reviewQuestionList: List[ReviewQuestion], conf_id: Long, flash: play.mvc.Http.Flash)
+@import helper._
+
+@import b3.vertical.fieldConstructor
+
+@main {
+    <h2 id="homeTitle">Review Question</h2>
+    <a class="btn btn-primary" href="/conferences/reviewquestion/new?conf_id=@conf_id">Add new PC member</a>
+
+    <br>
+    <br>
+    <table class="table-condensed zebra-striped">
+        <thead>
+            <tr>
+                <th>Question ID</th>
+                <th>Question</th>
+                <th>Public</th>
+                <th>Choice 1</th>
+                <th>Position 1</th>
+                <th>Choice 2</th>
+                <th>Position 2</th>
+                <th>Choice 3</th>
+                <th>Position 3</th>
+                <th>Choice 4</th>
+                <th>Position 4</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        @for(question <- reviewQuestionList) {
+        <tr>
+            <td>@question.id</td>
+            <td>@question.question</td>
+            <td>@question.is_public</td>
+            <td>@question.choice1</td>
+            <td>@question.position1</td>
+            <td>@question.choice2</td>
+            <td>@question.position2</td>
+            <td>@question.choice3</td>
+            <td>@question.position3</td>
+            <td>@question.choice4</td>
+            <td>@question.position4</td>
+            <td>
+                <a id="deleteMember" class="btn btn-default" href="/conferences/reviewquestion/delete/@question.id">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        }
+        </tbody>
+
+    </table>
+
+}

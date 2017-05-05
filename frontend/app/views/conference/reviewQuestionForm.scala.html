@@ -1,0 +1,40 @@
+@(conf_id: Long, reviewForm: play.data.Form[models.ReviewQuestion], flash: play.mvc.Http.Flash)
+@currentUser = @{
+  lib.UserStorage.getCurrentUser()
+}
+
+@import b3.vertical.fieldConstructor
+
+@main {
+
+  <h1>Create Review Question</h1>
+  @b3.form(routes.ConferenceController.createReviewQuestion(conf_id), 'enctype -> "multipart/form-data") {
+    <fieldset>
+      @b3.text(reviewForm("question"), '_label -> "Question", '_help -> "", 'required -> "required")
+      <br>
+      @b3.text(reviewForm("is_public"), '_label -> "Is Public", '_help -> "", 'required -> "required")
+      <br>
+      @b3.text(reviewForm("choice1"), '_label -> "Choice 1", '_help -> "")
+      <br>
+      @b3.text(reviewForm("position1"), '_label -> "Position 1", '_help -> "")
+      <br>
+      @b3.text(reviewForm("choice2"), '_label -> "Choice 2", '_help -> "")
+      <br>
+      @b3.text(reviewForm("position2"), '_label -> "Position 2", '_help -> "")
+      <br>
+      @b3.text(reviewForm("choice3"), '_label -> "Choice 3", '_help -> "")
+      <br>
+      @b3.text(reviewForm("position3"), '_label -> "Position 3", '_help -> "")
+      <br>
+      @b3.text(reviewForm("choice4"), '_label -> "Choice 4", '_help -> "")
+      <br>
+      @b3.text(reviewForm("position4"), '_label -> "Position 4", '_help -> "")
+      <br>
+    </fieldset>
+
+    <div class="actions">
+      <input type="submit" value="Submit" class="btn primary">
+    </div>
+
+  }
+}
