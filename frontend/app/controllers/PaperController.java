@@ -152,6 +152,7 @@ public class PaperController extends Controller {
     }
 
     /**
+     *
      * download file from database
      */
     public Result downloadPaper(Long id) {
@@ -180,6 +181,14 @@ public class PaperController extends Controller {
         Form paperForm = formFactory.form(PaperSubmission.class);
         paperForm = paperForm.fill(paper);
         return ok(views.html.paper.PaperForm.render(id, paperForm, flash()));
+    }
+
+    public Result authorList() {
+        List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                Api.getInstance().getPapers()
+        ));
+
+        return ok(views.html.conference.authorList.render(papers, flash()));
     }
 }
             

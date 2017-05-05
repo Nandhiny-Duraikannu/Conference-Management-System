@@ -135,7 +135,6 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("paper")).header("content-type",
                     "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
-            System.out.println(query);
             req.body(query);
 
             HttpResponse<JsonNode> response = req.asJson();
@@ -152,7 +151,6 @@ public class Api {
             HttpRequestWithBody req = Unirest.post(getUrl("paper/" + id)).header("content-type",
                     "application/x-www-form-urlencoded");
             String query = mapToQueryString(data);
-            System.out.println(query);
             req.body(query);
 
             HttpResponse<JsonNode> response = req.asJson();
@@ -178,6 +176,16 @@ public class Api {
     public Paper getPaperById(Long id) {
         try {
             HttpResponse<Paper> response = Unirest.get(getUrl("papers/" + id)).asObject(Paper.class);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Paper[] getPapers() {
+        try {
+            HttpResponse<Paper[]> response = Unirest.get(getUrl("papers")).asObject(Paper[].class);
             return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
@@ -505,7 +513,6 @@ public class Api {
             req.body(mapToQueryString(params));
 
             HttpResponse<String> response = req.asString();
-            System.out.println(response.getBody());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -522,7 +529,6 @@ public class Api {
             req.body(mapToQueryString(params));
 
             HttpResponse<String> response = req.asString();
-            System.out.println(response.getBody());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

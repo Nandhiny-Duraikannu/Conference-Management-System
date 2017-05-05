@@ -27,6 +27,7 @@ GET         /conferences/reviewquestion              controllers.ConferenceContr
 GET         /conferences/reviewquestion/delete/:id   controllers.ConferenceController.deleteReviewQuestion(id: Long)
 GET         /conferences/reviewquestion/new          controllers.ConferenceController.showReviewQuestionForm(conf_id: Long)
 POST        /conferences/reviewquestion              controllers.ConferenceController.createReviewQuestion(conf_id: Long)
+GET         /conferences/authorlist                  controllers.PaperController.authorList()
 
 # User Profile
 GET         /profile                                 controllers.HomeController.showProfile()
