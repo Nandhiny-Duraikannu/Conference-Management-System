@@ -97,7 +97,9 @@ public class PaperController extends Controller {
 
         if (!form.hasErrors()) {
             Map<String, String> data = form.data();
-            data.put("user.id", UserStorage.getCurrentUser().getId().toString());
+            if(!data.containsKey("user.id")) {
+                data.put("user.id", UserStorage.getCurrentUser().getId().toString());
+            }
             boolean success = false;
 
             if (id == null) {
