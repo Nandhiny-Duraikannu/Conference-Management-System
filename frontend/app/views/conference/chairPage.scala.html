@@ -1,0 +1,19 @@
+@(conf_id: Long, flash: play.mvc.Http.Flash)
+
+@currentUser = @{
+  lib.UserStorage.getCurrentUser()
+}
+
+@main {
+  <div class="jumbotron alert-info">
+    <h2>PC Chair functions</h2>
+    <p>
+    @if(currentUser == null) {
+      Please <a href="/login" role="button">log in</a>
+      or <a href="/login" role="button">sign up</a>.
+    } else {
+      <a href="/conferences/papers?conf_id=@conf_id&status=all" class="btn btn-primary btn-lg">Status of papers</a>
+    }
+    </p>
+  </div>
+}

@@ -1,0 +1,86 @@
+@import json.PaperConferenceReviews
+@(status: String, list: List[PaperConferenceReviews], conf_id: Long, flash: play.mvc.Http.Flash)
+
+@main {
+
+    <h2>Conference Papers Status</h2>
+    <form id="change_status" method="GET" action="/conferences/papers">
+        <input type="hidden" name="conf_id" value="@conf_id">
+        Filter by status:
+        <select id="status_filter" name="status">
+            <option value="all"@if(status == "all") { selected }>All</option>
+            <option value="accept"@if(status == "accept") { selected }>Accepted</option>
+            <option value="reject"@if(status == "reject") { selected }>Rejected</option>
+            <option value="move"@if(status == "move") { selected }>Moved</option>
+            <option value="hold"@if(status == "hold") { selected }>Hold</option>
+        </select>
+    </form>
+    <h2 id="homeTitle">Papers found: @list.size()</h2>
+    <button onclick="goBack()" class="btn primary">Go Back</button>
+    <br>
+    <br>
+    <table name="papers" class="table-condensed zebra-striped">
+        <thead>
+            <tr>
+                <th>Paper ID</th>
+                <th>Title</th>
+                <th>Authors</th>
+                <th>Reviewers</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @for(item <- list) {
+            <tr>
+                <td>@item.paperId</td>
+                <td>@item.paperTitle</td>
+                <td>
+                @for(author <- item.authors) {
+                    @author <br>
+                    }
+                </td>
+                <td>
+                @for(reviewer <- item.reviewers) {
+                    @reviewer <br>
+                    }
+                </td>
+                <td>
+                    <form action="/conferences/papers/status" method="post" class="status-form" data-paper-id="@item.paperId">
+                        <input type="radio" name="status" value="hold"
+                        @if(item.status == "hold") { checked }> Hold<br>
+                        <input type="radio" name="status" value="move"
+                        @if(item.status == "move") { checked }> Move<br>
+                        <input type="radio" name="status" value="accept"
+                        @if(item.status == "accept") { checked }> Accept<br>
+                        <input type="radio" name="status" value="reject"
+                        @if(item.status == "reject") { checked }> Reject
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <button onclick="goBack()" class="btn primary">Go Back</button>
+    <script>
+            function goBack() {
+                window.history.back();
+            };
+
+            $("#status_filter").on("change", function () {
+                $(this).closest("form").submit();
+            });
+
+            $('.status-form input').on('change', function (e) {
+                var paperId = $(this).closest('form').data('paper-id');
+                $.post(
+                        "/conferences/papers/status/" + paperId + "/" + $(this).val(),
+                        function (data) {
+                            alert('Status was changed');
+                            console.log(data);
+                        }
+                )
+            });
+    </script>
+}

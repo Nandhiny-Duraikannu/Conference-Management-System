@@ -173,7 +173,6 @@ public class ConferenceController extends Controller {
         PCMember member = new PCMember();
         Http.MultipartFormData data = request().body().asMultipartFormData();
         Map<String, String[]> params = request().body().asFormUrlEncoded();
-        System.out.println(params);
         member.conference = new Conference();
         member.conference.id = conf_id;
         member.user = new User();
@@ -226,6 +225,22 @@ public class ConferenceController extends Controller {
 
         template.setContent(request().body().asFormUrlEncoded().get("content")[0]);
         template.update();
+
+        return ok();
+    }
+
+    public Result getUserRoles(Long id) {
+        return ok(Json.toJson(PCMember.getByUserId(id)));
+    }
+
+    public Result getPapersStatus(Long confId, String status) {
+        return ok(Json.toJson(Conference.getPapersConferenceReviews(confId, status)));
+    }
+
+    public Result setPapersStatus(Long paperId, String status) {
+        Paper p = Paper.getById(paperId);
+        p.status = status;
+        p.save();
 
         return ok();
     }

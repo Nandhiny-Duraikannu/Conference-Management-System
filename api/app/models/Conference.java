@@ -4,6 +4,7 @@ import com.avaje.ebean.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import json.ConferenceReviewer;
+import json.PaperConferenceReviews;
 import json.UserConferenceReviews;
 
 import javax.persistence.Entity;
@@ -156,13 +157,63 @@ public class Conference extends Model {
 
                 result.put(reviewer.id, item);
             } else {
-                item = result.get(conf.id);
+                item = result.get(reviewer.id);
             }
 
             if (review.isReviewed()) {
                 item.addReviewedPaper(review.paper.id, review.paper.title);
             } else {
                 item.addNotReviewedPaper(review.paper.id, review.paper.title);
+            }
+        }
+
+        return new ArrayList<>(result.values());
+    }
+
+    public static List<PaperConferenceReviews> getPapersConferenceReviews(Long confId, String status) {
+        HashMap<Long, PaperConferenceReviews> result = new HashMap<>();
+        List<Review> reviews;
+        System.out.println(status);
+        if (status.equals("all")){
+            System.out.println("1");
+            reviews = Review.
+            find.select("*")
+            .where().eq("paper.conference.id", confId)
+            .findList();
+        }
+        else{
+            reviews = Review.
+                    find.select("*")
+                    .where().eq("paper.conference.id", confId)
+                    .eq("paper.status", status)
+                    .findList();
+        }
+
+        for (int i = 0; i < reviews.size(); i++) {
+            Review review = reviews.get(i);
+            Conference conf = review.paper.conference;
+            PaperConferenceReviews item;
+
+            if (!result.containsKey(conf.id)) {
+                item = new PaperConferenceReviews();
+                item.conferenceId = conf.id;
+                item.paperId = review.paper.id;
+                item.paperTitle = review.paper.title;
+                item.authors = new ArrayList<String>();
+                item.reviewers = new ArrayList<String>();
+                ArrayList<String> authors = Paper.getAuthors(review.paper.id);
+                for(int n=0; n<authors.size(); n++){
+                    item.authors.add(authors.get(n));
+                }
+                ArrayList<String> reviewers = Paper.getReviewers(review.paper.id);
+                for(int n=0; n<reviewers.size(); n++){
+                    item.reviewers.add(reviewers.get(n));
+                }
+                item.status = review.paper.status;
+
+                result.put(conf.id, item);
+            } else {
+                item = result.get(conf.id);
             }
         }
 

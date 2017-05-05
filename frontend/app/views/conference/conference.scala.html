@@ -1,11 +1,14 @@
 @import forms.ConferenceList
 @import lib.UserStorage
-@(list: List[Conference], listUser: List[java.lang.String], flash: play.mvc.Http.Flash)
+@(list: List[Conference],
+  listUser: List[java.lang.String],
+  listReview: List[java.lang.String],
+  listChair: List[java.lang.String],
+  flash: play.mvc.Http.Flash)
 @import helper._
 
 
 @main {
-
   <h2>Conferences</h2>
   <form method="GET" action="/conferencessearch">
     Select Conference:
@@ -55,12 +58,16 @@
           <a href="/papers?=conf_id=@conference.id">Papers</a>
           <br>
         }
-        @if(listUser.contains(conference.title)) {
+        @if(listReview.contains(conference.title)) {
           <a href="/reviews/conference/@conference.id">Review</a>
           <br>
         }
-          @if(UserStorage.getCurrentUser().isAdmin()) {
-          <a href="/conferences/admin?conf_id=@conference.id">Administer</a>
+        @if(listChair.contains(conference.title)) {
+          <a href="/conferences/chair?conf_id=@conference.id">PC chair</a>
+          <br>
+        }
+        @if(UserStorage.getCurrentUser().isAdmin()) {
+        <a href="/conferences/admin?conf_id=@conference.id">Administer</a>
         }
         </td>
       </tr>

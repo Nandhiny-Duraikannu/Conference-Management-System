@@ -34,7 +34,6 @@ public class Review extends Model {
 
     @Column(length = 10000)
     public String content;
-
     public String status;
 
     /**
@@ -133,6 +132,10 @@ public class Review extends Model {
         } else {
             this.content = content;
         }
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setStatus(String status) {
