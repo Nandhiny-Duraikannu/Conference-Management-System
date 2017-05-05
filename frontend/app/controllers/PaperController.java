@@ -190,5 +190,12 @@ public class PaperController extends Controller {
 
         return ok(views.html.conference.authorList.render(papers, flash()));
     }
+
+    public Result paperList() {
+        List<Paper> papers = new ArrayList<Paper>(Arrays.asList(
+                Api.getInstance().getPapers()
+        ));
+        return ok(views.html.conference.paperList.render(papers, flash()));
+    }
 }
             
