@@ -191,5 +191,9 @@ public class PaperController extends Controller {
             return "";
         }
     }
+
+    public Result getReviewers(Long id) {
+        return ok(Json.toJson(Paper.getReviewers(id)));
+    }
 }
             

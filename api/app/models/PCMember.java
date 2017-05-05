@@ -45,6 +45,10 @@ public class PCMember extends com.avaje.ebean.Model {
         return find.where().eq("conference.id", conf_id).findList();
     }
 
+    public static List<PCMember> getByUserId(Long user_id) {
+        return find.where().eq("user.id", user_id).findList();
+    }
+
     public Long getId() {
         return id;
     }

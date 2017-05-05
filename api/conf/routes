@@ -71,9 +71,7 @@ POST        /api/conferences/pcmembers/delete/:id                controllers.Con
 #get email templates by conference id
 GET         /api/conferences/templates/:conf_id                  controllers.ConferenceController.getEmailTemplates(conf_id: Long)
 # edit email template by id
-
-POST         /api/conferences/templates/:conf_id/:id             controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
-
+POST        /api/conferences/templates/:conf_id/:id              controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
 #Admin - Research Topic
 POST        /api/researchTopic                                   controllers.AdminController.saveResearchTopic()
 GET         /api/getalltopics                                    controllers.AdminController.getResearchTopic()
@@ -89,3 +87,8 @@ POST         /api/conferences/reviewquestion/delete/:id          controllers.Con
 GET          /api/conferences/reviewquestion/:conf_id            controllers.ConferenceController.getReviewQuestion(conf_id: Long)
 POST        /api/conferences/templates/:conf_id/:id              controllers.ConferenceController.updateEmailTemplate(conf_id: Long, id: Long)
 
+#get user roles for all conferences
+GET         /api/conferences/pcmembers/roles/:id                 controllers.ConferenceController.getUserRoles(id: Long)
+#get papers' review status
+GET         /api/conferences/papers/status                       controllers.ConferenceController.getPapersStatus(id: Long, status: String)
+POST        /api/conferences/papers/status/:id/:status           controllers.ConferenceController.setPapersStatus(id: Long, status: String)

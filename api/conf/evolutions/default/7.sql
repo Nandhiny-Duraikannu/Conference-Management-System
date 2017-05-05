@@ -2,16 +2,16 @@
 create table review_question (
   id                            bigint auto_increment not null,
   conference_id                 bigint not null,
-  question                      varchar(5000),
-  is_public                      varchar(256),
-  position1                     varchar(5000),
-  choice1                       varchar(5000),
-  position2                     varchar(5000),
-  choice2                       varchar(5000),
-  position3                     varchar(5000),
-  choice3                       varchar(5000),
-  position4                     varchar(5000),
-  choice4                       varchar(5000),
+  question                      varchar(500),
+  is_public                     varchar(256),
+  position1                     varchar(500),
+  choice1                       varchar(500),
+  position2                     varchar(500),
+  choice2                       varchar(500),
+  position3                     varchar(500),
+  choice3                       varchar(500),
+  position4                     varchar(500),
+  choice4                       varchar(500),
   constraint rq_question primary key (id)
 );
 

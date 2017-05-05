@@ -29,8 +29,10 @@ public class User {
     @Constraints.Required
     public String password;
 
+    @Constraints.Required
     public String securityQuestion;
 
+    @Constraints.Required
     public String securityAnswer;
 
     @Constraints.Required

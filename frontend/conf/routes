@@ -32,6 +32,11 @@ POST        /conferences/reviewquestion              controllers.ConferenceContr
 GET         /conferences/authorlist                  controllers.PaperController.authorList()
 GET         /conferences/paperlist                   controllers.PaperController.paperList()
 
+#PC chair page
+GET         /conferences/chair                            controllers.ConferenceController.showChairPage(conf_id: Long)
+GET         /conferences/papers                           controllers.ConferenceController.getPapersReviewInfo(conf_id: Long, status: String)
+POST        /conferences/papers/status/:id/:status        controllers.ConferenceController.savePaperStatus(id: Long, status: String)
+
 # User Profile
 GET         /profile                                 controllers.HomeController.showProfile()
 POST        /profile                                 controllers.HomeController.updateProfileWeb()

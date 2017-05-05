@@ -172,9 +172,32 @@ public class Paper extends com.avaje.ebean.Model {
         this.fileContent = content;
         this.fileSize = size;
         this.fileFormat = format;
-        this.status = "uploaded";
+        //this.status = "uploaded";
         this.submissionDate = new Date();
         this.save();
+    }
+
+    public static ArrayList<String> getReviewers(Long paper_id) {
+        List<Review> items = Review.
+                find.select("*")
+                .where().eq("paper_id", paper_id)
+                .findList();
+        ArrayList<String> reviewers = new ArrayList<String>();
+        for (int i = 0; i < items.size(); i++) {
+            Review a = items.get(i);
+            String userInfo = a.user.getName() + " " + a.user.getLastName();
+            if (a.user.getAffiliation() != null && a.user.getAffiliation().length() > 0) {
+                if (a.user.getAffiliation() != null || a.user.getAffiliation() != "") {
+                    userInfo += " (" + a.user.getAffiliation() + ")";
+                }
+            }
+            if (a.status != null && a.status != "")
+            {
+                userInfo += ", "+ a.status;
+            }
+            reviewers.add(userInfo);
+        }
+        return reviewers;
     }
 
     /**

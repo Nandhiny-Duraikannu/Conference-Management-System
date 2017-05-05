@@ -1,6 +1,7 @@
 package controllers;
 
 import json.ConferenceReviewer;
+import json.PaperConferenceReviews;
 import models.*;
 import play.data.Form;
 import play.data.FormFactory;
@@ -113,7 +114,21 @@ public class ConferenceController extends Controller {
         for (Conference conf : conferencesUser) {
             conferenceUsertitle.add(conf.title);
         }
-        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, flash()));
+
+        ArrayList<String> conferenceChair = new ArrayList<String>();
+        ArrayList<String> conferenceReview = new ArrayList<String>();
+        ArrayList<PCMember> members = Api.getInstance().getUserRoles(user.getId());
+        if (members != null) {
+            for (PCMember member : members) {
+                if(member.role.equals("reviewer")){
+                    conferenceReview.add(member.conference.title);
+                }else if(member.role.equals("chair")){
+                    conferenceChair.add(member.conference.title);
+                }
+            }
+        }
+
+        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, conferenceReview, conferenceChair, flash()));
     }
 
     public Result showConferencePageFilter(String keyword, String conf_status) {
@@ -124,7 +139,22 @@ public class ConferenceController extends Controller {
         for (Conference conf : conferencesUser) {
             conferenceUsertitle.add(conf.title);
         }
-        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, flash()));
+
+        ArrayList<String> conferenceChair = new ArrayList<String>();
+        ArrayList<String> conferenceReview = new ArrayList<String>();
+        ArrayList<PCMember> members = Api.getInstance().getUserRoles(user.getId());
+        if (members != null) {
+            for (PCMember member : members) {
+                if(member.role == "reviewer"){
+                    conferenceReview.add(member.conference.title);
+                }else if(member.role == "chair"){
+                    conferenceChair.add(member.conference.title);
+                }
+            }
+        }
+
+        return ok(views.html.conference.conference.render(Arrays.asList(conferences), conferenceUsertitle, conferenceReview, conferenceChair, flash()));
+
     }
 
     /**
@@ -133,6 +163,31 @@ public class ConferenceController extends Controller {
     public Result showAdminPage(Long conf_id) {
         return ok(views.html.conference.adminPage.render(conf_id, flash()));
     }
+
+    /**
+     * Display PC chair page
+     */
+    public Result showChairPage(Long conf_id) {
+        return ok(views.html.conference.chairPage.render(conf_id, flash()));
+    }
+
+    /**
+     * Display PC chair page
+     */
+    public Result getPapersReviewInfo(Long conf_id, String statusFilter) {
+        System.out.println(statusFilter);
+        ArrayList<PaperConferenceReviews> papers = Api.getInstance().getConferencesPapersStatus(conf_id, statusFilter);
+        System.out.println(papers.size());
+        return ok(views.html.conference.papersStatus.render(statusFilter, papers, conf_id, flash()));
+    }
+
+    // Submit paper status form
+    public Result savePaperStatus(Long id, String status) {
+        boolean result = Api.getInstance().setPaperStatus(id, status);
+        return ok(Json.toJson(result));
+    }
+
+
 
     /**
      * Display PC members

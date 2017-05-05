@@ -48,13 +48,15 @@ public class ReviewController extends Controller {
     public Result viewReview(Long id, String mode) {
         Review review = Api.getInstance().getReview(id);
         Form reviewForm = formFactory.form(Review.class);
+        System.out.println(review);
         reviewForm.data().put("content", review.content);
+        reviewForm.data().put("status", review.status);
         return ok(views.html.review.reviewForm.render(review, mode, reviewForm, flash()));
     }
 
     // Submit review form
     public Result edit(Long id) {
-        Api.getInstance().editReview(id,request().body().asFormUrlEncoded().get("content")[0]);
+        Api.getInstance().editReview(id,request().body().asFormUrlEncoded().get("content")[0],request().body().asFormUrlEncoded().get("status")[0]);
         return redirect("/reviews");
     }
 

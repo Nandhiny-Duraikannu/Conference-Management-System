@@ -34,6 +34,7 @@ public class Review extends Model {
 
     @Column(length = 10000)
     public String content;
+    public String status;
 
     /**
      * Generic query helper for entity Review with id Long
@@ -130,6 +131,18 @@ public class Review extends Model {
             this.content = null;
         } else {
             this.content = content;
+        }
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        if (status == null || status.length() == 0) {
+            this.status = null;
+        } else {
+            this.status = status;
         }
     }
 }
