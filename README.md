@@ -20,6 +20,8 @@ Then the API should be available at *localhost:9000* and web interface at *local
 At the first run, it may show an error and ask to apply 'database evolution'.
 Just press the button on this web page and it should work.
 
+## [Database schema](goo.gl/bnac5v)
+
 ## Play
 
 Play documentation is here:
