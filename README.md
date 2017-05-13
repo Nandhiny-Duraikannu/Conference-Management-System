@@ -19,16 +19,6 @@ Then try to run both projects. You can do it from console with *sbt run* or from
 Then the API should be available at *localhost:9000* and web interface at *localhost:9001*.
 At the first run, it may show an error and ask to apply 'database evolution'.
 Just press the button on this web page and it should work.
- 
-I used this template to initiate the project: https://github.com/playframework/play-java-ebean-example
-There they have 2 tables in database and models ("company" and "computer"). 
-I modified it to contain a "user" table and model to better fit our goals.
-
-Note about database:
-Play has a notion of database 'evolutions', which is the same as 'migration' in other systems.
-Ebean (a library to work with databases) automatically creates 'evolutions' when you modify class properties in 'models' folder.
-And you can run them from the browser!
-This feature seems to me a bit too magical, but we can go with it for now.
 
 ## Play
 
