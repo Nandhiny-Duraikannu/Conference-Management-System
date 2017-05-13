@@ -1,0 +1,323 @@
+{
+	"variables": [],
+	"info": {
+		"name": "soc-conferences",
+		"_postman_id": "c6049a79-51bc-38ed-bcbb-97e8ce2ef95a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"url": "{{host}}/api/users",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Jia",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "securityQuestion",
+							"value": "q",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "securityAnswer",
+							"value": "a",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "email",
+							"value": "email@example.com",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": "create user"
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id",
+			"request": {
+				"url": "{{host}}/api/users/123",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "create review",
+			"request": {
+				"url": "{{host}}/api/reviews",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "paper.id",
+							"value": "1",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "user.id",
+							"value": "2",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": "create user"
+			},
+			"response": []
+		},
+		{
+			"name": "get review by id",
+			"request": {
+				"url": "{{host}}/api/reviews/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get paper by id",
+			"request": {
+				"url": "{{host}}/api/papers/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get user by name",
+			"request": {
+				"url": "{{host}}/api/users/anton",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get reviews by user id",
+			"request": {
+				"url": "{{host}}/api/reviews/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get conference by id",
+			"request": {
+				"url": "{{host}}/api/conferences/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get conferences with assigned reviewer",
+			"request": {
+				"url": "{{host}}/api/conferences/reviewers/assigned/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "get reviews by user id and conf id",
+			"request": {
+				"url": "{{host}}/api/reviews/user/1/conference/1",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "get user by name"
+			},
+			"response": []
+		},
+		{
+			"name": "update review",
+			"request": {
+				"url": "{{host}}/api/reviews/1",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "content",
+							"value": "asdfasdf",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": "create user"
+			},
+			"response": []
+		},
+		{
+			"name": "create conference",
+			"request": {
+				"url": "{{host}}/api/conferences",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "acronym",
+							"value": "lol",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "title",
+							"value": "kek",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "deadline",
+							"value": "2016-01-01",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "submissionDateStart",
+							"value": "2017-01-01",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "status",
+							"value": "active",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "logo",
+							"type": "file",
+							"enabled": true,
+							"src": "43f79a903f25ef281b2af932d80e11a9.jpg"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "update conference",
+			"request": {
+				"url": "{{host}}/api/conferences/7",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "acronym",
+							"value": "lol",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "title",
+							"value": "kek1",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "deadline",
+							"value": "2016-01-01",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "submissionDateStart",
+							"value": "2017-01-01",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "status",
+							"value": "active",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "logo",
+							"type": "file",
+							"enabled": true,
+							"src": "43f79a903f25ef281b2af932d80e11a9.jpg"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get conference reviewers",
+			"request": {
+				"url": "{{host}}/api/conferences/1/reviewers",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
